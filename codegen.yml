@@ -1,0 +1,13 @@
+overwrite: true
+schema: "./schema.graphql"
+documents: "src/**/*.{gql,graphql}"
+
+generates:
+  # 这部分是必须的，它定义了生成代码的输出路径和配置
+  src/generated/graphql.ts:
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withHooks: true
