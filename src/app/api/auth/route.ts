@@ -1,89 +1,66 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const DIRECTUS_GRAPHQL_SYSTEM_URL = 'https://directus.matrix-net.tech/graphql/system';
 const DIRECTUS_GRAPHQL_URL = 'https://directus.matrix-net.tech/graphql';
 
-// 尝试不同的 GraphQL 认证突变名称
-const AUTH_MUTATIONS = [
-  // 标准 Directus GraphQL 认证
-  `mutation Login($email: String!, $password: String!) {
+// 官方 Directus GraphQL 认证突变
+const AUTH_LOGIN_MUTATION = `
+  mutation AuthLogin($email: String!, $password: String!) {
     auth_login(email: $email, password: $password) {
       access_token
       refresh_token
-      expires
-    }
-  }`,
-  // 备选突变名称
-  `mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      access_token
-      refresh_token
-      expires
-    }
-  }`,
-  // 另一种可能的名称
-  `mutation Authenticate($email: String!, $password: String!) {
-    authenticate(email: $email, password: $password) {
-      access_token
-      refresh_token
-      expires
-    }
-  }`
-];
-
-async function tryGraphQLAuth(email: string, password: string) {
-  for (let i = 0; i < AUTH_MUTATIONS.length; i++) {
-    const mutation = AUTH_MUTATIONS[i];
-    console.log(`尝试 GraphQL 认证方式 ${i + 1}...`);
-    
-    try {
-      const response = await fetch(DIRECTUS_GRAPHQL_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: mutation,
-          variables: { email, password },
-        }),
-      });
-      
-      const result = await response.json();
-      
-      // 如果没有错误且有数据，认证成功
-      if (!result.errors && result.data) {
-        const authData = result.data.auth_login || result.data.login || result.data.authenticate;
-        if (authData?.access_token) {
-          console.log(`GraphQL 认证成功，使用方式 ${i + 1}`);
-          return authData;
-        }
-      }
-      
-      console.log(`方式 ${i + 1} 失败:`, result.errors?.[0]?.message || '无数据返回');
-    } catch (error) {
-      console.log(`方式 ${i + 1} 异常:`, error);
     }
   }
-  
-  return null;
-}
+`;
 
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
     
-    console.log('Directus Auth - 尝试 GraphQL 认证:', email);
+    console.log('Directus Auth - 使用官方 GraphQL 认证:', email);
     
-    // 首先尝试 GraphQL 认证
-    const graphqlAuth = await tryGraphQLAuth(email, password);
+    // 使用官方的 /graphql/system 端点进行认证
+    const response = await fetch(DIRECTUS_GRAPHQL_SYSTEM_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: AUTH_LOGIN_MUTATION,
+        variables: { email, password },
+      }),
+    });
     
-    if (graphqlAuth) {
+    const result = await response.json();
+    
+    console.log('Directus Auth - GraphQL 响应:', {
+      status: response.status,
+      hasData: !!result.data,
+      hasErrors: !!result.errors
+    });
+    
+    if (result.errors) {
+      console.error('GraphQL 认证错误:', result.errors);
+      return NextResponse.json(
+        { 
+          errors: result.errors.map((err: any) => ({ 
+            message: err.message || '登录失败，请检查邮箱和密码' 
+          }))
+        },
+        { status: 401 }
+      );
+    }
+    
+    if (result.data?.auth_login?.access_token) {
       // GraphQL 认证成功，获取用户信息
+      const authData = result.data.auth_login;
+      
       try {
         const userResponse = await fetch(DIRECTUS_GRAPHQL_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${graphqlAuth.access_token}`,
+            'Authorization': `Bearer ${authData.access_token}`,
           },
           body: JSON.stringify({
             query: `
@@ -105,10 +82,11 @@ export async function POST(request: NextRequest) {
         
         const userResult = await userResponse.json();
         
+        console.log('GraphQL 认证完全成功！');
         return NextResponse.json({
-          access_token: graphqlAuth.access_token,
-          refresh_token: graphqlAuth.refresh_token,
-          expires: graphqlAuth.expires,
+          access_token: authData.access_token,
+          refresh_token: authData.refresh_token,
+          expires: null, // GraphQL 认证可能不返回 expires
           user: userResult.data?.users_me || {
             id: null,
             email,
@@ -117,52 +95,30 @@ export async function POST(request: NextRequest) {
           }
         });
       } catch (userError) {
-        console.warn('GraphQL 用户信息获取失败:', userError);
+        console.warn('GraphQL 用户信息获取失败，但认证成功:', userError);
         return NextResponse.json({
-          access_token: graphqlAuth.access_token,
-          refresh_token: graphqlAuth.refresh_token,
-          expires: graphqlAuth.expires,
+          access_token: authData.access_token,
+          refresh_token: authData.refresh_token,
+          expires: null,
           user: { id: null, email, first_name: null, last_name: null }
         });
       }
-    }
-    
-    // GraphQL 认证失败，回退到 REST API
-    console.log('GraphQL 认证全部失败，尝试 REST API...');
-    const restResponse = await fetch('https://directus.matrix-net.tech/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, password }),
-    });
-    
-    const restData = await restResponse.json();
-    
-    if (restResponse.ok && restData.data) {
-      console.log('REST API 认证成功');
-      return NextResponse.json({
-        access_token: restData.data.access_token,
-        refresh_token: restData.data.refresh_token,
-        expires: restData.data.expires,
-        user: {
-          id: restData.data.user?.id,
-          email: restData.data.user?.email,
-          first_name: restData.data.user?.first_name,
-          last_name: restData.data.user?.last_name,
-        }
-      });
     } else {
+      // 认证失败
       return NextResponse.json(
-        { errors: restData.errors || [{ message: '登录失败，请检查邮箱和密码' }] },
+        { 
+          errors: [{ message: '登录失败，请检查邮箱和密码' }] 
+        },
         { status: 401 }
       );
     }
     
   } catch (error) {
-    console.error('Directus Auth Error:', error);
+    console.error('Directus GraphQL Auth Error:', error);
     return NextResponse.json(
-      { errors: [{ message: '服务器连接失败，请稍后重试' }] },
+      { 
+        errors: [{ message: '服务器连接失败，请稍后重试' }] 
+      },
       { status: 500 }
     );
   }
