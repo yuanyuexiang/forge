@@ -10,7 +10,9 @@ import {
   LogoutOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
-  SettingOutlined
+  SettingOutlined,
+  TagOutlined,
+  CreditCardOutlined
 } from '@ant-design/icons';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '../providers/AuthProvider';
@@ -34,6 +36,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname === '/products') return 'products';
     if (pathname === '/orders') return 'orders';
     if (pathname === '/users') return 'users';
+    if (pathname === '/categories') return 'categories';
+    if (pathname === '/payments') return 'payments';
     return 'dashboard';
   };
 
@@ -51,10 +55,22 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       onClick: () => router.push('/products'),
     },
     {
+      key: 'categories',
+      icon: <TagOutlined />,
+      label: '分类管理',
+      onClick: () => router.push('/categories'),
+    },
+    {
       key: 'orders',
       icon: <ShoppingCartOutlined />,
       label: '订单管理',
       onClick: () => router.push('/orders'),
+    },
+    {
+      key: 'payments',
+      icon: <CreditCardOutlined />,
+      label: '支付管理',
+      onClick: () => router.push('/payments'),
     },
     {
       key: 'users',

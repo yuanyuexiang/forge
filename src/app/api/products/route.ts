@@ -1,51 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const GRAPHQL_ENDPOINT = '/api/graphql';
-
-// 使用 GraphQL 需要先获取有效的认证 token，现在先创建一个基于现有数据结构的查询
-async function fetchProductsViaGraphQL(authHeader?: string) {
-  // 基于我们观察到的实际工作情况，使用更通用的查询方式
-  const query = `
-    query {
-      products: products {
-        id
-        name
-        description
-        price
-        stock
-        created_at
-        updated_at
-      }
-    }
-  `;
-
-  const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
-  };
-
-  if (authHeader) {
-    headers['Authorization'] = authHeader;
-  }
-
-  const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}${GRAPHQL_ENDPOINT}`, {
-    method: 'POST',
-    headers,
-    body: JSON.stringify({ query }),
-    signal: AbortSignal.timeout(10000),
-  });
-
-  if (!response.ok) {
-    throw new Error(`GraphQL request failed: ${response.status}`);
-  }
-
-  const result = await response.json();
-  
-  if (result.errors) {
-    throw new Error(`GraphQL errors: ${JSON.stringify(result.errors)}`);
-  }
-
-  return result.data?.products || [];
-}
+import { executeGraphQLQuery, DATA_QUERIES } from '../../lib/directus-config';
 
 export async function GET(request: NextRequest) {
   try {
@@ -60,7 +14,13 @@ export async function GET(request: NextRequest) {
 
     console.log('Products API - 通过 GraphQL 获取产品数据');
 
-    const products = await fetchProductsViaGraphQL(authHeader);
+    const result = await executeGraphQLQuery(
+      DATA_QUERIES.PRODUCTS,
+      {},
+      authHeader
+    );
+    
+    const products = result.data?.products || [];
     console.log(`Products API - 成功获取 ${products.length} 个产品`);
     return NextResponse.json(products);
 
@@ -103,26 +63,11 @@ export async function POST(request: NextRequest) {
       }
     `;
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}${GRAPHQL_ENDPOINT}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': authHeader,
-      },
-      body: JSON.stringify({ 
-        query: mutation,
-        variables: { data: productData }
-      }),
-    });
-
-    const result = await response.json();
-    
-    if (result.errors) {
-      return NextResponse.json(
-        { error: 'GraphQL 错误', details: result.errors },
-        { status: 400 }
-      );
-    }
+    const result = await executeGraphQLQuery(
+      mutation,
+      { data: productData },
+      authHeader
+    );
 
     return NextResponse.json(result.data?.create_products_item);
 

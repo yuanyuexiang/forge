@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const DIRECTUS_GRAPHQL_URL = 'https://directus.matrix-net.tech/graphql';
+import { DIRECTUS_CONFIG } from '../../lib/directus-config';
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,7 +19,7 @@ export async function POST(request: NextRequest) {
     console.log('GraphQL Proxy - Request preview:', body.substring(0, 200) + '...');
     console.log('GraphQL Proxy - Has auth:', !!authHeader);
 
-    const response = await fetch(DIRECTUS_GRAPHQL_URL, {
+    const response = await fetch(DIRECTUS_CONFIG.GRAPHQL_URL, {
       method: 'POST',
       headers,
       body,

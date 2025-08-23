@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const DIRECTUS_GRAPHQL_URL = 'https://directus.matrix-net.tech/graphql';
+// 使用本地 GraphQL 代理端点
+const GRAPHQL_PROXY_URL = '/api/graphql';
 
 // GraphQL 查询：获取当前用户信息
 const GET_CURRENT_USER_QUERY = `
@@ -10,10 +11,6 @@ const GET_CURRENT_USER_QUERY = `
       email
       first_name
       last_name
-      role {
-        id
-        name
-      }
     }
   }
 `;
@@ -31,8 +28,8 @@ export async function GET(request: NextRequest) {
     
     const token = authHeader.substring(7);
     
-    // 通过 GraphQL 获取用户信息
-    const response = await fetch(DIRECTUS_GRAPHQL_URL, {
+    // 通过 GraphQL 代理获取用户信息
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}${GRAPHQL_PROXY_URL}`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,

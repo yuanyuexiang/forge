@@ -1,17 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-
-const DIRECTUS_GRAPHQL_SYSTEM_URL = 'https://directus.matrix-net.tech/graphql/system';
-const DIRECTUS_GRAPHQL_URL = 'https://directus.matrix-net.tech/graphql';
-
-// 官方 Directus GraphQL 认证突变
-const AUTH_LOGIN_MUTATION = `
-  mutation AuthLogin($email: String!, $password: String!) {
-    auth_login(email: $email, password: $password) {
-      access_token
-      refresh_token
-    }
-  }
-`;
+import { DIRECTUS_CONFIG, AUTH_QUERIES, executeGraphQLQuery } from '../../lib/directus-config';
 
 export async function POST(request: NextRequest) {
   try {
@@ -20,13 +8,13 @@ export async function POST(request: NextRequest) {
     console.log('Directus Auth - 使用官方 GraphQL 认证:', email);
     
     // 使用官方的 /graphql/system 端点进行认证
-    const response = await fetch(DIRECTUS_GRAPHQL_SYSTEM_URL, {
+    const response = await fetch(DIRECTUS_CONFIG.GRAPHQL_SYSTEM_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        query: AUTH_LOGIN_MUTATION,
+        query: AUTH_QUERIES.LOGIN,
         variables: { email, password },
       }),
     });
@@ -56,27 +44,14 @@ export async function POST(request: NextRequest) {
       const authData = result.data.auth_login;
       
       try {
-        const userResponse = await fetch(DIRECTUS_GRAPHQL_URL, {
+        const userResponse = await fetch(DIRECTUS_CONFIG.GRAPHQL_URL, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${authData.access_token}`,
           },
           body: JSON.stringify({
-            query: `
-              query {
-                users_me {
-                  id
-                  email
-                  first_name
-                  last_name
-                  role {
-                    id
-                    name
-                  }
-                }
-              }
-            `,
+            query: AUTH_QUERIES.GET_CURRENT_USER,
           }),
         });
         
