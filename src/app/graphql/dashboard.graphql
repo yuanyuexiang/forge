@@ -1,0 +1,33 @@
+query GetDashboardData {
+  users_aggregated {
+    countAll
+  }
+  products_aggregated {
+    countAll
+  }
+  orders_aggregated {
+    countAll
+  }
+  categories_aggregated {
+    countAll
+  }
+}
+
+query GetRecentUsers($limit: Int = 5) {
+  users(limit: $limit, sort: ["-created_at"]) {
+    id
+    name
+    email
+    created_at
+  }
+}
+
+query GetRecentProducts($limit: Int = 5) {
+  products(limit: $limit, sort: ["-created_at"]) {
+    id
+    name
+    price
+    stock
+    created_at
+  }
+}

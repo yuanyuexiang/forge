@@ -11,3 +11,6 @@ generates:
       - typescript-react-apollo
     config:
       withHooks: true
+      apolloReactHooksImportFrom: "@apollo/client"
+      apolloReactCommonImportFrom: "@apollo/client"
+      reactApolloVersion: 3

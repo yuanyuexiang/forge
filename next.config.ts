@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   // 启用 Ant Design 的 styled-components SSR
   compiler: {
     styledComponents: true,
-  },
+  }
 };
 
 export default nextConfig;
