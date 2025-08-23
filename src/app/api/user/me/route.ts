@@ -1,5 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const DIRECTUS_GRAPHQL_URL = 'https://directus.matrix-net.tech/graphql';
+
+// GraphQL 查询：获取当前用户信息
+const GET_CURRENT_USER_QUERY = `
+  query {
+    users_me {
+      id
+      email
+      first_name
+      last_name
+      role {
+        id
+        name
+      }
+    }
+  }
+`;
+
 export async function GET(request: NextRequest) {
   try {
     const authHeader = request.headers.get('authorization');
@@ -13,26 +31,39 @@ export async function GET(request: NextRequest) {
     
     const token = authHeader.substring(7);
     
-    // 调用 Directus 获取用户信息
-    const response = await fetch('https://directus.matrix-net.tech/users/me', {
+    // 通过 GraphQL 获取用户信息
+    const response = await fetch(DIRECTUS_GRAPHQL_URL, {
+      method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
+      body: JSON.stringify({
+        query: GET_CURRENT_USER_QUERY,
+      }),
     });
     
-    if (response.ok) {
-      const userData = await response.json();
-      return NextResponse.json(userData.data);
-    } else {
+    const result = await response.json();
+    
+    if (result.errors) {
+      console.error('GraphQL 用户查询错误:', result.errors);
       return NextResponse.json(
         { errors: [{ message: 'Token 验证失败' }] },
-        { status: response.status }
+        { status: 401 }
+      );
+    }
+    
+    if (result.data?.users_me) {
+      return NextResponse.json(result.data.users_me);
+    } else {
+      return NextResponse.json(
+        { errors: [{ message: '用户信息不存在' }] },
+        { status: 404 }
       );
     }
     
   } catch (error) {
-    console.error('User info error:', error);
+    console.error('GraphQL 用户信息查询失败:', error);
     return NextResponse.json(
       { errors: [{ message: '获取用户信息失败' }] },
       { status: 500 }
