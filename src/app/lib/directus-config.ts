@@ -16,7 +16,7 @@ export async function executeGraphQLQuery(
   query: string, 
   variables: any = {}, 
   authToken?: string,
-  useProxy: boolean = true
+  useProxy: boolean = false  // 暂时禁用代理，直接使用Directus端点
 ) {
   const url = useProxy 
     ? `${DIRECTUS_CONFIG.BASE_URL}${DIRECTUS_CONFIG.LOCAL_GRAPHQL_PROXY}`
