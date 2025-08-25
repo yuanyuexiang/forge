@@ -116,7 +116,7 @@ jobs:
           echo "${{ vars.SSH_PRIVATE_KEY }}" > /root/.ssh/id_rsa
           chmod 600 /root/.ssh/id_rsa
           dos2unix /root/.ssh/id_rsa
-
+          echo "~~~~~~~~~~~~~~~~successful~~~~~~~~~~~~~~~~~~~~~~~"
           ssh-keygen -l -f /root/.ssh/id_rsa
 
           echo "
