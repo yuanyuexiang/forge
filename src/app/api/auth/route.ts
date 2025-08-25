@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { DIRECTUS_CONFIG, AUTH_QUERIES, executeGraphQLQuery } from '../../lib/directus-config';
+import { DIRECTUS_CONFIG, AUTH_QUERIES } from '../../lib/directus-config';
 
 export async function POST(request: NextRequest) {
   try {

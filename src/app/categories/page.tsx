@@ -14,33 +14,22 @@ import {
 import { 
   PlusOutlined, 
   EditOutlined, 
-  DeleteOutlined,
-  SearchOutlined 
+  DeleteOutlined 
 } from '@ant-design/icons';
-import { useQuery, useMutation } from '@apollo/client';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import AdminLayout from '../components/AdminLayout';
 import { 
-  GetCategoriesDocument, 
-  CreateCategoryDocument, 
-  UpdateCategoryDocument, 
-  DeleteCategoryDocument
+  useGetCategoriesQuery,
+  useCreateCategoryMutation,
+  useUpdateCategoryMutation,
+  useDeleteCategoryMutation,
+  GetCategoriesQuery
 } from '../../generated/graphql';
 
 const { Search } = Input;
 
-interface Category {
-  id: string;
-  name: string;
-  description?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-interface CategoryFormData {
-  name: string;
-  description?: string;
-}
+// 使用生成的类型
+type Category = GetCategoriesQuery['categories'][0];
 
 function CategoriesContent() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -49,10 +38,10 @@ function CategoriesContent() {
   const [form] = Form.useForm();
 
   // 查询分类列表
-  const { data, loading, error, refetch } = useQuery(GetCategoriesDocument);
+  const { data, loading, error, refetch } = useGetCategoriesQuery();
   
   // 创建分类
-  const [createCategory] = useMutation(CreateCategoryDocument, {
+  const [createCategory] = useCreateCategoryMutation({
     onCompleted: () => {
       message.success('分类创建成功');
       closeModal();
@@ -65,7 +54,7 @@ function CategoriesContent() {
   });
 
   // 更新分类
-  const [updateCategory] = useMutation(UpdateCategoryDocument, {
+  const [updateCategory] = useUpdateCategoryMutation({
     onCompleted: () => {
       message.success('分类更新成功');
       closeModal();
@@ -78,7 +67,7 @@ function CategoriesContent() {
   });
 
   // 删除分类
-  const [deleteCategory] = useMutation(DeleteCategoryDocument, {
+  const [deleteCategory] = useDeleteCategoryMutation({
     onCompleted: () => {
       message.success('分类删除成功');
       refetch();

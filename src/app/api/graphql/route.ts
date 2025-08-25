@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     let jsonData;
     try {
       jsonData = JSON.parse(data);
-    } catch (e) {
+    } catch {
       console.error('GraphQL Proxy - Invalid JSON response:', data);
       return NextResponse.json(
         { 

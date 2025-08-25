@@ -121,7 +121,7 @@ const CategoriesContent: React.FC = () => {
   };
 
   // 删除分类
-  const deleteCategory = async (id: string) => {
+  const deleteCategory = async (_id: string) => {
     try {
       message.info('删除功能待实现');
       // 注意：需要在后端实现 DELETE 方法

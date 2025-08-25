@@ -11,50 +11,29 @@ import {
   Select, 
   Space, 
   message, 
-  Popconfirm,
-  Image
+  Popconfirm
 } from 'antd';
 import { 
   PlusOutlined, 
   EditOutlined, 
-  DeleteOutlined,
-  SearchOutlined 
+  DeleteOutlined
 } from '@ant-design/icons';
-import { useQuery, useMutation } from '@apollo/client';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import AdminLayout from '../components/AdminLayout';
 import { 
-  GetProductsDocument, 
-  CreateProductDocument, 
-  UpdateProductDocument, 
-  DeleteProductDocument,
-  GetCategoriesDocument
+  useGetProductsQuery,
+  useGetCategoriesQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  useDeleteProductMutation,
+  GetProductsQuery
 } from '../../generated/graphql';
 
 const { Search } = Input;
 const { Option } = Select;
 
-interface Product {
-  id: string;
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  category_id?: {
-    id: string;
-    name: string;
-  };
-  created_at: string;
-  updated_at: string;
-}
-
-interface ProductFormData {
-  name: string;
-  description: string;
-  price: number;
-  stock: number;
-  category_id?: string;
-}
+// 使用生成的类型
+type Product = GetProductsQuery['products'][0];
 
 function ProductsContent() {
   const [modalVisible, setModalVisible] = useState(false);
@@ -63,13 +42,13 @@ function ProductsContent() {
   const [form] = Form.useForm();
 
   // 查询产品列表
-  const { data: productsData, loading, error, refetch } = useQuery(GetProductsDocument);
+  const { data: productsData, loading, error, refetch } = useGetProductsQuery();
   
   // 查询分类列表（用于表单选择）
-  const { data: categoriesData } = useQuery(GetCategoriesDocument);
+  const { data: categoriesData } = useGetCategoriesQuery();
   
   // 创建产品
-  const [createProduct] = useMutation(CreateProductDocument, {
+  const [createProduct] = useCreateProductMutation({
     onCompleted: () => {
       message.success('商品创建成功');
       closeModal();
@@ -82,7 +61,7 @@ function ProductsContent() {
   });
 
   // 更新产品
-  const [updateProduct] = useMutation(UpdateProductDocument, {
+  const [updateProduct] = useUpdateProductMutation({
     onCompleted: () => {
       message.success('商品更新成功');
       closeModal();
@@ -95,7 +74,7 @@ function ProductsContent() {
   });
 
   // 删除产品
-  const [deleteProduct] = useMutation(DeleteProductDocument, {
+  const [deleteProduct] = useDeleteProductMutation({
     onCompleted: () => {
       message.success('商品删除成功');
       refetch();

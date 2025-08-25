@@ -26,9 +26,10 @@ export async function GET(request: NextRequest) {
     }
     
     const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get('limit') || '50');
-    const offset = parseInt(searchParams.get('offset') || '0');
-    const sort = searchParams.get('sort')?.split(',') || ['name'];
+    // URL参数为后续功能预留
+    searchParams.get('limit');
+    searchParams.get('offset');
+    searchParams.get('sort');
     
     console.log('Categories API - GraphQL 获取分类列表');
     

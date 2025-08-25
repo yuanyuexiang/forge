@@ -1,43 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { executeGraphQLQuery, DATA_QUERIES } from '../../lib/directus-config';
 
-// GraphQL 查询：获取所有订单
-const GET_ORDERS_QUERY = `
-  query GetOrders($limit: Int, $offset: Int, $sort: [String]) {
-    orders(limit: $limit, offset: $offset, sort: $sort) {
-      id
-      user_id
-      total_price
-      status
-      created_at
-      updated_at
-      order_items {
-        id
-        product_id
-        quantity
-        price
-        product {
-          name
-          description
-        }
-      }
-      payment {
-        id
-        payment_method
-        amount
-        status
-        paid_at
-      }
-      user {
-        id
-        first_name
-        last_name
-        email
-      }
-    }
-  }
-`;
-
 // GraphQL 查询：获取单个订单详情
 const GET_ORDER_BY_ID_QUERY = `
   query GetOrderById($id: ID!) {

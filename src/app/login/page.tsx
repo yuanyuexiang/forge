@@ -31,7 +31,7 @@ export default function LoginPage() {
       } else {
         message.error(result.error || '登录失败！');
       }
-    } catch (error) {
+    } catch {
       message.error('登录失败，请重试！');
     } finally {
       setLoading(false);
