@@ -44,14 +44,8 @@ export type Mutation = {
   create_orders_items: Array<Orders>;
   create_payments_item?: Maybe<Payments>;
   create_payments_items: Array<Payments>;
-  create_post_item?: Maybe<Post>;
-  create_post_items: Array<Post>;
   create_products_item?: Maybe<Products>;
   create_products_items: Array<Products>;
-  create_user_item?: Maybe<User>;
-  create_user_items: Array<User>;
-  create_user_post_item?: Maybe<User_Post>;
-  create_user_post_items: Array<User_Post>;
   create_users_item?: Maybe<Users>;
   create_users_items: Array<Users>;
   delete_categories_item?: Maybe<Delete_One>;
@@ -62,14 +56,8 @@ export type Mutation = {
   delete_orders_items?: Maybe<Delete_Many>;
   delete_payments_item?: Maybe<Delete_One>;
   delete_payments_items?: Maybe<Delete_Many>;
-  delete_post_item?: Maybe<Delete_One>;
-  delete_post_items?: Maybe<Delete_Many>;
   delete_products_item?: Maybe<Delete_One>;
   delete_products_items?: Maybe<Delete_Many>;
-  delete_user_item?: Maybe<Delete_One>;
-  delete_user_items?: Maybe<Delete_Many>;
-  delete_user_post_item?: Maybe<Delete_One>;
-  delete_user_post_items?: Maybe<Delete_Many>;
   delete_users_item?: Maybe<Delete_One>;
   delete_users_items?: Maybe<Delete_Many>;
   update_categories_batch: Array<Categories>;
@@ -84,18 +72,9 @@ export type Mutation = {
   update_payments_batch: Array<Payments>;
   update_payments_item?: Maybe<Payments>;
   update_payments_items: Array<Payments>;
-  update_post_batch: Array<Post>;
-  update_post_item?: Maybe<Post>;
-  update_post_items: Array<Post>;
   update_products_batch: Array<Products>;
   update_products_item?: Maybe<Products>;
   update_products_items: Array<Products>;
-  update_user_batch: Array<User>;
-  update_user_item?: Maybe<User>;
-  update_user_items: Array<User>;
-  update_user_post_batch: Array<User_Post>;
-  update_user_post_item?: Maybe<User_Post>;
-  update_user_post_items: Array<User_Post>;
   update_users_batch: Array<Users>;
   update_users_item?: Maybe<Users>;
   update_users_items: Array<Users>;
@@ -166,22 +145,6 @@ export type MutationCreate_Payments_ItemsArgs = {
 };
 
 
-export type MutationCreate_Post_ItemArgs = {
-  data: Create_Post_Input;
-};
-
-
-export type MutationCreate_Post_ItemsArgs = {
-  data?: InputMaybe<Array<Create_Post_Input>>;
-  filter?: InputMaybe<Post_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
 export type MutationCreate_Products_ItemArgs = {
   data: Create_Products_Input;
 };
@@ -190,38 +153,6 @@ export type MutationCreate_Products_ItemArgs = {
 export type MutationCreate_Products_ItemsArgs = {
   data?: InputMaybe<Array<Create_Products_Input>>;
   filter?: InputMaybe<Products_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationCreate_User_ItemArgs = {
-  data: Create_User_Input;
-};
-
-
-export type MutationCreate_User_ItemsArgs = {
-  data?: InputMaybe<Array<Create_User_Input>>;
-  filter?: InputMaybe<User_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationCreate_User_Post_ItemArgs = {
-  data: Create_User_Post_Input;
-};
-
-
-export type MutationCreate_User_Post_ItemsArgs = {
-  data?: InputMaybe<Array<Create_User_Post_Input>>;
-  filter?: InputMaybe<User_Post_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -286,42 +217,12 @@ export type MutationDelete_Payments_ItemsArgs = {
 };
 
 
-export type MutationDelete_Post_ItemArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDelete_Post_ItemsArgs = {
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-};
-
-
 export type MutationDelete_Products_ItemArgs = {
   id: Scalars['ID']['input'];
 };
 
 
 export type MutationDelete_Products_ItemsArgs = {
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-};
-
-
-export type MutationDelete_User_ItemArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDelete_User_ItemsArgs = {
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-};
-
-
-export type MutationDelete_User_Post_ItemArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDelete_User_Post_ItemsArgs = {
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
 };
 
@@ -452,35 +353,6 @@ export type MutationUpdate_Payments_ItemsArgs = {
 };
 
 
-export type MutationUpdate_Post_BatchArgs = {
-  data?: InputMaybe<Array<Update_Post_Input>>;
-  filter?: InputMaybe<Post_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_Post_ItemArgs = {
-  data: Update_Post_Input;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdate_Post_ItemsArgs = {
-  data: Update_Post_Input;
-  filter?: InputMaybe<Post_Filter>;
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
 export type MutationUpdate_Products_BatchArgs = {
   data?: InputMaybe<Array<Update_Products_Input>>;
   filter?: InputMaybe<Products_Filter>;
@@ -501,64 +373,6 @@ export type MutationUpdate_Products_ItemArgs = {
 export type MutationUpdate_Products_ItemsArgs = {
   data: Update_Products_Input;
   filter?: InputMaybe<Products_Filter>;
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_User_BatchArgs = {
-  data?: InputMaybe<Array<Update_User_Input>>;
-  filter?: InputMaybe<User_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_User_ItemArgs = {
-  data: Update_User_Input;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdate_User_ItemsArgs = {
-  data: Update_User_Input;
-  filter?: InputMaybe<User_Filter>;
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_User_Post_BatchArgs = {
-  data?: InputMaybe<Array<Update_User_Post_Input>>;
-  filter?: InputMaybe<User_Post_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_User_Post_ItemArgs = {
-  data: Update_User_Post_Input;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdate_User_Post_ItemsArgs = {
-  data: Update_User_Post_Input;
-  filter?: InputMaybe<User_Post_Filter>;
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -614,22 +428,10 @@ export type Query = {
   payments_aggregated: Array<Payments_Aggregated>;
   payments_by_id?: Maybe<Payments>;
   payments_by_version?: Maybe<Version_Payments>;
-  post: Array<Post>;
-  post_aggregated: Array<Post_Aggregated>;
-  post_by_id?: Maybe<Post>;
-  post_by_version?: Maybe<Version_Post>;
   products: Array<Products>;
   products_aggregated: Array<Products_Aggregated>;
   products_by_id?: Maybe<Products>;
   products_by_version?: Maybe<Version_Products>;
-  user: Array<User>;
-  user_aggregated: Array<User_Aggregated>;
-  user_by_id?: Maybe<User>;
-  user_by_version?: Maybe<Version_User>;
-  user_post: Array<User_Post>;
-  user_post_aggregated: Array<User_Post_Aggregated>;
-  user_post_by_id?: Maybe<User_Post>;
-  user_post_by_version?: Maybe<Version_User_Post>;
   users: Array<Users>;
   users_aggregated: Array<Users_Aggregated>;
   users_by_id?: Maybe<Users>;
@@ -769,39 +571,6 @@ export type QueryPayments_By_VersionArgs = {
 };
 
 
-export type QueryPostArgs = {
-  filter?: InputMaybe<Post_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryPost_AggregatedArgs = {
-  filter?: InputMaybe<Post_Filter>;
-  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryPost_By_IdArgs = {
-  id: Scalars['ID']['input'];
-  version?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryPost_By_VersionArgs = {
-  id: Scalars['ID']['input'];
-  version: Scalars['String']['input'];
-};
-
-
 export type QueryProductsArgs = {
   filter?: InputMaybe<Products_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -830,72 +599,6 @@ export type QueryProducts_By_IdArgs = {
 
 
 export type QueryProducts_By_VersionArgs = {
-  id: Scalars['ID']['input'];
-  version: Scalars['String']['input'];
-};
-
-
-export type QueryUserArgs = {
-  filter?: InputMaybe<User_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryUser_AggregatedArgs = {
-  filter?: InputMaybe<User_Filter>;
-  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryUser_By_IdArgs = {
-  id: Scalars['ID']['input'];
-  version?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryUser_By_VersionArgs = {
-  id: Scalars['ID']['input'];
-  version: Scalars['String']['input'];
-};
-
-
-export type QueryUser_PostArgs = {
-  filter?: InputMaybe<User_Post_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryUser_Post_AggregatedArgs = {
-  filter?: InputMaybe<User_Post_Filter>;
-  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryUser_Post_By_IdArgs = {
-  id: Scalars['ID']['input'];
-  version?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryUser_Post_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
@@ -960,10 +663,7 @@ export type Subscription = {
   order_items_mutated?: Maybe<Order_Items_Mutated>;
   orders_mutated?: Maybe<Orders_Mutated>;
   payments_mutated?: Maybe<Payments_Mutated>;
-  post_mutated?: Maybe<Post_Mutated>;
   products_mutated?: Maybe<Products_Mutated>;
-  user_mutated?: Maybe<User_Mutated>;
-  user_post_mutated?: Maybe<User_Post_Mutated>;
   users_mutated?: Maybe<Users_Mutated>;
 };
 
@@ -1093,22 +793,7 @@ export type SubscriptionPayments_MutatedArgs = {
 };
 
 
-export type SubscriptionPost_MutatedArgs = {
-  event?: InputMaybe<EventEnum>;
-};
-
-
 export type SubscriptionProducts_MutatedArgs = {
-  event?: InputMaybe<EventEnum>;
-};
-
-
-export type SubscriptionUser_MutatedArgs = {
-  event?: InputMaybe<EventEnum>;
-};
-
-
-export type SubscriptionUser_Post_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
@@ -1240,13 +925,6 @@ export type Create_Payments_Input = {
   status?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type Create_Post_Input = {
-  content?: InputMaybe<Scalars['String']['input']>;
-  date_created?: InputMaybe<Scalars['Date']['input']>;
-  date_updated?: InputMaybe<Scalars['Date']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-};
-
 export type Create_Products_Input = {
   category_id?: InputMaybe<Create_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
@@ -1256,19 +934,6 @@ export type Create_Products_Input = {
   price: Scalars['Float']['input'];
   stock?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['Date']['input']>;
-};
-
-export type Create_User_Input = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  posts?: InputMaybe<Array<InputMaybe<Create_User_Post_Input>>>;
-  status?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type Create_User_Post_Input = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-  post_id?: InputMaybe<Create_Post_Input>;
-  user_id?: InputMaybe<Create_User_Input>;
 };
 
 export type Create_Users_Input = {
@@ -3082,61 +2747,6 @@ export type Payments_Mutated = {
   key: Scalars['ID']['output'];
 };
 
-export type Post = {
-  __typename?: 'post';
-  content?: Maybe<Scalars['String']['output']>;
-  date_created?: Maybe<Scalars['Date']['output']>;
-  date_created_func?: Maybe<Datetime_Functions>;
-  date_updated?: Maybe<Scalars['Date']['output']>;
-  date_updated_func?: Maybe<Datetime_Functions>;
-  id: Scalars['ID']['output'];
-};
-
-export type Post_Aggregated = {
-  __typename?: 'post_aggregated';
-  avg?: Maybe<Post_Aggregated_Fields>;
-  avgDistinct?: Maybe<Post_Aggregated_Fields>;
-  count?: Maybe<Post_Aggregated_Count>;
-  countAll?: Maybe<Scalars['Int']['output']>;
-  countDistinct?: Maybe<Post_Aggregated_Count>;
-  group?: Maybe<Scalars['JSON']['output']>;
-  max?: Maybe<Post_Aggregated_Fields>;
-  min?: Maybe<Post_Aggregated_Fields>;
-  sum?: Maybe<Post_Aggregated_Fields>;
-  sumDistinct?: Maybe<Post_Aggregated_Fields>;
-};
-
-export type Post_Aggregated_Count = {
-  __typename?: 'post_aggregated_count';
-  content?: Maybe<Scalars['Int']['output']>;
-  date_created?: Maybe<Scalars['Int']['output']>;
-  date_updated?: Maybe<Scalars['Int']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-};
-
-export type Post_Aggregated_Fields = {
-  __typename?: 'post_aggregated_fields';
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-export type Post_Filter = {
-  _and?: InputMaybe<Array<InputMaybe<Post_Filter>>>;
-  _or?: InputMaybe<Array<InputMaybe<Post_Filter>>>;
-  content?: InputMaybe<String_Filter_Operators>;
-  date_created?: InputMaybe<Date_Filter_Operators>;
-  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-  date_updated?: InputMaybe<Date_Filter_Operators>;
-  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-  id?: InputMaybe<Number_Filter_Operators>;
-};
-
-export type Post_Mutated = {
-  __typename?: 'post_mutated';
-  data?: Maybe<Post>;
-  event?: Maybe<EventEnum>;
-  key: Scalars['ID']['output'];
-};
-
 export type Products = {
   __typename?: 'products';
   category_id?: Maybe<Categories>;
@@ -3273,13 +2883,6 @@ export type Update_Payments_Input = {
   status?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type Update_Post_Input = {
-  content?: InputMaybe<Scalars['String']['input']>;
-  date_created?: InputMaybe<Scalars['Date']['input']>;
-  date_updated?: InputMaybe<Scalars['Date']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-};
-
 export type Update_Products_Input = {
   category_id?: InputMaybe<Update_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
@@ -3291,19 +2894,6 @@ export type Update_Products_Input = {
   updated_at?: InputMaybe<Scalars['Date']['input']>;
 };
 
-export type Update_User_Input = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  posts?: InputMaybe<Array<InputMaybe<Update_User_Post_Input>>>;
-  status?: InputMaybe<Scalars['String']['input']>;
-};
-
-export type Update_User_Post_Input = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-  post_id?: InputMaybe<Update_Post_Input>;
-  user_id?: InputMaybe<Update_User_Input>;
-};
-
 export type Update_Users_Input = {
   created_at?: InputMaybe<Scalars['Date']['input']>;
   email?: InputMaybe<Scalars['String']['input']>;
@@ -3311,149 +2901,6 @@ export type Update_Users_Input = {
   name?: InputMaybe<Scalars['String']['input']>;
   password?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['Date']['input']>;
-};
-
-export type User = {
-  __typename?: 'user';
-  id: Scalars['ID']['output'];
-  name?: Maybe<Scalars['String']['output']>;
-  posts?: Maybe<Array<Maybe<User_Post>>>;
-  posts_func?: Maybe<Count_Functions>;
-  status?: Maybe<Scalars['String']['output']>;
-};
-
-
-export type UserPostsArgs = {
-  filter?: InputMaybe<User_Post_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type User_Aggregated = {
-  __typename?: 'user_aggregated';
-  avg?: Maybe<User_Aggregated_Fields>;
-  avgDistinct?: Maybe<User_Aggregated_Fields>;
-  count?: Maybe<User_Aggregated_Count>;
-  countAll?: Maybe<Scalars['Int']['output']>;
-  countDistinct?: Maybe<User_Aggregated_Count>;
-  group?: Maybe<Scalars['JSON']['output']>;
-  max?: Maybe<User_Aggregated_Fields>;
-  min?: Maybe<User_Aggregated_Fields>;
-  sum?: Maybe<User_Aggregated_Fields>;
-  sumDistinct?: Maybe<User_Aggregated_Fields>;
-};
-
-export type User_Aggregated_Count = {
-  __typename?: 'user_aggregated_count';
-  id?: Maybe<Scalars['Int']['output']>;
-  name?: Maybe<Scalars['Int']['output']>;
-  posts?: Maybe<Scalars['Int']['output']>;
-  status?: Maybe<Scalars['Int']['output']>;
-};
-
-export type User_Aggregated_Fields = {
-  __typename?: 'user_aggregated_fields';
-  id?: Maybe<Scalars['Float']['output']>;
-};
-
-export type User_Filter = {
-  _and?: InputMaybe<Array<InputMaybe<User_Filter>>>;
-  _or?: InputMaybe<Array<InputMaybe<User_Filter>>>;
-  id?: InputMaybe<Number_Filter_Operators>;
-  name?: InputMaybe<String_Filter_Operators>;
-  posts?: InputMaybe<User_Post_Quantifier_Filter>;
-  posts_func?: InputMaybe<Count_Function_Filter_Operators>;
-  status?: InputMaybe<String_Filter_Operators>;
-};
-
-export type User_Mutated = {
-  __typename?: 'user_mutated';
-  data?: Maybe<User>;
-  event?: Maybe<EventEnum>;
-  key: Scalars['ID']['output'];
-};
-
-export type User_Post = {
-  __typename?: 'user_post';
-  id: Scalars['ID']['output'];
-  post_id?: Maybe<Post>;
-  user_id?: Maybe<User>;
-};
-
-
-export type User_PostPost_IdArgs = {
-  filter?: InputMaybe<Post_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type User_PostUser_IdArgs = {
-  filter?: InputMaybe<User_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type User_Post_Aggregated = {
-  __typename?: 'user_post_aggregated';
-  avg?: Maybe<User_Post_Aggregated_Fields>;
-  avgDistinct?: Maybe<User_Post_Aggregated_Fields>;
-  count?: Maybe<User_Post_Aggregated_Count>;
-  countAll?: Maybe<Scalars['Int']['output']>;
-  countDistinct?: Maybe<User_Post_Aggregated_Count>;
-  group?: Maybe<Scalars['JSON']['output']>;
-  max?: Maybe<User_Post_Aggregated_Fields>;
-  min?: Maybe<User_Post_Aggregated_Fields>;
-  sum?: Maybe<User_Post_Aggregated_Fields>;
-  sumDistinct?: Maybe<User_Post_Aggregated_Fields>;
-};
-
-export type User_Post_Aggregated_Count = {
-  __typename?: 'user_post_aggregated_count';
-  id?: Maybe<Scalars['Int']['output']>;
-  post_id?: Maybe<Scalars['Int']['output']>;
-  user_id?: Maybe<Scalars['Int']['output']>;
-};
-
-export type User_Post_Aggregated_Fields = {
-  __typename?: 'user_post_aggregated_fields';
-  id?: Maybe<Scalars['Float']['output']>;
-  post_id?: Maybe<Scalars['Float']['output']>;
-  user_id?: Maybe<Scalars['Float']['output']>;
-};
-
-export type User_Post_Filter = {
-  _and?: InputMaybe<Array<InputMaybe<User_Post_Filter>>>;
-  _or?: InputMaybe<Array<InputMaybe<User_Post_Filter>>>;
-  id?: InputMaybe<Number_Filter_Operators>;
-  post_id?: InputMaybe<Post_Filter>;
-  user_id?: InputMaybe<User_Filter>;
-};
-
-export type User_Post_Mutated = {
-  __typename?: 'user_post_mutated';
-  data?: Maybe<User_Post>;
-  event?: Maybe<EventEnum>;
-  key: Scalars['ID']['output'];
-};
-
-export type User_Post_Quantifier_Filter = {
-  _and?: InputMaybe<Array<InputMaybe<User_Post_Filter>>>;
-  _none?: InputMaybe<User_Post_Filter>;
-  _or?: InputMaybe<Array<InputMaybe<User_Post_Filter>>>;
-  _some?: InputMaybe<User_Post_Filter>;
-  id?: InputMaybe<Number_Filter_Operators>;
-  post_id?: InputMaybe<Post_Filter>;
-  user_id?: InputMaybe<User_Filter>;
 };
 
 export type Users = {
@@ -3555,14 +3002,6 @@ export type Version_Payments = {
   status?: Maybe<Scalars['String']['output']>;
 };
 
-export type Version_Post = {
-  __typename?: 'version_post';
-  content?: Maybe<Scalars['String']['output']>;
-  date_created?: Maybe<Scalars['Date']['output']>;
-  date_updated?: Maybe<Scalars['Date']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-};
-
 export type Version_Products = {
   __typename?: 'version_products';
   category_id?: Maybe<Scalars['JSON']['output']>;
@@ -3573,21 +3012,6 @@ export type Version_Products = {
   price?: Maybe<Scalars['Float']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['Date']['output']>;
-};
-
-export type Version_User = {
-  __typename?: 'version_user';
-  id?: Maybe<Scalars['ID']['output']>;
-  name?: Maybe<Scalars['String']['output']>;
-  posts?: Maybe<Scalars['JSON']['output']>;
-  status?: Maybe<Scalars['String']['output']>;
-};
-
-export type Version_User_Post = {
-  __typename?: 'version_user_post';
-  id?: Maybe<Scalars['ID']['output']>;
-  post_id?: Maybe<Scalars['JSON']['output']>;
-  user_id?: Maybe<Scalars['JSON']['output']>;
 };
 
 export type Version_Users = {

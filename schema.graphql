@@ -115,13 +115,6 @@ input create_payments_input {
   paid_at: Date
 }
 
-input create_post_input {
-  id: ID
-  date_created: Date
-  date_updated: Date
-  content: String
-}
-
 input create_products_input {
   id: ID
   name: String!
@@ -131,19 +124,6 @@ input create_products_input {
   category_id: create_categories_input
   created_at: Date
   updated_at: Date
-}
-
-input create_user_input {
-  id: ID
-  status: String
-  name: String
-  posts: [create_user_post_input]
-}
-
-input create_user_post_input {
-  id: ID
-  user_id: create_user_input
-  post_id: create_post_input
 }
 
 input create_users_input {
@@ -1206,14 +1186,8 @@ type Mutation {
   create_orders_item(data: create_orders_input!): orders
   create_payments_items(filter: payments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_payments_input!]): [payments!]!
   create_payments_item(data: create_payments_input!): payments
-  create_post_items(filter: post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_post_input!]): [post!]!
-  create_post_item(data: create_post_input!): post
   create_products_items(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_products_input!]): [products!]!
   create_products_item(data: create_products_input!): products
-  create_user_items(filter: user_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_user_input!]): [user!]!
-  create_user_item(data: create_user_input!): user
-  create_user_post_items(filter: user_post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_user_post_input!]): [user_post!]!
-  create_user_post_item(data: create_user_post_input!): user_post
   create_users_items(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_users_input!]): [users!]!
   create_users_item(data: create_users_input!): users
   update_categories_items(filter: categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_categories_input!): [categories!]!
@@ -1228,18 +1202,9 @@ type Mutation {
   update_payments_items(filter: payments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_payments_input!): [payments!]!
   update_payments_batch(filter: payments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_payments_input!]): [payments!]!
   update_payments_item(id: ID!, data: update_payments_input!): payments
-  update_post_items(filter: post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_post_input!): [post!]!
-  update_post_batch(filter: post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_post_input!]): [post!]!
-  update_post_item(id: ID!, data: update_post_input!): post
   update_products_items(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_products_input!): [products!]!
   update_products_batch(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_products_input!]): [products!]!
   update_products_item(id: ID!, data: update_products_input!): products
-  update_user_items(filter: user_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_user_input!): [user!]!
-  update_user_batch(filter: user_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_user_input!]): [user!]!
-  update_user_item(id: ID!, data: update_user_input!): user
-  update_user_post_items(filter: user_post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_user_post_input!): [user_post!]!
-  update_user_post_batch(filter: user_post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_user_post_input!]): [user_post!]!
-  update_user_post_item(id: ID!, data: update_user_post_input!): user_post
   update_users_items(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_users_input!): [users!]!
   update_users_batch(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_users_input!]): [users!]!
   update_users_item(id: ID!, data: update_users_input!): users
@@ -1251,14 +1216,8 @@ type Mutation {
   delete_orders_item(id: ID!): delete_one
   delete_payments_items(ids: [ID]!): delete_many
   delete_payments_item(id: ID!): delete_one
-  delete_post_items(ids: [ID]!): delete_many
-  delete_post_item(id: ID!): delete_one
   delete_products_items(ids: [ID]!): delete_many
   delete_products_item(id: ID!): delete_one
-  delete_user_items(ids: [ID]!): delete_many
-  delete_user_item(id: ID!): delete_one
-  delete_user_post_items(ids: [ID]!): delete_many
-  delete_user_post_item(id: ID!): delete_one
   delete_users_items(ids: [ID]!): delete_many
   delete_users_item(id: ID!): delete_one
 }
@@ -1445,56 +1404,6 @@ type payments_mutated {
   data: payments
 }
 
-type post {
-  id: ID!
-  date_created: Date
-  date_created_func: datetime_functions
-  date_updated: Date
-  date_updated_func: datetime_functions
-  content: String
-}
-
-type post_aggregated {
-  group: JSON
-  countAll: Int
-  count: post_aggregated_count
-  countDistinct: post_aggregated_count
-  avg: post_aggregated_fields
-  sum: post_aggregated_fields
-  avgDistinct: post_aggregated_fields
-  sumDistinct: post_aggregated_fields
-  min: post_aggregated_fields
-  max: post_aggregated_fields
-}
-
-type post_aggregated_count {
-  id: Int
-  date_created: Int
-  date_updated: Int
-  content: Int
-}
-
-type post_aggregated_fields {
-  id: Float
-}
-
-input post_filter {
-  id: number_filter_operators
-  date_created: date_filter_operators
-  date_created_func: datetime_function_filter_operators
-  date_updated: date_filter_operators
-  date_updated_func: datetime_function_filter_operators
-  content: string_filter_operators
-  _and: [post_filter]
-  _or: [post_filter]
-}
-
-type post_mutated {
-  key: ID!
-  event: EventEnum
-  data: post
-}
-
 type products {
   id: ID!
   name: String!
@@ -1577,22 +1486,10 @@ type Query {
   payments_by_id(id: ID!, version: String): payments
   payments_aggregated(groupBy: [String], filter: payments_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [payments_aggregated!]!
   payments_by_version(version: String!, id: ID!): version_payments
-  post(filter: post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [post!]!
-  post_by_id(id: ID!, version: String): post
-  post_aggregated(groupBy: [String], filter: post_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [post_aggregated!]!
-  post_by_version(version: String!, id: ID!): version_post
   products(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [products!]!
   products_by_id(id: ID!, version: String): products
   products_aggregated(groupBy: [String], filter: products_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [products_aggregated!]!
   products_by_version(version: String!, id: ID!): version_products
-  user(filter: user_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [user!]!
-  user_by_id(id: ID!, version: String): user
-  user_aggregated(groupBy: [String], filter: user_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [user_aggregated!]!
-  user_by_version(version: String!, id: ID!): version_user
-  user_post(filter: user_post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [user_post!]!
-  user_post_by_id(id: ID!, version: String): user_post
-  user_post_aggregated(groupBy: [String], filter: user_post_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [user_post_aggregated!]!
-  user_post_by_version(version: String!, id: ID!): version_user_post
   users(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [users!]!
   users_by_id(id: ID!, version: String): users
   users_aggregated(groupBy: [String], filter: users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [users_aggregated!]!
@@ -1647,10 +1544,7 @@ type Subscription {
   order_items_mutated(event: EventEnum): order_items_mutated
   orders_mutated(event: EventEnum): orders_mutated
   payments_mutated(event: EventEnum): payments_mutated
-  post_mutated(event: EventEnum): post_mutated
   products_mutated(event: EventEnum): products_mutated
-  user_mutated(event: EventEnum): user_mutated
-  user_post_mutated(event: EventEnum): user_post_mutated
   users_mutated(event: EventEnum): users_mutated
 }
 
@@ -1688,13 +1582,6 @@ input update_payments_input {
   paid_at: Date
 }
 
-input update_post_input {
-  id: ID
-  date_created: Date
-  date_updated: Date
-  content: String
-}
-
 input update_products_input {
   id: ID
   name: String
@@ -1706,19 +1593,6 @@ input update_products_input {
   updated_at: Date
 }
 
-input update_user_input {
-  id: ID
-  status: String
-  name: String
-  posts: [update_user_post_input]
-}
-
-input update_user_post_input {
-  id: ID
-  user_id: update_user_input
-  post_id: update_post_input
-}
-
 input update_users_input {
   id: ID
   name: String
@@ -1726,109 +1600,6 @@ input update_users_input {
   password: String
   created_at: Date
   updated_at: Date
-}
-
-type user {
-  id: ID!
-  status: String
-  name: String
-  posts(filter: user_post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [user_post]
-  posts_func: count_functions
-}
-
-type user_aggregated {
-  group: JSON
-  countAll: Int
-  count: user_aggregated_count
-  countDistinct: user_aggregated_count
-  avg: user_aggregated_fields
-  sum: user_aggregated_fields
-  avgDistinct: user_aggregated_fields
-  sumDistinct: user_aggregated_fields
-  min: user_aggregated_fields
-  max: user_aggregated_fields
-}
-
-type user_aggregated_count {
-  id: Int
-  status: Int
-  name: Int
-  posts: Int
-}
-
-type user_aggregated_fields {
-  id: Float
-}
-
-input user_filter {
-  id: number_filter_operators
-  status: string_filter_operators
-  name: string_filter_operators
-  posts: user_post_quantifier_filter
-  posts_func: count_function_filter_operators
-  _and: [user_filter]
-  _or: [user_filter]
-}
-
-type user_mutated {
-  key: ID!
-  event: EventEnum
-  data: user
-}
-
-type user_post {
-  id: ID!
-  user_id(filter: user_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): user
-  post_id(filter: post_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): post
-}
-
-type user_post_aggregated {
-  group: JSON
-  countAll: Int
-  count: user_post_aggregated_count
-  countDistinct: user_post_aggregated_count
-  avg: user_post_aggregated_fields
-  sum: user_post_aggregated_fields
-  avgDistinct: user_post_aggregated_fields
-  sumDistinct: user_post_aggregated_fields
-  min: user_post_aggregated_fields
-  max: user_post_aggregated_fields
-}
-
-type user_post_aggregated_count {
-  id: Int
-  user_id: Int
-  post_id: Int
-}
-
-type user_post_aggregated_fields {
-  id: Float
-  user_id: Float
-  post_id: Float
-}
-
-input user_post_filter {
-  id: number_filter_operators
-  user_id: user_filter
-  post_id: post_filter
-  _and: [user_post_filter]
-  _or: [user_post_filter]
-}
-
-type user_post_mutated {
-  key: ID!
-  event: EventEnum
-  data: user_post
-}
-
-input user_post_quantifier_filter {
-  id: number_filter_operators
-  user_id: user_filter
-  post_id: post_filter
-  _and: [user_post_filter]
-  _or: [user_post_filter]
-  _some: user_post_filter
-  _none: user_post_filter
 }
 
 type users {
@@ -1921,13 +1692,6 @@ type version_payments {
   paid_at: Date
 }
 
-type version_post {
-  id: ID
-  date_created: Date
-  date_updated: Date
-  content: String
-}
-
 type version_products {
   id: ID
   name: String
@@ -1937,19 +1701,6 @@ type version_products {
   category_id: JSON
   created_at: Date
   updated_at: Date
-}
-
-type version_user {
-  id: ID
-  status: String
-  name: String
-  posts: JSON
-}
-
-type version_user_post {
-  id: ID
-  user_id: JSON
-  post_id: JSON
 }
 
 type version_users {
