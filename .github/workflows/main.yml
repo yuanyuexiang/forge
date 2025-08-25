@@ -108,36 +108,36 @@ jobs:
 
       - name: 配置SSH Key
         run: |
-          # 安装必要工具
-          apk add --no-cache openssh-client dos2unix
-          
           # 创建 SSH 配置和密钥
           mkdir -p /root/.ssh
           echo "${{ vars.SSH_PRIVATE_KEY }}" > /root/.ssh/id_rsa
           chmod 600 /root/.ssh/id_rsa
           dos2unix /root/.ssh/id_rsa
-          
+
           ssh-keygen -l -f /root/.ssh/id_rsa
 
           echo "
           Host remote-docker
-              HostName ${{ vars.REMOTE_HOST }}
+              HostName 117.72.204.201
               User root
               IdentityFile /root/.ssh/id_rsa
               StrictHostKeyChecking=no
           " > /root/.ssh/config
 
           # 添加远程主机到 known_hosts
-          ssh-keyscan -H ${{ vars.REMOTE_HOST }} >> /root/.ssh/known_hosts
+          ssh-keyscan -H 117.72.204.201 >> /root/.ssh/known_hosts
 
           echo "静态解析主机名"
            # 静态解析主机名
-          echo "${{ vars.REMOTE_HOST }} remote-docker" >> /etc/hosts
+          echo "117.72.204.201 remote-docker" >> /etc/hosts
 
           ssh-keygen -y -f /root/.ssh/id_rsa
 
           # 添加远程主机到 known_hosts
-          ssh-keyscan -H ${{ vars.REMOTE_HOST }} >> /root/.ssh/known_hosts
+          ssh-keyscan -H 117.72.204.201 >> /root/.ssh/known_hosts
+
+          # 测试 SSH
+          ssh -vvv -o StrictHostKeyChecking=no root@117.72.204.201 echo "SSH connection successful"
 
           # 创建 Docker Context
           docker context create remote --docker "host=ssh://remote-docker"
