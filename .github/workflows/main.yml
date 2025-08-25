@@ -116,13 +116,13 @@ jobs:
           echo "${{ vars.SSH_PRIVATE_KEY }}" > /root/.ssh/id_rsa
           chmod 600 /root/.ssh/id_rsa
           dos2unix /root/.ssh/id_rsa
-          echo "~~~~~~~~~~~~~~~~successful~~~~~~~~~~~~~~~~~~~~~~~"
+          
           ssh-keygen -l -f /root/.ssh/id_rsa
 
           echo "
           Host remote-docker
               HostName ${{ vars.REMOTE_HOST }}
-              User ${{ vars.REMOTE_USER }}
+              User root
               IdentityFile /root/.ssh/id_rsa
               StrictHostKeyChecking=no
           " > /root/.ssh/config
