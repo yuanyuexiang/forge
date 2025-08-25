@@ -143,19 +143,29 @@ function ProductsContent() {
     try {
       const values = await form.validateFields();
       
+      // 转换 category_id 格式以符合 GraphQL schema
+      const transformedValues = {
+        ...values,
+        category_id: values.category_id ? { id: values.category_id } : undefined
+      };
+      
+      // 调试日志
+      console.log('Original form values:', values);
+      console.log('Transformed values:', transformedValues);
+      
       if (editingProduct) {
         // 更新产品
         await updateProduct({
           variables: {
             id: editingProduct.id,
-            data: values
+            data: transformedValues
           }
         });
       } else {
         // 创建产品
         await createProduct({
           variables: {
-            data: values
+            data: transformedValues
           }
         });
       }

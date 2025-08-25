@@ -1,17 +1,7 @@
 import { ApolloClient, InMemoryCache, HttpLink, from } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
-
-// 根据环境配置GraphQL端点
-const getGraphQLEndpoint = () => {
-  // 在开发环境使用本地代理避免CORS
-  if (process.env.NODE_ENV === 'development') {
-    return '/api/graphql';
-  }
-  
-  // 生产环境可以直接连接（如果CORS配置正确）
-  // 或者使用环境变量配置的端点
-  return process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || '/api/graphql';
-};
+import { onError } from '@apollo/client/link/error';
+import { getApiConfig } from './api-config';
 
 // 创建认证链接
 const authLink = setContext((_, { headers }) => {
@@ -26,22 +16,86 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-// 创建 HTTP 链接
-const httpLink = new HttpLink({ 
-  uri: getGraphQLEndpoint()
-});
+// 创建错误处理链接
+const errorLink = onError(({ graphQLErrors, networkError }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) => {
+      console.error(
+        `GraphQL error: Message: ${message}, Location: ${locations}, Path: ${path}`
+      );
+    });
+  }
 
-const client = new ApolloClient({
-  link: from([authLink, httpLink]),
-  cache: new InMemoryCache(),
-  defaultOptions: {
-    watchQuery: {
-      errorPolicy: 'all'
-    },
-    query: {
-      errorPolicy: 'all'
+  if (networkError) {
+    console.error(`Network error: ${networkError}`);
+    
+    // 如果是401错误，清除token并重定向到登录页
+    if ('statusCode' in networkError && networkError.statusCode === 401) {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('authToken');
+        window.location.href = '/login';
+      }
     }
   }
 });
 
+// 创建 Apollo Client
+const createApolloClient = () => {
+  const config = getApiConfig();
+  
+  // 创建 HTTP 链接
+  const httpLink = new HttpLink({ 
+    uri: config.endpoint,
+    fetchOptions: {
+      timeout: config.timeout || 30000
+    }
+  });
+
+  // 组合所有链接
+  const link = from([
+    errorLink,
+    authLink,
+    httpLink
+  ]);
+
+  return new ApolloClient({
+    link,
+    cache: new InMemoryCache({
+      typePolicies: {
+        // 可以在这里定义缓存策略
+        Query: {
+          fields: {
+            // 例如：为分页查询定义合并策略
+          }
+        }
+      }
+    }),
+    defaultOptions: {
+      watchQuery: {
+        errorPolicy: 'all',
+        notifyOnNetworkStatusChange: true
+      },
+      query: {
+        errorPolicy: 'all'
+      },
+      mutate: {
+        errorPolicy: 'all'
+      }
+    },
+    // 开发环境配置
+    devtools: {
+      enabled: process.env.NODE_ENV === 'development'
+    }
+  });
+};
+
+// 创建单例客户端实例
+const client = createApolloClient();
+
 export default client;
+
+// 导出重新创建客户端的函数（用于配置更新时）
+export const recreateApolloClient = () => {
+  const newClient = createApolloClient();
+  return newClient;
+};
