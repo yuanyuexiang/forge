@@ -13,8 +13,3 @@ services:
       - "traefik.http.routers.forge.tls=true"
       - "traefik.http.routers.forge.tls.certresolver=aliyunresolver"
       - "traefik.http.services.forge.loadbalancer.server.port=3000"
-  
-networks:
-  matrix-network:
-    driver: bridge
-    name: matrix-network
