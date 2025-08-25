@@ -1,0 +1,76 @@
+# 产品相关的GraphQL操作
+
+# 查询所有产品
+query GetProducts {
+  products {
+    id
+    name
+    description
+    price
+    stock
+    category_id {
+      id
+      name
+    }
+    created_at
+    updated_at
+  }
+}
+
+# 根据ID查询产品
+query GetProductById($id: ID!) {
+  products_by_id(id: $id) {
+    id
+    name
+    description
+    price
+    stock
+    category_id {
+      id
+      name
+    }
+    created_at
+    updated_at
+  }
+}
+
+# 创建产品
+mutation CreateProduct($data: create_products_input!) {
+  create_products_item(data: $data) {
+    id
+    name
+    description
+    price
+    stock
+    category_id {
+      id
+      name
+    }
+    created_at
+    updated_at
+  }
+}
+
+# 更新产品
+mutation UpdateProduct($id: ID!, $data: update_products_input!) {
+  update_products_item(id: $id, data: $data) {
+    id
+    name
+    description
+    price
+    stock
+    category_id {
+      id
+      name
+    }
+    created_at
+    updated_at
+  }
+}
+
+# 删除产品
+mutation DeleteProduct($id: ID!) {
+  delete_products_item(id: $id) {
+    id
+  }
+}

@@ -6,7 +6,7 @@ query LoginUser($email: String!, $password: String!) {
   }
 }
 
-query GetCurrentUser($id: ID!) {
+query GetUserById($id: ID!) {
   users_by_id(id: $id) {
     id
     name

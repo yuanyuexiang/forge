@@ -1,0 +1,52 @@
+# 分类相关的GraphQL操作
+
+# 查询所有分类
+query GetCategories {
+  categories {
+    id
+    name
+    description
+    created_at
+    updated_at
+  }
+}
+
+# 根据ID查询分类
+query GetCategoryById($id: ID!) {
+  categories_by_id(id: $id) {
+    id
+    name
+    description
+    created_at
+    updated_at
+  }
+}
+
+# 创建分类
+mutation CreateCategory($data: create_categories_input!) {
+  create_categories_item(data: $data) {
+    id
+    name
+    description
+    created_at
+    updated_at
+  }
+}
+
+# 更新分类
+mutation UpdateCategory($id: ID!, $data: update_categories_input!) {
+  update_categories_item(id: $id, data: $data) {
+    id
+    name
+    description
+    created_at
+    updated_at
+  }
+}
+
+# 删除分类
+mutation DeleteCategory($id: ID!) {
+  delete_categories_item(id: $id) {
+    id
+  }
+}

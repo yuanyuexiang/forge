@@ -1,11 +1,22 @@
 import { ApolloClient, InMemoryCache, HttpLink, from } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
-import { getApiConfig } from './api-config';
+
+// 根据环境配置GraphQL端点
+const getGraphQLEndpoint = () => {
+  // 在开发环境使用本地代理避免CORS
+  if (process.env.NODE_ENV === 'development') {
+    return '/api/graphql';
+  }
+  
+  // 生产环境可以直接连接（如果CORS配置正确）
+  // 或者使用环境变量配置的端点
+  return process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT || '/api/graphql';
+};
 
 // 创建认证链接
 const authLink = setContext((_, { headers }) => {
-  const config = getApiConfig();
-  const token = config.authToken;
+  // 从localStorage获取token
+  const token = typeof window !== 'undefined' ? localStorage.getItem('authToken') : null;
   
   return {
     headers: {
@@ -17,7 +28,7 @@ const authLink = setContext((_, { headers }) => {
 
 // 创建 HTTP 链接
 const httpLink = new HttpLink({ 
-  uri: () => getApiConfig().endpoint
+  uri: getGraphQLEndpoint()
 });
 
 const client = new ApolloClient({
