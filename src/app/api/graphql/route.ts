@@ -68,8 +68,9 @@ export async function POST(request: NextRequest) {
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+        'Access-Control-Max-Age': '86400', // 24小时缓存预检请求
       },
     });
 
@@ -92,8 +93,45 @@ export async function OPTIONS() {
     status: 200,
     headers: {
       'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+      'Access-Control-Max-Age': '86400', // 24小时缓存预检请求
     },
   });
+}
+
+// 添加 GET 方法支持（用于简单查询）
+export async function GET(request: NextRequest) {
+  const url = new URL(request.url);
+  const query = url.searchParams.get('query');
+  const variables = url.searchParams.get('variables');
+  
+  if (!query) {
+    return NextResponse.json(
+      { errors: [{ message: 'Query parameter is required' }] },
+      { 
+        status: 400,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+        }
+      }
+    );
+  }
+
+  // 构造 GraphQL 请求体
+  const body = JSON.stringify({
+    query,
+    variables: variables ? JSON.parse(variables) : {},
+  });
+
+  // 重用 POST 方法的逻辑
+  const modifiedRequest = new NextRequest(request.url, {
+    method: 'POST',
+    headers: request.headers,
+    body,
+  });
+
+  return POST(modifiedRequest);
 }

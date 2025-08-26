@@ -102,9 +102,9 @@ export const getApiConfig = (): ApiConfig => {
       }
     }
     
-    // 根据环境选择基础配置
+    // 根据环境选择基础配置 - 生产环境也使用代理避免CORS问题
     const environment = getCurrentEnvironment();
-    const baseConfig = environment === 'production' ? directApiConfig : defaultApiConfig;
+    const baseConfig = defaultApiConfig; // 总是使用代理配置
     
     // 合并所有配置：基础配置 < 环境变量 < 用户配置
     const finalConfig = mergeConfigs(baseConfig, envConfig, userConfig);

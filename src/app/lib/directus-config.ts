@@ -11,12 +11,12 @@ export const DIRECTUS_CONFIG = {
   BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
 };
 
-// GraphQL 查询辅助函数
+// GraphQL 查询辅助函数（客户端使用，通过代理）
 export async function executeGraphQLQuery(
   query: string, 
   variables: any = {}, 
   authToken?: string,
-  useProxy: boolean = false  // 暂时禁用代理，直接使用Directus端点
+  useProxy: boolean = true  // 默认使用代理，避免CORS问题
 ) {
   const url = useProxy 
     ? `${DIRECTUS_CONFIG.BASE_URL}${DIRECTUS_CONFIG.LOCAL_GRAPHQL_PROXY}`
@@ -45,6 +45,44 @@ export async function executeGraphQLQuery(
     return result.data;
   } catch (error) {
     console.error('GraphQL 请求失败:', error);
+    throw error;
+  }
+}
+
+// 服务器端 GraphQL 查询辅助函数（直接连接，不通过代理）
+export async function executeServerSideGraphQLQuery(
+  query: string, 
+  variables: any = {}, 
+  authToken?: string,
+  useSystemEndpoint: boolean = false
+) {
+  const url = useSystemEndpoint 
+    ? DIRECTUS_CONFIG.GRAPHQL_SYSTEM_URL 
+    : DIRECTUS_CONFIG.GRAPHQL_URL;
+
+  try {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(authToken && { 'Authorization': `Bearer ${authToken}` }),
+      },
+      body: JSON.stringify({
+        query,
+        variables,
+      }),
+    });
+
+    const result = await response.json();
+    
+    if (result.errors) {
+      console.error('服务器端 GraphQL 错误:', result.errors);
+      throw new Error(result.errors[0]?.message || 'GraphQL 查询失败');
+    }
+    
+    return result.data;
+  } catch (error) {
+    console.error('服务器端 GraphQL 请求失败:', error);
     throw error;
   }
 }
