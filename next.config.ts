@@ -16,6 +16,10 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  // 抑制 React 版本兼容性警告
+  experimental: {
+    reactCompiler: false,
+  },
 };
 
 export default nextConfig;

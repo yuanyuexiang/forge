@@ -351,7 +351,7 @@ const PaymentsContentGraphQL: React.FC = () => {
       </div>
 
       {/* 支付表格 */}
-      <Card>
+      <Card style={{ minHeight: 'calc(100vh - 280px)' }}>
         <Table
           columns={columns}
           dataSource={filteredPayments}
@@ -362,7 +362,11 @@ const PaymentsContentGraphQL: React.FC = () => {
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total) => `共 ${total} 条支付记录`,
+            size: 'default',
+            position: ['bottomCenter']
           }}
+          scroll={{ y: 'calc(100vh - 420px)' }}
+          size="middle"
         />
       </Card>
 

@@ -292,7 +292,7 @@ const OrdersContentGraphQL: React.FC = () => {
       </div>
 
       {/* 订单表格 */}
-      <Card>
+      <Card style={{ minHeight: 'calc(100vh - 280px)' }}>
         <Table
           columns={columns}
           dataSource={filteredOrders}
@@ -303,7 +303,11 @@ const OrdersContentGraphQL: React.FC = () => {
             showSizeChanger: true,
             showQuickJumper: true,
             showTotal: (total) => `共 ${total} 条订单`,
+            size: 'default',
+            position: ['bottomCenter']
           }}
+          scroll={{ y: 'calc(100vh - 420px)' }}
+          size="middle"
         />
       </Card>
 

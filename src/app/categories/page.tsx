@@ -198,7 +198,7 @@ function CategoriesContent() {
   ];
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white min-h-full">
       <div className="mb-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold">分类管理</h1>
         <Button
@@ -220,18 +220,24 @@ function CategoriesContent() {
         />
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={filteredCategories}
-        rowKey="id"
-        loading={loading}
-        pagination={{
-          pageSize: 10,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条记录`,
-        }}
-      />
+      <div style={{ background: '#fff', minHeight: 'calc(100vh - 280px)' }}>
+        <Table
+          columns={columns}
+          dataSource={filteredCategories}
+          rowKey="id"
+          loading={loading}
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total) => `共 ${total} 条记录`,
+            size: 'default',
+            position: ['bottomCenter']
+          }}
+          scroll={{ y: 'calc(100vh - 380px)' }}
+          size="middle"
+        />
+      </div>
 
       <Modal
         title={editingCategory ? '编辑分类' : '新增分类'}

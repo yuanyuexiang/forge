@@ -73,9 +73,9 @@ function DashboardContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500 mb-1">总订单数</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <div className="text-3xl font-bold text-gray-900">
                 {loading ? <Spin size="small" /> : statsData.totalOrders.toLocaleString()}
-              </p>
+              </div>
               <p className="text-sm text-green-600 mt-1">
                 <span className="inline-block mr-1">↗</span>
                 较昨日 +12%
@@ -91,9 +91,9 @@ function DashboardContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500 mb-1">商品总数</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <div className="text-3xl font-bold text-gray-900">
                 {loading ? <Spin size="small" /> : statsData.totalProducts.toLocaleString()}
-              </p>
+              </div>
               <p className="text-sm text-blue-600 mt-1">
                 <span className="inline-block mr-1">↗</span>
                 较昨日 +3%
@@ -109,9 +109,9 @@ function DashboardContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500 mb-1">用户总数</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <div className="text-3xl font-bold text-gray-900">
                 {loading ? <Spin size="small" /> : statsData.totalUsers.toLocaleString()}
-              </p>
+              </div>
               <p className="text-sm text-orange-600 mt-1">
                 <span className="inline-block mr-1">↗</span>
                 较昨日 +8%
@@ -127,9 +127,9 @@ function DashboardContent() {
           <div className="flex items-center justify-between">
             <div>
               <p className="text-sm text-gray-500 mb-1">今日销售额</p>
-              <p className="text-3xl font-bold text-gray-900">
+              <div className="text-3xl font-bold text-gray-900">
                 {loading ? <Spin size="small" /> : `¥${(statsData.totalOrders * 89).toLocaleString()}`}
-              </p>
+              </div>
               <p className="text-sm text-purple-600 mt-1">
                 <span className="inline-block mr-1">↗</span>
                 较昨日 +15%

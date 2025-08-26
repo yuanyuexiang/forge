@@ -11,7 +11,8 @@ import {
   Select, 
   Space, 
   message, 
-  Popconfirm
+  Popconfirm,
+  Typography
 } from 'antd';
 import { 
   PlusOutlined, 
@@ -31,6 +32,7 @@ import {
 
 const { Search } = Input;
 const { Option } = Select;
+const { Title } = Typography;
 
 // 使用生成的类型
 type Product = GetProductsQuery['products'][0];
@@ -232,11 +234,11 @@ function ProductsContent() {
   ];
 
   return (
-    <div className="p-6">
-      <div className="mb-4 flex justify-between items-center">
-        <h1 className="text-2xl font-bold">商品管理</h1>
-        <Button
-          type="primary"
+    <div className="p-6 bg-white min-h-full">
+      <div className="mb-6 flex justify-between items-center">
+        <Title level={2} className="mb-0">商品管理</Title>
+        <Button 
+          type="primary" 
           icon={<PlusOutlined />}
           onClick={() => openModal()}
         >
@@ -246,7 +248,7 @@ function ProductsContent() {
 
       <div className="mb-4">
         <Search
-          placeholder="搜索商品名称或分类"
+          placeholder="搜索商品名称"
           allowClear
           style={{ width: 300 }}
           onSearch={setSearchText}
@@ -254,18 +256,24 @@ function ProductsContent() {
         />
       </div>
 
-      <Table
-        columns={columns}
-        dataSource={filteredProducts}
-        rowKey="id"
-        loading={loading}
-        pagination={{
-          pageSize: 10,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条记录`,
-        }}
-      />
+      <div style={{ background: '#fff', minHeight: 'calc(100vh - 280px)' }}>
+        <Table
+          columns={columns}
+          dataSource={filteredProducts}
+          rowKey="id"
+          loading={loading}
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total) => `共 ${total} 条记录`,
+            size: 'default',
+            position: ['bottomCenter']
+          }}
+          scroll={{ y: 'calc(100vh - 380px)' }}
+          size="middle"
+        />
+      </div>
 
       <Modal
         title={editingProduct ? '编辑商品' : '新增商品'}
