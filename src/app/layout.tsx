@@ -16,8 +16,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "电商管理后台",
-  description: "现代化电商平台管理系统",
+  title: "服装店管理后台",
+  description: "现代化服装店管理系统",
 };
 
 export default function RootLayout({

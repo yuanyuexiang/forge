@@ -42,8 +42,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <Card className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Title level={2}>电商管理后台</Title>
-          <p className="text-gray-600">请登录您的 Directus 账户</p>
+          <Title level={2}>服装店管理后台</Title>
+          <p className="text-gray-600">请登录您的管理员账户</p>
         </div>
         
         <Form
@@ -91,7 +91,7 @@ export default function LoginPage() {
         </Form>
         
         <div className="text-center text-sm text-gray-500">
-          <p>请使用您的 Directus 账户登录</p>
+          <p>请使用您的管理员账户登录</p>
         </div>
         </Card>
     </div>
