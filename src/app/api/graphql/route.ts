@@ -9,17 +9,19 @@ export async function POST(request: NextRequest) {
     // 复制相关的头部信息
     headers.set('Content-Type', 'application/json');
     
-    // 如果有认证头，传递给 Directus
+    // 如果有认证头，传递给目标服务器
     const authHeader = request.headers.get('authorization');
     if (authHeader) {
       headers.set('Authorization', authHeader);
     }
 
-    console.log('GraphQL Proxy - Forwarding request to Directus');
+    // 使用配置中的 GraphQL URL
+    const targetUrl = DIRECTUS_CONFIG.GRAPHQL_URL;
+    console.log('GraphQL Proxy - Forwarding request to:', targetUrl);
     console.log('GraphQL Proxy - Request preview:', body.substring(0, 200) + '...');
     console.log('GraphQL Proxy - Has auth:', !!authHeader);
 
-    const response = await fetch(DIRECTUS_CONFIG.GRAPHQL_URL, {
+    const response = await fetch(targetUrl, {
       method: 'POST',
       headers,
       body,

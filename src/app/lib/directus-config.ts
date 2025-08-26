@@ -1,14 +1,24 @@
-// Directus API 配置
+// Directus API 配置 - 简化版本，基于域名自动检测
+const getDirectusUrl = () => {
+  // 如果在浏览器环境且域名包含 forge，说明是同域部署
+  if (typeof window !== 'undefined' && window.location.host.includes('forge')) {
+    return window.location.origin;
+  }
+  
+  // 默认使用 Directus 
+  return 'https://directus.matrix-net.tech';
+};
+
 export const DIRECTUS_CONFIG = {
-  // GraphQL 端点
-  GRAPHQL_URL: 'https://directus.matrix-net.tech/graphql',
-  GRAPHQL_SYSTEM_URL: 'https://directus.matrix-net.tech/graphql/system',
+  // GraphQL 端点 - 自动检测
+  GRAPHQL_URL: `${getDirectusUrl()}/graphql`,
+  GRAPHQL_SYSTEM_URL: `${getDirectusUrl()}/graphql/system`,
   
   // 本地代理端点
   LOCAL_GRAPHQL_PROXY: '/api/graphql',
   
   // 基础配置
-  BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+  BASE_URL: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
 };
 
 // GraphQL 查询辅助函数（客户端使用，通过代理）

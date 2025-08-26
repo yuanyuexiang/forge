@@ -19,37 +19,65 @@ class ApiConfigError extends Error {
   }
 }
 
-// 从环境变量获取配置
-const getEnvConfig = (): Partial<ApiConfig> => {
-  if (typeof window !== 'undefined') {
-    return {}; // 客户端不使用环境变量
-  }
-  
-  return {
-    endpoint: process.env.NEXT_PUBLIC_GRAPHQL_ENDPOINT,
-    timeout: process.env.NEXT_PUBLIC_API_TIMEOUT ? parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT) : undefined,
-    retryCount: process.env.NEXT_PUBLIC_API_RETRY_COUNT ? parseInt(process.env.NEXT_PUBLIC_API_RETRY_COUNT) : undefined,
-  };
-};
-
 // 获取当前环境
 const getCurrentEnvironment = (): Environment => {
   return (process.env.NODE_ENV as Environment) || 'development';
 };
 
-// 默认配置
-export const defaultApiConfig: ApiConfig = {
-  endpoint: "/api/graphql", // 使用本地代理端点避免 CORS
-  requiresAuth: true,
-  authToken: undefined,
-  useProxy: true,
-  timeout: 30000, // 30秒超时
-  retryCount: 3
+// 智能端点检测 - 基于当前域名和环境自动判断
+const getSmartEndpoint = (): { endpoint: string; useProxy: boolean } => {
+  const environment = getCurrentEnvironment();
+  
+  if (environment === 'development') {
+    // 开发环境：总是使用代理避免 CORS
+    return {
+      endpoint: '/api/graphql',
+      useProxy: true
+    };
+  }
+  
+  // 生产环境：检测当前域名
+  if (typeof window !== 'undefined') {
+    const currentHost = window.location.host;
+    
+    // 如果当前域名包含 forge，说明前后端同域，直接访问 /graphql
+    if (currentHost.includes('forge')) {
+      return {
+        endpoint: '/graphql',
+        useProxy: false
+      };
+    }
+  }
+  
+  // 服务器端渲染或其他情况，使用代理保证兼容性
+  return {
+    endpoint: '/api/graphql',
+    useProxy: true
+  };
 };
 
-// 直连配置（生产环境或用户直接连接）
+// 创建默认配置
+const createDefaultConfig = (): ApiConfig => {
+  const { endpoint, useProxy } = getSmartEndpoint();
+  
+  return {
+    endpoint,
+    requiresAuth: true,
+    authToken: undefined,
+    useProxy,
+    timeout: 30000, // 30秒超时
+    retryCount: 3
+  };
+};
+
+// 导出默认配置
+export const defaultApiConfig: ApiConfig = createDefaultConfig();
+
+// 直连配置（强制不使用代理）
 export const directApiConfig: ApiConfig = {
-  endpoint: "https://directus.matrix-net.tech/graphql",
+  endpoint: typeof window !== 'undefined' && window.location.host.includes('forge') 
+    ? '/graphql' 
+    : 'https://directus.matrix-net.tech/graphql',
   requiresAuth: true,
   authToken: undefined,
   useProxy: false,
@@ -85,7 +113,6 @@ const mergeConfigs = (...configs: Partial<ApiConfig>[]): ApiConfig => {
 // 获取 API 配置
 export const getApiConfig = (): ApiConfig => {
   try {
-    const envConfig = getEnvConfig();
     let userConfig: Partial<ApiConfig> = {};
     
     // 只在客户端读取 localStorage
@@ -102,17 +129,16 @@ export const getApiConfig = (): ApiConfig => {
       }
     }
     
-    // 根据环境选择基础配置 - 生产环境也使用代理避免CORS问题
-    const environment = getCurrentEnvironment();
-    const baseConfig = defaultApiConfig; // 总是使用代理配置
+    // 基础配置使用智能检测的默认配置
+    const baseConfig = createDefaultConfig();
     
-    // 合并所有配置：基础配置 < 环境变量 < 用户配置
-    const finalConfig = mergeConfigs(baseConfig, envConfig, userConfig);
+    // 合并配置：基础配置 < 用户配置
+    const finalConfig = mergeConfigs(baseConfig, userConfig);
     
     return finalConfig;
   } catch (error) {
     console.error('Error getting API config:', error);
-    return defaultApiConfig;
+    return createDefaultConfig();
   }
 };
 
@@ -157,3 +183,7 @@ export const isApiConfigValid = (config?: ApiConfig): boolean => {
     return false;
   }
 };
+
+// 导出类型
+export type { ApiConfig, Environment };
+export { ApiConfigError };
