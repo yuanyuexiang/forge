@@ -234,7 +234,7 @@ function ProductsContent() {
   ];
 
   return (
-    <div className="p-6 bg-white min-h-full">
+    <div className="p-6 bg-white">
       <div className="mb-6 flex justify-between items-center">
         <Title level={2} className="mb-0">商品管理</Title>
         <Button 
@@ -270,7 +270,7 @@ function ProductsContent() {
             size: 'default',
             position: ['bottomCenter']
           }}
-          scroll={{ y: 'calc(100vh - 420px)' }}
+          scroll={{ y: 'calc(100vh - 320px)' }}
           size="middle"
         />
       </div>

@@ -281,7 +281,7 @@ function PaymentsContent() {
   ];
 
   return (
-    <div className="p-6 bg-white min-h-full">
+    <div className="p-6 bg-white">
       {/* 统计卡片 */}
       <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={6}>
@@ -353,24 +353,22 @@ function PaymentsContent() {
       </div>
 
       {/* 支付表格 */}
-      <div style={{ background: '#fff', minHeight: 'calc(100vh - 280px)' }}>
-        <Table
-          columns={columns}
-          dataSource={filteredPayments}
-          rowKey="id"
-          loading={loading}
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共 ${total} 条支付记录`,
-            size: 'default',
-            position: ['bottomCenter']
-          }}
-          scroll={{ y: 'calc(100vh - 420px)' }}
-          size="middle"
-        />
-      </div>
+      <Table
+        columns={columns}
+        dataSource={filteredPayments}
+        rowKey="id"
+        loading={loading}
+        pagination={{
+          pageSize: 10,
+          showSizeChanger: true,
+          showQuickJumper: true,
+          showTotal: (total) => `共 ${total} 条支付记录`,
+          size: 'default',
+          position: ['bottomCenter']
+        }}
+        scroll={{ y: 'calc(100vh - 420px)' }}
+        size="middle"
+      />
 
       {/* 支付详情弹窗 */}
       <Modal

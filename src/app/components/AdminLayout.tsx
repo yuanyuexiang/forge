@@ -138,7 +138,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </Dropdown>
         </Header>
         
-        <Content className="bg-gray-50 min-h-screen">
+        <Content className="bg-gray-50">
           {children}
         </Content>
       </Layout>
