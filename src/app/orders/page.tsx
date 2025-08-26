@@ -2,7 +2,7 @@
 
 import { useAuth } from '../providers/AuthProvider';
 import AdminLayout from '../components/AdminLayout';
-import OrdersContent from '../components/OrdersContent';
+import OrdersContentGraphQL from '../components/OrdersContentGraphQL';
 
 export default function OrdersPage() {
   const { user } = useAuth();
@@ -13,7 +13,7 @@ export default function OrdersPage() {
 
   return (
     <AdminLayout>
-      <OrdersContent />
+      <OrdersContentGraphQL />
     </AdminLayout>
   );
 }

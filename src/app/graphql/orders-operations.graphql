@@ -1,0 +1,98 @@
+# 订单相关的GraphQL操作
+
+# 查询所有订单
+query GetOrders {
+  orders {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
+    created_at
+    updated_at
+  }
+}
+
+# 根据ID查询订单
+query GetOrderById($id: ID!) {
+  orders_by_id(id: $id) {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
+    created_at
+    updated_at
+  }
+}
+
+# 查询订单项
+query GetOrderItems($orderId: GraphQLStringOrFloat!) {
+  order_items(filter: { order_id: { id: { _eq: $orderId } } }) {
+    id
+    order_id {
+      id
+    }
+    product_id {
+      id
+      name
+      description
+    }
+    quantity
+    price
+  }
+}
+
+# 创建订单
+mutation CreateOrder($data: create_orders_input!) {
+  create_orders_item(data: $data) {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
+    created_at
+    updated_at
+  }
+}
+
+# 更新订单
+mutation UpdateOrder($id: ID!, $data: update_orders_input!) {
+  update_orders_item(id: $id, data: $data) {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
+    created_at
+    updated_at
+  }
+}
+
+# 删除订单
+mutation DeleteOrder($id: ID!) {
+  delete_orders_item(id: $id) {
+    id
+  }
+}
+
+# 更新订单状态
+mutation UpdateOrderStatus($id: ID!, $status: String!) {
+  update_orders_item(id: $id, data: { status: $status }) {
+    id
+    status
+    updated_at
+  }
+}

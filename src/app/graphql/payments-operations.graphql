@@ -1,0 +1,122 @@
+# 支付相关的GraphQL操作
+
+# 查询所有支付记录
+query GetPayments {
+  payments {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+
+# 根据ID查询支付记录
+query GetPaymentById($id: ID!) {
+  payments_by_id(id: $id) {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+
+# 根据订单ID查询支付记录
+query GetPaymentsByOrderId($orderId: GraphQLStringOrFloat!) {
+  payments(filter: { order_id: { id: { _eq: $orderId } } }) {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+
+# 创建支付记录
+mutation CreatePayment($data: create_payments_input!) {
+  create_payments_item(data: $data) {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+
+# 更新支付记录
+mutation UpdatePayment($id: ID!, $data: update_payments_input!) {
+  update_payments_item(id: $id, data: $data) {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+
+# 删除支付记录
+mutation DeletePayment($id: ID!) {
+  delete_payments_item(id: $id) {
+    id
+  }
+}
+
+# 更新支付状态
+mutation UpdatePaymentStatus($id: ID!, $status: String!) {
+  update_payments_item(id: $id, data: { status: $status }) {
+    id
+    status
+    paid_at
+  }
+}

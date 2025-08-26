@@ -3097,6 +3097,104 @@ export type GetRecentProductsQueryVariables = Exact<{
 
 export type GetRecentProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, price: number, stock?: number | null, created_at?: any | null }> };
 
+export type GetOrdersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, created_at?: any | null, updated_at?: any | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null }> };
+
+export type GetOrderByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetOrderByIdQuery = { __typename?: 'Query', orders_by_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, created_at?: any | null, updated_at?: any | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null } | null };
+
+export type GetOrderItemsQueryVariables = Exact<{
+  orderId: Scalars['GraphQLStringOrFloat']['input'];
+}>;
+
+
+export type GetOrderItemsQuery = { __typename?: 'Query', order_items: Array<{ __typename?: 'order_items', id: string, quantity?: number | null, price?: number | null, order_id?: { __typename?: 'orders', id: string } | null, product_id?: { __typename?: 'products', id: string, name: string, description?: string | null } | null }> };
+
+export type CreateOrderMutationVariables = Exact<{
+  data: Create_Orders_Input;
+}>;
+
+
+export type CreateOrderMutation = { __typename?: 'Mutation', create_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, created_at?: any | null, updated_at?: any | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null } | null };
+
+export type UpdateOrderMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: Update_Orders_Input;
+}>;
+
+
+export type UpdateOrderMutation = { __typename?: 'Mutation', update_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, created_at?: any | null, updated_at?: any | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null } | null };
+
+export type DeleteOrderMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteOrderMutation = { __typename?: 'Mutation', delete_orders_item?: { __typename?: 'delete_one', id: string } | null };
+
+export type UpdateOrderStatusMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  status: Scalars['String']['input'];
+}>;
+
+
+export type UpdateOrderStatusMutation = { __typename?: 'Mutation', update_orders_item?: { __typename?: 'orders', id: string, status?: string | null, updated_at?: any | null } | null };
+
+export type GetPaymentsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetPaymentsQuery = { __typename?: 'Query', payments: Array<{ __typename?: 'payments', id: string, payment_method?: string | null, amount?: number | null, status?: string | null, paid_at?: any | null, order_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null } | null }> };
+
+export type GetPaymentByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetPaymentByIdQuery = { __typename?: 'Query', payments_by_id?: { __typename?: 'payments', id: string, payment_method?: string | null, amount?: number | null, status?: string | null, paid_at?: any | null, order_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null } | null } | null };
+
+export type GetPaymentsByOrderIdQueryVariables = Exact<{
+  orderId: Scalars['GraphQLStringOrFloat']['input'];
+}>;
+
+
+export type GetPaymentsByOrderIdQuery = { __typename?: 'Query', payments: Array<{ __typename?: 'payments', id: string, payment_method?: string | null, amount?: number | null, status?: string | null, paid_at?: any | null, order_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null } | null }> };
+
+export type CreatePaymentMutationVariables = Exact<{
+  data: Create_Payments_Input;
+}>;
+
+
+export type CreatePaymentMutation = { __typename?: 'Mutation', create_payments_item?: { __typename?: 'payments', id: string, payment_method?: string | null, amount?: number | null, status?: string | null, paid_at?: any | null, order_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null } | null } | null };
+
+export type UpdatePaymentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: Update_Payments_Input;
+}>;
+
+
+export type UpdatePaymentMutation = { __typename?: 'Mutation', update_payments_item?: { __typename?: 'payments', id: string, payment_method?: string | null, amount?: number | null, status?: string | null, paid_at?: any | null, order_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null } | null } | null };
+
+export type DeletePaymentMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeletePaymentMutation = { __typename?: 'Mutation', delete_payments_item?: { __typename?: 'delete_one', id: string } | null };
+
+export type UpdatePaymentStatusMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  status: Scalars['String']['input'];
+}>;
+
+
+export type UpdatePaymentStatusMutation = { __typename?: 'Mutation', update_payments_item?: { __typename?: 'payments', id: string, status?: string | null, paid_at?: any | null } | null };
+
 export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3605,6 +3703,632 @@ export type GetRecentProductsQueryHookResult = ReturnType<typeof useGetRecentPro
 export type GetRecentProductsLazyQueryHookResult = ReturnType<typeof useGetRecentProductsLazyQuery>;
 export type GetRecentProductsSuspenseQueryHookResult = ReturnType<typeof useGetRecentProductsSuspenseQuery>;
 export type GetRecentProductsQueryResult = ApolloReactCommon.QueryResult<GetRecentProductsQuery, GetRecentProductsQueryVariables>;
+export const GetOrdersDocument = gql`
+    query GetOrders {
+  orders {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
+    created_at
+    updated_at
+  }
+}
+    `;
+
+/**
+ * __useGetOrdersQuery__
+ *
+ * To run a query within a React component, call `useGetOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrdersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetOrdersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetOrdersQuery, GetOrdersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetOrdersQuery, GetOrdersQueryVariables>(GetOrdersDocument, options);
+      }
+export function useGetOrdersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetOrdersQuery, GetOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetOrdersQuery, GetOrdersQueryVariables>(GetOrdersDocument, options);
+        }
+export function useGetOrdersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOrdersQuery, GetOrdersQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetOrdersQuery, GetOrdersQueryVariables>(GetOrdersDocument, options);
+        }
+export type GetOrdersQueryHookResult = ReturnType<typeof useGetOrdersQuery>;
+export type GetOrdersLazyQueryHookResult = ReturnType<typeof useGetOrdersLazyQuery>;
+export type GetOrdersSuspenseQueryHookResult = ReturnType<typeof useGetOrdersSuspenseQuery>;
+export type GetOrdersQueryResult = ApolloReactCommon.QueryResult<GetOrdersQuery, GetOrdersQueryVariables>;
+export const GetOrderByIdDocument = gql`
+    query GetOrderById($id: ID!) {
+  orders_by_id(id: $id) {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
+    created_at
+    updated_at
+  }
+}
+    `;
+
+/**
+ * __useGetOrderByIdQuery__
+ *
+ * To run a query within a React component, call `useGetOrderByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetOrderByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetOrderByIdQuery, GetOrderByIdQueryVariables> & ({ variables: GetOrderByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetOrderByIdQuery, GetOrderByIdQueryVariables>(GetOrderByIdDocument, options);
+      }
+export function useGetOrderByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetOrderByIdQuery, GetOrderByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetOrderByIdQuery, GetOrderByIdQueryVariables>(GetOrderByIdDocument, options);
+        }
+export function useGetOrderByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOrderByIdQuery, GetOrderByIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetOrderByIdQuery, GetOrderByIdQueryVariables>(GetOrderByIdDocument, options);
+        }
+export type GetOrderByIdQueryHookResult = ReturnType<typeof useGetOrderByIdQuery>;
+export type GetOrderByIdLazyQueryHookResult = ReturnType<typeof useGetOrderByIdLazyQuery>;
+export type GetOrderByIdSuspenseQueryHookResult = ReturnType<typeof useGetOrderByIdSuspenseQuery>;
+export type GetOrderByIdQueryResult = ApolloReactCommon.QueryResult<GetOrderByIdQuery, GetOrderByIdQueryVariables>;
+export const GetOrderItemsDocument = gql`
+    query GetOrderItems($orderId: GraphQLStringOrFloat!) {
+  order_items(filter: {order_id: {id: {_eq: $orderId}}}) {
+    id
+    order_id {
+      id
+    }
+    product_id {
+      id
+      name
+      description
+    }
+    quantity
+    price
+  }
+}
+    `;
+
+/**
+ * __useGetOrderItemsQuery__
+ *
+ * To run a query within a React component, call `useGetOrderItemsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetOrderItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetOrderItemsQuery({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *   },
+ * });
+ */
+export function useGetOrderItemsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetOrderItemsQuery, GetOrderItemsQueryVariables> & ({ variables: GetOrderItemsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetOrderItemsQuery, GetOrderItemsQueryVariables>(GetOrderItemsDocument, options);
+      }
+export function useGetOrderItemsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetOrderItemsQuery, GetOrderItemsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetOrderItemsQuery, GetOrderItemsQueryVariables>(GetOrderItemsDocument, options);
+        }
+export function useGetOrderItemsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOrderItemsQuery, GetOrderItemsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetOrderItemsQuery, GetOrderItemsQueryVariables>(GetOrderItemsDocument, options);
+        }
+export type GetOrderItemsQueryHookResult = ReturnType<typeof useGetOrderItemsQuery>;
+export type GetOrderItemsLazyQueryHookResult = ReturnType<typeof useGetOrderItemsLazyQuery>;
+export type GetOrderItemsSuspenseQueryHookResult = ReturnType<typeof useGetOrderItemsSuspenseQuery>;
+export type GetOrderItemsQueryResult = ApolloReactCommon.QueryResult<GetOrderItemsQuery, GetOrderItemsQueryVariables>;
+export const CreateOrderDocument = gql`
+    mutation CreateOrder($data: create_orders_input!) {
+  create_orders_item(data: $data) {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
+    created_at
+    updated_at
+  }
+}
+    `;
+export type CreateOrderMutationFn = ApolloReactCommon.MutationFunction<CreateOrderMutation, CreateOrderMutationVariables>;
+
+/**
+ * __useCreateOrderMutation__
+ *
+ * To run a mutation, you first call `useCreateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createOrderMutation, { data, loading, error }] = useCreateOrderMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateOrderMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateOrderMutation, CreateOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateOrderMutation, CreateOrderMutationVariables>(CreateOrderDocument, options);
+      }
+export type CreateOrderMutationHookResult = ReturnType<typeof useCreateOrderMutation>;
+export type CreateOrderMutationResult = ApolloReactCommon.MutationResult<CreateOrderMutation>;
+export type CreateOrderMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateOrderMutation, CreateOrderMutationVariables>;
+export const UpdateOrderDocument = gql`
+    mutation UpdateOrder($id: ID!, $data: update_orders_input!) {
+  update_orders_item(id: $id, data: $data) {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
+    created_at
+    updated_at
+  }
+}
+    `;
+export type UpdateOrderMutationFn = ApolloReactCommon.MutationFunction<UpdateOrderMutation, UpdateOrderMutationVariables>;
+
+/**
+ * __useUpdateOrderMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrderMutation, { data, loading, error }] = useUpdateOrderMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateOrderMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateOrderMutation, UpdateOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateOrderMutation, UpdateOrderMutationVariables>(UpdateOrderDocument, options);
+      }
+export type UpdateOrderMutationHookResult = ReturnType<typeof useUpdateOrderMutation>;
+export type UpdateOrderMutationResult = ApolloReactCommon.MutationResult<UpdateOrderMutation>;
+export type UpdateOrderMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateOrderMutation, UpdateOrderMutationVariables>;
+export const DeleteOrderDocument = gql`
+    mutation DeleteOrder($id: ID!) {
+  delete_orders_item(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteOrderMutationFn = ApolloReactCommon.MutationFunction<DeleteOrderMutation, DeleteOrderMutationVariables>;
+
+/**
+ * __useDeleteOrderMutation__
+ *
+ * To run a mutation, you first call `useDeleteOrderMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteOrderMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteOrderMutation, { data, loading, error }] = useDeleteOrderMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteOrderMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteOrderMutation, DeleteOrderMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteOrderMutation, DeleteOrderMutationVariables>(DeleteOrderDocument, options);
+      }
+export type DeleteOrderMutationHookResult = ReturnType<typeof useDeleteOrderMutation>;
+export type DeleteOrderMutationResult = ApolloReactCommon.MutationResult<DeleteOrderMutation>;
+export type DeleteOrderMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteOrderMutation, DeleteOrderMutationVariables>;
+export const UpdateOrderStatusDocument = gql`
+    mutation UpdateOrderStatus($id: ID!, $status: String!) {
+  update_orders_item(id: $id, data: {status: $status}) {
+    id
+    status
+    updated_at
+  }
+}
+    `;
+export type UpdateOrderStatusMutationFn = ApolloReactCommon.MutationFunction<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>;
+
+/**
+ * __useUpdateOrderStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdateOrderStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateOrderStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateOrderStatusMutation, { data, loading, error }] = useUpdateOrderStatusMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdateOrderStatusMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>(UpdateOrderStatusDocument, options);
+      }
+export type UpdateOrderStatusMutationHookResult = ReturnType<typeof useUpdateOrderStatusMutation>;
+export type UpdateOrderStatusMutationResult = ApolloReactCommon.MutationResult<UpdateOrderStatusMutation>;
+export type UpdateOrderStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>;
+export const GetPaymentsDocument = gql`
+    query GetPayments {
+  payments {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+    `;
+
+/**
+ * __useGetPaymentsQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetPaymentsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, options);
+      }
+export function useGetPaymentsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, options);
+        }
+export function useGetPaymentsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetPaymentsQuery, GetPaymentsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetPaymentsQuery, GetPaymentsQueryVariables>(GetPaymentsDocument, options);
+        }
+export type GetPaymentsQueryHookResult = ReturnType<typeof useGetPaymentsQuery>;
+export type GetPaymentsLazyQueryHookResult = ReturnType<typeof useGetPaymentsLazyQuery>;
+export type GetPaymentsSuspenseQueryHookResult = ReturnType<typeof useGetPaymentsSuspenseQuery>;
+export type GetPaymentsQueryResult = ApolloReactCommon.QueryResult<GetPaymentsQuery, GetPaymentsQueryVariables>;
+export const GetPaymentByIdDocument = gql`
+    query GetPaymentById($id: ID!) {
+  payments_by_id(id: $id) {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+    `;
+
+/**
+ * __useGetPaymentByIdQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetPaymentByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetPaymentByIdQuery, GetPaymentByIdQueryVariables> & ({ variables: GetPaymentByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetPaymentByIdQuery, GetPaymentByIdQueryVariables>(GetPaymentByIdDocument, options);
+      }
+export function useGetPaymentByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPaymentByIdQuery, GetPaymentByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetPaymentByIdQuery, GetPaymentByIdQueryVariables>(GetPaymentByIdDocument, options);
+        }
+export function useGetPaymentByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetPaymentByIdQuery, GetPaymentByIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetPaymentByIdQuery, GetPaymentByIdQueryVariables>(GetPaymentByIdDocument, options);
+        }
+export type GetPaymentByIdQueryHookResult = ReturnType<typeof useGetPaymentByIdQuery>;
+export type GetPaymentByIdLazyQueryHookResult = ReturnType<typeof useGetPaymentByIdLazyQuery>;
+export type GetPaymentByIdSuspenseQueryHookResult = ReturnType<typeof useGetPaymentByIdSuspenseQuery>;
+export type GetPaymentByIdQueryResult = ApolloReactCommon.QueryResult<GetPaymentByIdQuery, GetPaymentByIdQueryVariables>;
+export const GetPaymentsByOrderIdDocument = gql`
+    query GetPaymentsByOrderId($orderId: GraphQLStringOrFloat!) {
+  payments(filter: {order_id: {id: {_eq: $orderId}}}) {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+    `;
+
+/**
+ * __useGetPaymentsByOrderIdQuery__
+ *
+ * To run a query within a React component, call `useGetPaymentsByOrderIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetPaymentsByOrderIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetPaymentsByOrderIdQuery({
+ *   variables: {
+ *      orderId: // value for 'orderId'
+ *   },
+ * });
+ */
+export function useGetPaymentsByOrderIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetPaymentsByOrderIdQuery, GetPaymentsByOrderIdQueryVariables> & ({ variables: GetPaymentsByOrderIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetPaymentsByOrderIdQuery, GetPaymentsByOrderIdQueryVariables>(GetPaymentsByOrderIdDocument, options);
+      }
+export function useGetPaymentsByOrderIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetPaymentsByOrderIdQuery, GetPaymentsByOrderIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetPaymentsByOrderIdQuery, GetPaymentsByOrderIdQueryVariables>(GetPaymentsByOrderIdDocument, options);
+        }
+export function useGetPaymentsByOrderIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetPaymentsByOrderIdQuery, GetPaymentsByOrderIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetPaymentsByOrderIdQuery, GetPaymentsByOrderIdQueryVariables>(GetPaymentsByOrderIdDocument, options);
+        }
+export type GetPaymentsByOrderIdQueryHookResult = ReturnType<typeof useGetPaymentsByOrderIdQuery>;
+export type GetPaymentsByOrderIdLazyQueryHookResult = ReturnType<typeof useGetPaymentsByOrderIdLazyQuery>;
+export type GetPaymentsByOrderIdSuspenseQueryHookResult = ReturnType<typeof useGetPaymentsByOrderIdSuspenseQuery>;
+export type GetPaymentsByOrderIdQueryResult = ApolloReactCommon.QueryResult<GetPaymentsByOrderIdQuery, GetPaymentsByOrderIdQueryVariables>;
+export const CreatePaymentDocument = gql`
+    mutation CreatePayment($data: create_payments_input!) {
+  create_payments_item(data: $data) {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+    `;
+export type CreatePaymentMutationFn = ApolloReactCommon.MutationFunction<CreatePaymentMutation, CreatePaymentMutationVariables>;
+
+/**
+ * __useCreatePaymentMutation__
+ *
+ * To run a mutation, you first call `useCreatePaymentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePaymentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPaymentMutation, { data, loading, error }] = useCreatePaymentMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePaymentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePaymentMutation, CreatePaymentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreatePaymentMutation, CreatePaymentMutationVariables>(CreatePaymentDocument, options);
+      }
+export type CreatePaymentMutationHookResult = ReturnType<typeof useCreatePaymentMutation>;
+export type CreatePaymentMutationResult = ApolloReactCommon.MutationResult<CreatePaymentMutation>;
+export type CreatePaymentMutationOptions = ApolloReactCommon.BaseMutationOptions<CreatePaymentMutation, CreatePaymentMutationVariables>;
+export const UpdatePaymentDocument = gql`
+    mutation UpdatePayment($id: ID!, $data: update_payments_input!) {
+  update_payments_item(id: $id, data: $data) {
+    id
+    order_id {
+      id
+      user_id {
+        id
+        name
+        email
+      }
+      total_price
+      status
+    }
+    payment_method
+    amount
+    status
+    paid_at
+  }
+}
+    `;
+export type UpdatePaymentMutationFn = ApolloReactCommon.MutationFunction<UpdatePaymentMutation, UpdatePaymentMutationVariables>;
+
+/**
+ * __useUpdatePaymentMutation__
+ *
+ * To run a mutation, you first call `useUpdatePaymentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePaymentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePaymentMutation, { data, loading, error }] = useUpdatePaymentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdatePaymentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePaymentMutation, UpdatePaymentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdatePaymentMutation, UpdatePaymentMutationVariables>(UpdatePaymentDocument, options);
+      }
+export type UpdatePaymentMutationHookResult = ReturnType<typeof useUpdatePaymentMutation>;
+export type UpdatePaymentMutationResult = ApolloReactCommon.MutationResult<UpdatePaymentMutation>;
+export type UpdatePaymentMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePaymentMutation, UpdatePaymentMutationVariables>;
+export const DeletePaymentDocument = gql`
+    mutation DeletePayment($id: ID!) {
+  delete_payments_item(id: $id) {
+    id
+  }
+}
+    `;
+export type DeletePaymentMutationFn = ApolloReactCommon.MutationFunction<DeletePaymentMutation, DeletePaymentMutationVariables>;
+
+/**
+ * __useDeletePaymentMutation__
+ *
+ * To run a mutation, you first call `useDeletePaymentMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeletePaymentMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deletePaymentMutation, { data, loading, error }] = useDeletePaymentMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeletePaymentMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePaymentMutation, DeletePaymentMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeletePaymentMutation, DeletePaymentMutationVariables>(DeletePaymentDocument, options);
+      }
+export type DeletePaymentMutationHookResult = ReturnType<typeof useDeletePaymentMutation>;
+export type DeletePaymentMutationResult = ApolloReactCommon.MutationResult<DeletePaymentMutation>;
+export type DeletePaymentMutationOptions = ApolloReactCommon.BaseMutationOptions<DeletePaymentMutation, DeletePaymentMutationVariables>;
+export const UpdatePaymentStatusDocument = gql`
+    mutation UpdatePaymentStatus($id: ID!, $status: String!) {
+  update_payments_item(id: $id, data: {status: $status}) {
+    id
+    status
+    paid_at
+  }
+}
+    `;
+export type UpdatePaymentStatusMutationFn = ApolloReactCommon.MutationFunction<UpdatePaymentStatusMutation, UpdatePaymentStatusMutationVariables>;
+
+/**
+ * __useUpdatePaymentStatusMutation__
+ *
+ * To run a mutation, you first call `useUpdatePaymentStatusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePaymentStatusMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePaymentStatusMutation, { data, loading, error }] = useUpdatePaymentStatusMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      status: // value for 'status'
+ *   },
+ * });
+ */
+export function useUpdatePaymentStatusMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePaymentStatusMutation, UpdatePaymentStatusMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdatePaymentStatusMutation, UpdatePaymentStatusMutationVariables>(UpdatePaymentStatusDocument, options);
+      }
+export type UpdatePaymentStatusMutationHookResult = ReturnType<typeof useUpdatePaymentStatusMutation>;
+export type UpdatePaymentStatusMutationResult = ApolloReactCommon.MutationResult<UpdatePaymentStatusMutation>;
+export type UpdatePaymentStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePaymentStatusMutation, UpdatePaymentStatusMutationVariables>;
 export const GetProductsDocument = gql`
     query GetProducts {
   products {

@@ -2,7 +2,7 @@
 
 import { useAuth } from '../providers/AuthProvider';
 import AdminLayout from '../components/AdminLayout';
-import PaymentsContent from '../components/PaymentsContent';
+import PaymentsContentGraphQL from '../components/PaymentsContentGraphQL';
 
 export default function PaymentsPage() {
   const { user } = useAuth();
@@ -13,7 +13,7 @@ export default function PaymentsPage() {
 
   return (
     <AdminLayout>
-      <PaymentsContent />
+      <PaymentsContentGraphQL />
     </AdminLayout>
   );
 }
