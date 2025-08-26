@@ -198,7 +198,7 @@ function CategoriesContent() {
   ];
 
   return (
-    <div className="p-6 bg-white">
+    <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
       <div className="mb-4 flex justify-between items-center">
         <h1 className="text-2xl font-bold">分类管理</h1>
         <Button
@@ -233,7 +233,7 @@ function CategoriesContent() {
           size: 'default',
           position: ['bottomCenter']
         }}
-        scroll={{ y: 'calc(100vh - 320px)' }}
+        scroll={{ y: 'calc(100vh - 180px)' }}
         size="middle"
       />
 

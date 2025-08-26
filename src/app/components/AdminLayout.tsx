@@ -102,7 +102,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   }
 
   return (
-    <Layout className="min-h-screen">
+    <Layout style={{ height: '100vh', overflow: 'hidden' }}>
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="h-16 flex items-center justify-center bg-blue-600">
           <Title level={4} className="text-white m-0">
@@ -117,7 +117,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         />
       </Sider>
       
-      <Layout>
+      <Layout style={{ height: '100%', overflow: 'hidden' }}>
         <Header className="bg-white px-4 flex items-center justify-between shadow-sm">
           <Button
             type="text"
@@ -138,7 +138,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </Dropdown>
         </Header>
         
-        <Content className="bg-gray-50">
+        <Content style={{ height: 'calc(100vh - 64px)', overflowY: 'auto', backgroundColor: '#f5f5f5' }}>
           {children}
         </Content>
       </Layout>

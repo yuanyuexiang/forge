@@ -48,7 +48,7 @@ function DashboardContent() {
   }
 
   return (
-    <div className="p-6 bg-white">
+    <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
       {/* 系统状态提示 */}
       <div className="mb-4">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">

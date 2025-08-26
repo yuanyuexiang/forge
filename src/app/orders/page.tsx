@@ -234,7 +234,7 @@ function OrdersContent() {
   ];
 
   return (
-    <div className="p-6 bg-white">
+    <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
       {/* 统计卡片 */}
       <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={6}>
@@ -307,7 +307,7 @@ function OrdersContent() {
           size: 'default',
           position: ['bottomCenter']
         }}
-        scroll={{ y: 'calc(100vh - 420px)' }}
+        scroll={{ y: 'calc(100vh - 280px)' }}
         size="middle"
       />      {/* 订单详情弹窗 */}
       <Modal
