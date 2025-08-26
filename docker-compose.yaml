@@ -1,6 +1,6 @@
 services:
    forge:
-    container_name: service-timeflow
+    container_name: forge
     image: ${DOCKER_IMAGE_TAG}
     restart: always
     networks:
