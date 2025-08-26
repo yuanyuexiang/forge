@@ -9,7 +9,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.forge.rule=Host(`forge.matrix-net.tech`)" # 替换为你的域名
       - "traefik.http.routers.forge.entrypoints=websecure"
-      - "traefik.http.routers.forge.tls=true"
       - "traefik.http.routers.forge.tls.certresolver=aliyunresolver"
       - "traefik.http.services.forge.loadbalancer.server.port=3000"
 
