@@ -1,7 +1,6 @@
 import { ApolloClient, InMemoryCache, HttpLink, from } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
-import { getApiConfig } from './api-config';
 
 // 创建认证链接
 const authLink = setContext((_, { headers }) => {
@@ -41,13 +40,11 @@ const errorLink = onError(({ graphQLErrors, networkError }) => {
 
 // 创建 Apollo Client
 const createApolloClient = () => {
-  const config = getApiConfig();
-  
-  // 创建 HTTP 链接
+  // 固定使用 GraphQL API 端点
   const httpLink = new HttpLink({ 
-    uri: config.endpoint,
+    uri: '/api/graphql',
     fetchOptions: {
-      timeout: config.timeout || 30000
+      timeout: 30000
     }
   });
 

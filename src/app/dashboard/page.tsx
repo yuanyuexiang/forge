@@ -10,7 +10,6 @@ import {
 } from '@ant-design/icons';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import AdminLayout from '../components/AdminLayout';
-import ApiSettings from '../components/ApiSettings';
 import { 
   useGetDashboardDataQuery,
   useGetRecentUsersQuery,
@@ -20,8 +19,6 @@ import {
 const { Title } = Typography;
 
 function DashboardContent() {
-  const [apiSettingsVisible, setApiSettingsVisible] = useState(false);
-  
   // 使用 GraphQL hooks 获取仪表板数据
   const { data: dashboardData, loading: dashboardLoading, error: dashboardError } = useGetDashboardDataQuery();
   const { loading: usersLoading } = useGetRecentUsersQuery({ variables: { limit: 5 } });
@@ -51,7 +48,7 @@ function DashboardContent() {
   }
 
   return (
-    <div className="p-6">
+    <div className="p-6 bg-white min-h-full">
       {/* API 状态指示器 */}
       <div className="mb-4">
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
@@ -169,13 +166,6 @@ function DashboardContent() {
             >
               用户管理
             </Button>
-            <Button 
-              icon={<DashboardOutlined />}
-              className="h-12"
-              onClick={() => setApiSettingsVisible(true)}
-            >
-              系统设置
-            </Button>
           </div>
         </div>
 
@@ -203,12 +193,6 @@ function DashboardContent() {
           </div>
         </div>
       </div>
-
-      {/* API 设置弹窗 */}
-      <ApiSettings 
-        visible={apiSettingsVisible} 
-        onClose={() => setApiSettingsVisible(false)} 
-      />
     </div>
   );
 }

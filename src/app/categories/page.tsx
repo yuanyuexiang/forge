@@ -234,7 +234,7 @@ function CategoriesContent() {
             size: 'default',
             position: ['bottomCenter']
           }}
-          scroll={{ y: 'calc(100vh - 380px)' }}
+          scroll={{ y: 'calc(100vh - 420px)' }}
           size="middle"
         />
       </div>
