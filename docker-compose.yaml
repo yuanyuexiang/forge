@@ -3,6 +3,8 @@ services:
     container_name: forge
     image: ${DOCKER_IMAGE_TAG}
     restart: always
+    healthcheck:
+      disable: true
     networks:
       - matrix-network
     labels:
