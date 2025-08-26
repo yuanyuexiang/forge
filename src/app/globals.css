@@ -24,3 +24,100 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* 登录页面关键样式 - 提前加载避免闪烁 */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.login-page-container {
+  min-height: 100vh;
+  display: flex;
+  background: linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #74b9ff 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+.login-page-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  color: white;
+  min-height: 100vh;
+}
+
+.login-page-right {
+  width: 480px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.login-logo-circle {
+  width: 120px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  backdrop-filter: blur(10px);
+}
+
+.login-input-field {
+  height: 50px !important;
+  border-radius: 8px !important;
+  border: 1px solid #e0e6ed !important;
+  background: #fff !important;
+  transition: all 0.3s ease !important;
+}
+
+.login-input-field:hover {
+  border-color: #74b9ff !important;
+}
+
+.login-input-field:focus,
+.login-input-field:focus-within {
+  border-color: #74b9ff !important;
+  box-shadow: 0 0 0 2px rgba(116, 185, 255, 0.2) !important;
+}
+
+.login-submit-button {
+  height: 50px !important;
+  border-radius: 8px !important;
+  background: linear-gradient(45deg, #fd79a8, #e84393) !important;
+  border: none !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  transition: all 0.3s ease !important;
+}
+
+.login-submit-button:hover {
+  background: linear-gradient(45deg, #e84393, #fd79a8) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(253, 121, 168, 0.4) !important;
+}
+
+.login-submit-button:active {
+  transform: translateY(0) !important;
+}
+
+@media (max-width: 768px) {
+  .login-page-left {
+    display: none;
+  }
+  .login-page-right {
+    width: 100%;
+  }
+}

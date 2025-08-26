@@ -39,149 +39,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div 
-      className="min-h-screen flex"
-      style={{
-        background: 'linear-gradient(135deg, #74b9ff 0%, #0984e3 50%, #74b9ff 100%)',
-        backgroundSize: '400% 400%',
-        animation: 'gradientShift 15s ease infinite'
-      }}
-    >
-      <style jsx>{`
-        @keyframes gradientShift {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        
-        .left-panel {
-          flex: 1;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 60px;
-          color: white;
-        }
-        
-        .right-panel {
-          width: 480px;
-          background: rgba(255, 255, 255, 0.95);
-          backdrop-filter: blur(10px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 60px 40px;
-          box-shadow: -2px 0 20px rgba(0, 0, 0, 0.1);
-        }
-        
-        .logo-container {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          margin-bottom: 40px;
-        }
-        
-        .logo-circle {
-          width: 120px;
-          height: 120px;
-          background: rgba(255, 255, 255, 0.2);
-          border: 3px solid rgba(255, 255, 255, 0.3);
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin-bottom: 20px;
-          backdrop-filter: blur(10px);
-        }
-        
-        .logo-text {
-          font-size: 48px;
-          font-weight: 300;
-          color: white;
-          margin: 0;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-          letter-spacing: 2px;
-        }
-        
-        .subtitle {
-          color: rgba(255, 255, 255, 0.8);
-          font-size: 18px;
-          margin-top: 10px;
-          font-weight: 300;
-        }
-        
-        .login-form {
-          width: 100%;
-          max-width: 360px;
-        }
-        
-        .form-title {
-          text-align: center;
-          margin-bottom: 40px;
-          color: #2c3e50;
-          font-size: 24px;
-          font-weight: 500;
-        }
-        
-        .login-input {
-          height: 50px;
-          border-radius: 8px;
-          border: 1px solid #e0e6ed;
-          background: #fff;
-          transition: all 0.3s ease;
-        }
-        
-        .login-input:hover {
-          border-color: #74b9ff;
-        }
-        
-        .login-input:focus {
-          border-color: #74b9ff;
-          box-shadow: 0 0 0 2px rgba(116, 185, 255, 0.2);
-        }
-        
-        .login-button {
-          height: 50px;
-          border-radius: 8px;
-          background: linear-gradient(45deg, #fd79a8, #e84393);
-          border: none;
-          font-weight: 600;
-          font-size: 16px;
-          transition: all 0.3s ease;
-          margin-top: 10px;
-        }
-        
-        .login-button:hover {
-          background: linear-gradient(45deg, #e84393, #fd79a8);
-          transform: translateY(-2px);
-          box-shadow: 0 6px 20px rgba(253, 121, 168, 0.4);
-        }
-        
-        .login-button:active {
-          transform: translateY(0);
-        }
-        
-        .form-label {
-          color: #5a6c7d;
-          font-weight: 500;
-          margin-bottom: 8px;
-        }
-        
-        @media (max-width: 768px) {
-          .left-panel {
-            display: none;
-          }
-          .right-panel {
-            width: 100%;
-          }
-        }
-      `}</style>
-
+    <div className="login-page-container">
       {/* 左侧品牌区域 */}
-      <div className="left-panel">
-        <div className="logo-container">
-          <div className="logo-circle">
+      <div className="login-page-left">
+        <div className="flex flex-col items-center mb-10">
+          <div className="login-logo-circle">
             <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
               <path
                 d="M30 12L48 21v18L30 48 12 39V21l18-9z"
@@ -199,21 +61,42 @@ export default function LoginPage() {
               />
             </svg>
           </div>
-          <h1 className="logo-text">Forge CMS</h1>
-          <p className="subtitle">服装店管理系统</p>
+          <h1 
+            className="text-5xl font-light text-white m-0"
+            style={{
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              letterSpacing: '2px'
+            }}
+          >
+            Forge CMS
+          </h1>
+          <p 
+            className="text-lg font-light mt-2"
+            style={{ color: 'rgba(255, 255, 255, 0.8)' }}
+          >
+            服装店管理系统
+          </p>
         </div>
         
-        <div style={{ textAlign: 'center', maxWidth: '400px' }}>
-          <p style={{ fontSize: '16px', lineHeight: '1.6', opacity: '0.9' }}>
+        <div className="text-center max-w-sm">
+          <p 
+            className="text-base leading-relaxed"
+            style={{ opacity: '0.9' }}
+          >
             现代化的服装店管理平台，为您的业务提供全方位的管理解决方案
           </p>
         </div>
       </div>
 
       {/* 右侧登录表单区域 */}
-      <div className="right-panel">
-        <div className="login-form">
-          <h2 className="form-title">登录系统</h2>
+      <div className="login-page-right">
+        <div className="w-full max-w-sm">
+          <h2 
+            className="text-center mb-10 text-2xl font-medium"
+            style={{ color: '#2c3e50' }}
+          >
+            登录系统
+          </h2>
           
           <Form
             name="login"
@@ -222,7 +105,11 @@ export default function LoginPage() {
             layout="vertical"
           >
             <Form.Item
-              label={<span className="form-label">用户</span>}
+              label={
+                <span style={{ color: '#5a6c7d', fontWeight: '500' }}>
+                  用户
+                </span>
+              }
               name="email"
               rules={[
                 { required: true, message: '请输入用户邮箱！' },
@@ -230,7 +117,7 @@ export default function LoginPage() {
               ]}
             >
               <Input 
-                className="login-input"
+                className="login-input-field"
                 prefix={<UserOutlined style={{ color: '#74b9ff' }} />} 
                 placeholder="请输入邮箱地址" 
                 size="large"
@@ -238,7 +125,11 @@ export default function LoginPage() {
             </Form.Item>
 
             <Form.Item
-              label={<span className="form-label">密码</span>}
+              label={
+                <span style={{ color: '#5a6c7d', fontWeight: '500' }}>
+                  密码
+                </span>
+              }
               name="password"
               rules={[
                 { required: true, message: '请输入密码！' },
@@ -246,7 +137,7 @@ export default function LoginPage() {
               ]}
             >
               <Input.Password
-                className="login-input"
+                className="login-input-field"
                 prefix={<LockOutlined style={{ color: '#74b9ff' }} />}
                 placeholder="请输入密码"
                 size="large"
@@ -258,7 +149,7 @@ export default function LoginPage() {
                 type="primary" 
                 htmlType="submit" 
                 loading={loading}
-                className="login-button w-full"
+                className="login-submit-button w-full mt-2"
                 size="large"
               >
                 登 录
@@ -266,7 +157,10 @@ export default function LoginPage() {
             </Form.Item>
           </Form>
           
-          <div className="text-center text-sm" style={{ color: '#636e72', marginTop: '30px' }}>
+          <div 
+            className="text-center text-sm mt-8"
+            style={{ color: '#636e72' }}
+          >
             <p>© 2025 Matrix Net Tech. 保留所有权利</p>
           </div>
         </div>
