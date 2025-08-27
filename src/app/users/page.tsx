@@ -143,7 +143,7 @@ function UsersContent() {
   return (
     <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
       {/* 统计卡片 */}
-      <Row gutter={16} style={{ marginBottom: 16 }}>
+      {/* <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={6}>
           <Card>
             <Statistic
@@ -153,7 +153,7 @@ function UsersContent() {
             />
           </Card>
         </Col>
-      </Row>
+      </Row> */}
 
       {/* 搜索和筛选栏 */}
       <div className="mb-6 flex justify-between items-center">
