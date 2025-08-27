@@ -1,36 +1,31 @@
 query GetDashboardData($today: String) {
-  users_aggregated {
-    countAll
+  # 直接查询各个表的记录数
+  users(limit: 0) {
+    id
   }
-  products_aggregated {
-    countAll
+  products(limit: 0) {
+    id
   }
-  orders_aggregated {
-    countAll
+  orders(limit: 0) {
+    id
   }
-  categories_aggregated {
-    countAll
+  categories(limit: 0) {
+    id
   }
-  # 总销售额（所有已完成订单）
-  total_revenue: orders_aggregated(filter: { status: { _eq: "completed" } }) {
-    sum {
-      total_price
-    }
+  
+  # 已完成订单（用于计算总销售额）
+  completed_orders: orders(filter: { status: { _eq: "completed" } }) {
+    id
+    total_price
   }
-  # 今日订单数
-  today_orders: orders_aggregated(filter: { 
+  
+  # 今日订单
+  today_orders: orders(filter: { 
     created_at: { _gte: $today } 
   }) {
-    countAll
-  }
-  # 今日销售额
-  today_revenue: orders_aggregated(filter: { 
-    created_at: { _gte: $today }
-    status: { _eq: "completed" }
-  }) {
-    sum {
-      total_price
-    }
+    id
+    total_price
+    status
   }
 }
 
@@ -49,6 +44,20 @@ query GetRecentProducts($limit: Int = 5) {
     name
     price
     stock
+    created_at
+  }
+}
+
+query GetRecentOrders($limit: Int = 5) {
+  orders(limit: $limit, sort: ["-created_at"]) {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
     created_at
   }
 }

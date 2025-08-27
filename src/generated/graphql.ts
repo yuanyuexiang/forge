@@ -3083,7 +3083,7 @@ export type GetDashboardDataQueryVariables = Exact<{
 }>;
 
 
-export type GetDashboardDataQuery = { __typename?: 'Query', users_aggregated: Array<{ __typename?: 'users_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }>, total_revenue: Array<{ __typename?: 'orders_aggregated', sum?: { __typename?: 'orders_aggregated_fields', total_price?: number | null } | null }>, today_orders: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, today_revenue: Array<{ __typename?: 'orders_aggregated', sum?: { __typename?: 'orders_aggregated_fields', total_price?: number | null } | null }> };
+export type GetDashboardDataQuery = { __typename?: 'Query', users: Array<{ __typename?: 'users', id: string }>, products: Array<{ __typename?: 'products', id: string }>, orders: Array<{ __typename?: 'orders', id: string }>, categories: Array<{ __typename?: 'categories', id: string }>, completed_orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null }>, today_orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null }> };
 
 export type GetRecentUsersQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -3098,6 +3098,13 @@ export type GetRecentProductsQueryVariables = Exact<{
 
 
 export type GetRecentProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, price: number, stock?: number | null, created_at?: any | null }> };
+
+export type GetRecentOrdersQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, created_at?: any | null, user_id?: { __typename?: 'users', id: string, name: string, email: string } | null }> };
 
 export type GetOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -3572,32 +3579,26 @@ export type DeleteCategoryMutationResult = ApolloReactCommon.MutationResult<Dele
 export type DeleteCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
 export const GetDashboardDataDocument = gql`
     query GetDashboardData($today: String) {
-  users_aggregated {
-    countAll
+  users(limit: 0) {
+    id
   }
-  products_aggregated {
-    countAll
+  products(limit: 0) {
+    id
   }
-  orders_aggregated {
-    countAll
+  orders(limit: 0) {
+    id
   }
-  categories_aggregated {
-    countAll
+  categories(limit: 0) {
+    id
   }
-  total_revenue: orders_aggregated(filter: {status: {_eq: "completed"}}) {
-    sum {
-      total_price
-    }
+  completed_orders: orders(filter: {status: {_eq: "completed"}}) {
+    id
+    total_price
   }
-  today_orders: orders_aggregated(filter: {created_at: {_gte: $today}}) {
-    countAll
-  }
-  today_revenue: orders_aggregated(
-    filter: {created_at: {_gte: $today}, status: {_eq: "completed"}}
-  ) {
-    sum {
-      total_price
-    }
+  today_orders: orders(filter: {created_at: {_gte: $today}}) {
+    id
+    total_price
+    status
   }
 }
     `;
@@ -3721,6 +3722,54 @@ export type GetRecentProductsQueryHookResult = ReturnType<typeof useGetRecentPro
 export type GetRecentProductsLazyQueryHookResult = ReturnType<typeof useGetRecentProductsLazyQuery>;
 export type GetRecentProductsSuspenseQueryHookResult = ReturnType<typeof useGetRecentProductsSuspenseQuery>;
 export type GetRecentProductsQueryResult = ApolloReactCommon.QueryResult<GetRecentProductsQuery, GetRecentProductsQueryVariables>;
+export const GetRecentOrdersDocument = gql`
+    query GetRecentOrders($limit: Int = 5) {
+  orders(limit: $limit, sort: ["-created_at"]) {
+    id
+    user_id {
+      id
+      name
+      email
+    }
+    total_price
+    status
+    created_at
+  }
+}
+    `;
+
+/**
+ * __useGetRecentOrdersQuery__
+ *
+ * To run a query within a React component, call `useGetRecentOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetRecentOrdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetRecentOrdersQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetRecentOrdersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetRecentOrdersQuery, GetRecentOrdersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetRecentOrdersQuery, GetRecentOrdersQueryVariables>(GetRecentOrdersDocument, options);
+      }
+export function useGetRecentOrdersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetRecentOrdersQuery, GetRecentOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetRecentOrdersQuery, GetRecentOrdersQueryVariables>(GetRecentOrdersDocument, options);
+        }
+export function useGetRecentOrdersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetRecentOrdersQuery, GetRecentOrdersQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetRecentOrdersQuery, GetRecentOrdersQueryVariables>(GetRecentOrdersDocument, options);
+        }
+export type GetRecentOrdersQueryHookResult = ReturnType<typeof useGetRecentOrdersQuery>;
+export type GetRecentOrdersLazyQueryHookResult = ReturnType<typeof useGetRecentOrdersLazyQuery>;
+export type GetRecentOrdersSuspenseQueryHookResult = ReturnType<typeof useGetRecentOrdersSuspenseQuery>;
+export type GetRecentOrdersQueryResult = ApolloReactCommon.QueryResult<GetRecentOrdersQuery, GetRecentOrdersQueryVariables>;
 export const GetOrdersDocument = gql`
     query GetOrders {
   orders {
