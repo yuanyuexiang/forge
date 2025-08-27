@@ -130,9 +130,20 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             placement="bottomRight"
             arrow
           >
-            <div className="flex items-center cursor-pointer">
-              <Avatar icon={<UserOutlined />} className="mr-2" />
-              <span>{user.name || user.email}</span>
+            <div className="flex items-center cursor-pointer hover:bg-gray-50 px-2 py-1 rounded">
+              <Avatar 
+                icon={<UserOutlined />} 
+                className="mr-2"
+                style={{ backgroundColor: '#1890ff' }}
+              />
+              <div className="flex flex-col">
+                {/* <span className="text-sm font-medium text-gray-800">
+                  {user.name || user.email.split('@')[0]}
+                </span> */}
+                <span className="text-gray-500">
+                  {user.email}
+                </span>
+              </div>
             </div>
           </Dropdown>
         </Header>
