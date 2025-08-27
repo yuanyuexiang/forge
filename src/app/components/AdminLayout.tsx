@@ -150,7 +150,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           style={{ 
             backgroundColor: '#1F2937', 
             borderBottom: '1px solid #374151',
-            color: '#FFFFFF'
+            color: '#FFFFFF',
+            padding: '0 20px'
           }}
         >
           <Button
@@ -158,7 +159,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={toggleCollapsed}
             className="text-lg"
-            style={{ color: '#FFFFFF' }}
+            style={{ 
+              color: '#FFFFFF'
+            }}
           />
           
           <Dropdown
@@ -184,7 +187,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                 style={{ backgroundColor: '#C5A46D' }}
               />
               <div className="flex flex-col">
-                <span style={{ fontSize: '12px', color: '#D1D5DB' }}>
+                <span style={{ fontSize: '12px', color: '#D1D5DB' ,marginLeft: '8px'}}>
                   {user.email}
                 </span>
               </div>
