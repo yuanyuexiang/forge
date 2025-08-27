@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Layout, Menu, Avatar, Dropdown, Button, Typography } from 'antd';
 import { 
   DashboardOutlined, 
@@ -29,6 +29,21 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   const { user, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();
+
+  // 初始化时从 localStorage 读取侧边栏状态
+  useEffect(() => {
+    const savedCollapsed = localStorage.getItem('sidebar-collapsed');
+    if (savedCollapsed !== null) {
+      setCollapsed(JSON.parse(savedCollapsed));
+    }
+  }, []);
+
+  // 切换侧边栏状态并保存到 localStorage
+  const toggleCollapsed = () => {
+    const newCollapsed = !collapsed;
+    setCollapsed(newCollapsed);
+    localStorage.setItem('sidebar-collapsed', JSON.stringify(newCollapsed));
+  };
 
   // 根据当前路径确定选中的菜单项
   const getSelectedKey = () => {
@@ -141,7 +156,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
+            onClick={toggleCollapsed}
             className="text-lg"
             style={{ color: '#FFFFFF' }}
           />

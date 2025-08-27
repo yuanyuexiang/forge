@@ -26,7 +26,7 @@ export async function GET(
     let token = request.headers.get('authorization')?.replace('Bearer ', '');
     
     if (!token) {
-      token = url.searchParams.get('token');
+      token = url.searchParams.get('token') || undefined;
     }
     
     if (!token) {

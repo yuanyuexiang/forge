@@ -306,37 +306,66 @@ function ProductEditContent() {
       const values = await form.validateFields();
       setSaving(true);
 
-      // 转换数据格式
-      const productData = {
-        name: values.name,
-        subtitle: values.subtitle || '',
-        description: values.description || '',
-        brand: values.brand || '',
-        price: Number(values.price),
-        market_price: values.market_price ? Number(values.market_price) : null,
-        stock: Number(values.stock),
-        barcode: values.barcode || '',
-        category_id: values.category_id ? { id: values.category_id } : null,
-        status: values.status,
-        main_image: values.main_image || '',
-        images: values.images || [],
-        video_url: values.video_url || '',
-        is_on_sale: Boolean(values.is_on_sale)
-      };
-
+      // 为创建和更新使用不同的数据格式
       if (isEditMode) {
-        // 更新商品
+        // 更新商品 - 使用对象格式
+        const updateData = {
+          name: values.name,
+          subtitle: values.subtitle || '',
+          description: values.description || '',
+          brand: values.brand || '',
+          price: Number(values.price),
+          market_price: values.market_price ? Number(values.market_price) : null,
+          stock: Number(values.stock),
+          barcode: values.barcode || '',
+          category_id: values.category_id ? { id: values.category_id } : null,
+          status: values.status,
+          main_image: values.main_image || '',
+          images: values.images || [],
+          video_url: values.video_url || '',
+          is_on_sale: Boolean(values.is_on_sale)
+        };
+
         await updateProduct({
           variables: {
             id: params.id as string,
-            data: productData
+            data: updateData
           }
         });
       } else {
-        // 创建商品
+        // 创建商品 - 尝试通过提供分类名称来关联
+        let categoryData = null;
+        if (values.category_id) {
+          // 找到对应的分类
+          const selectedCategory = categories.find(cat => cat.id === values.category_id);
+          if (selectedCategory) {
+            categoryData = {
+              id: selectedCategory.id,
+              name: selectedCategory.name
+            };
+          }
+        }
+
+        const createData = {
+          name: values.name,
+          subtitle: values.subtitle || '',
+          description: values.description || '',
+          brand: values.brand || '',
+          price: Number(values.price),
+          market_price: values.market_price ? Number(values.market_price) : null,
+          stock: Number(values.stock),
+          barcode: values.barcode || '',
+          category_id: categoryData,
+          status: values.status,
+          main_image: values.main_image || '',
+          images: values.images || [],
+          video_url: values.video_url || '',
+          is_on_sale: Boolean(values.is_on_sale)
+        };
+
         await createProduct({
           variables: {
-            data: productData
+            data: createData
           }
         });
       }
