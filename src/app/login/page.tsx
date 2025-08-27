@@ -62,28 +62,29 @@ export default function LoginPage() {
             </svg>
           </div>
           <h1 
-            className="text-5xl font-light text-white m-0"
+            className="text-5xl font-light m-0"
             style={{
-              textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              letterSpacing: '2px'
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+              letterSpacing: '2px',
+              color: '#C5A46D'
             }}
           >
-            Forge CMS
+            Forge Luxury
           </h1>
           <p 
             className="text-lg font-light mt-2"
-            style={{ color: 'rgba(255, 255, 255, 0.8)' }}
+            style={{ color: 'rgba(249, 250, 251, 0.8)' }}
           >
-            服装店管理系统
+            精品服饰管理系统
           </p>
         </div>
         
         <div className="text-center max-w-sm">
           <p 
             className="text-base leading-relaxed"
-            style={{ opacity: '0.9' }}
+            style={{ opacity: '0.8', color: '#F9FAFB' }}
           >
-            现代化的服装店管理平台，为您的业务提供全方位的管理解决方案
+            专业的精品服饰管理平台，为您的高端业务提供卓越的管理体验
           </p>
         </div>
       </div>
@@ -92,10 +93,10 @@ export default function LoginPage() {
       <div className="login-page-right">
         <div className="w-full max-w-sm">
           <h2 
-            className="text-center mb-10 text-2xl font-medium"
-            style={{ color: '#2c3e50' }}
+            className="text-center mb-10 text-2xl font-semibold"
+            style={{ color: '#111827' }}
           >
-            登录系统
+            系统登录
           </h2>
           
           <Form
@@ -106,7 +107,7 @@ export default function LoginPage() {
           >
             <Form.Item
               label={
-                <span style={{ color: '#5a6c7d', fontWeight: '500' }}>
+                <span style={{ color: '#374151', fontWeight: '600' }}>
                   用户
                 </span>
               }
@@ -118,7 +119,7 @@ export default function LoginPage() {
             >
               <Input 
                 className="login-input-field"
-                prefix={<UserOutlined style={{ color: '#74b9ff' }} />} 
+                prefix={<UserOutlined style={{ color: '#C5A46D' }} />} 
                 placeholder="请输入邮箱地址" 
                 size="large"
               />
@@ -126,7 +127,7 @@ export default function LoginPage() {
 
             <Form.Item
               label={
-                <span style={{ color: '#5a6c7d', fontWeight: '500' }}>
+                <span style={{ color: '#374151', fontWeight: '600' }}>
                   密码
                 </span>
               }
@@ -138,7 +139,7 @@ export default function LoginPage() {
             >
               <Input.Password
                 className="login-input-field"
-                prefix={<LockOutlined style={{ color: '#74b9ff' }} />}
+                prefix={<LockOutlined style={{ color: '#C5A46D' }} />}
                 placeholder="请输入密码"
                 size="large"
               />
@@ -159,9 +160,9 @@ export default function LoginPage() {
           
           <div 
             className="text-center text-sm mt-8"
-            style={{ color: '#636e72' }}
+            style={{ color: '#6B7280' }}
           >
-            <p>© 2025 Matrix Net Tech. 保留所有权利</p>
+            <p>© 2025 Forge Luxury Systems. 保留所有权利</p>
           </div>
         </div>
       </div>

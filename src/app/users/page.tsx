@@ -141,7 +141,7 @@ function UsersContent() {
   ];
 
   return (
-    <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
+    <div style={{ height: '100%', padding: '24px', backgroundColor: '#F9FAFB' }}>
       {/* 统计卡片 */}
       {/* <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={6}>

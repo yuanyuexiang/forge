@@ -60,7 +60,7 @@ function ProfileContent() {
   };
 
   return (
-    <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
+    <div style={{ height: '100%', padding: '24px', backgroundColor: '#F9FAFB' }}>
       <Title level={4} className="mb-6">账号详情</Title>
       
       <div className="max-w-2xl">

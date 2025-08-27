@@ -102,10 +102,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <Layout style={{ height: '100vh', overflow: 'hidden' }}>
-      <Sider trigger={null} collapsible collapsed={collapsed}>
-        <div className="h-16 flex items-center justify-center bg-blue-600">
-          <Title level={4} className="text-white m-0">
-            {collapsed ? 'EC' : '服装店后台'}
+      <Sider 
+        trigger={null} 
+        collapsible 
+        collapsed={collapsed}
+        style={{ backgroundColor: '#111827' }}
+      >
+        <div 
+          className="h-16 flex items-center justify-center"
+          style={{ backgroundColor: '#111827', borderBottom: '1px solid #374151' }}
+        >
+          <Title level={4} style={{ color: '#C5A46D', margin: 0, fontWeight: 600 }}>
+            {collapsed ? 'LX' : '精品服饰后台'}
           </Title>
         </div>
         <Menu
@@ -113,16 +121,29 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           mode="inline"
           selectedKeys={[getSelectedKey()]}
           items={menuItems}
+          style={{ 
+            backgroundColor: '#111827',
+            borderRight: 'none'
+          }}
+          className="luxury-menu"
         />
       </Sider>
       
       <Layout style={{ height: '100%', overflow: 'hidden' }}>
-        <Header className="bg-white px-4 flex items-center justify-between shadow-sm">
+        <Header 
+          className="px-4 flex items-center justify-between shadow-sm"
+          style={{ 
+            backgroundColor: '#1F2937', 
+            borderBottom: '1px solid #374151',
+            color: '#FFFFFF'
+          }}
+        >
           <Button
             type="text"
             icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
             onClick={() => setCollapsed(!collapsed)}
             className="text-lg"
+            style={{ color: '#FFFFFF' }}
           />
           
           <Dropdown
@@ -130,17 +151,25 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             placement="bottomRight"
             arrow
           >
-            <div className="flex items-center cursor-pointer hover:bg-gray-50 px-2 py-1 rounded">
+            <div 
+              className="flex items-center cursor-pointer px-2 py-1 rounded"
+              style={{ 
+                transition: 'background-color 0.2s',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = '#374151';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+              }}
+            >
               <Avatar 
                 icon={<UserOutlined />} 
                 className="mr-2"
-                style={{ backgroundColor: '#1890ff' }}
+                style={{ backgroundColor: '#C5A46D' }}
               />
               <div className="flex flex-col">
-                {/* <span className="text-sm font-medium text-gray-800">
-                  {user.name || user.email.split('@')[0]}
-                </span> */}
-                <span className="text-gray-500">
+                <span style={{ fontSize: '12px', color: '#D1D5DB' }}>
                   {user.email}
                 </span>
               </div>
@@ -148,7 +177,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </Dropdown>
         </Header>
         
-        <Content style={{ height: 'calc(100vh - 64px)', overflowY: 'auto', backgroundColor: '#f5f5f5' }}>
+        <Content style={{ 
+          height: 'calc(100vh - 64px)', 
+          overflowY: 'auto', 
+          backgroundColor: '#F9FAFB' 
+        }}>
           {children}
         </Content>
       </Layout>

@@ -113,74 +113,110 @@ function DashboardContent() {
       
       {/* 统计卡片区域 */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+        <div className="luxury-card p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 mb-1">总订单数</p>
-              <div className="text-3xl font-bold text-gray-900">
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>总订单数</p>
+              <div style={{ fontSize: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
                 {isLoading ? <Spin size="small" /> : statsData.totalOrders.toLocaleString()}
               </div>
-              <p className="text-sm text-green-600 mt-1">
+              <p style={{ fontSize: '13px', color: '#059669', marginTop: '8px', fontWeight: 500 }}>
                 <span className="inline-block mr-1">↗</span>
                 较昨日 +12%
               </p>
             </div>
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <ShoppingCartOutlined className="text-2xl text-blue-600" />
+            <div style={{ 
+              width: '56px', 
+              height: '56px', 
+              background: 'linear-gradient(135deg, #1F2937 0%, #374151 100%)', 
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(31, 41, 55, 0.3)'
+            }}>
+              <ShoppingCartOutlined style={{ fontSize: '24px', color: '#C5A46D' }} />
             </div>
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+        <div className="luxury-card p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 mb-1">商品总数</p>
-              <div className="text-3xl font-bold text-gray-900">
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>商品总数</p>
+              <div style={{ fontSize: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
                 {isLoading ? <Spin size="small" /> : statsData.totalProducts.toLocaleString()}
               </div>
-              <p className="text-sm text-blue-600 mt-1">
+              <p style={{ fontSize: '13px', color: '#3B82F6', marginTop: '8px', fontWeight: 500 }}>
                 <span className="inline-block mr-1">↗</span>
                 较昨日 +3%
               </p>
             </div>
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <ShoppingOutlined className="text-2xl text-green-600" />
+            <div style={{ 
+              width: '56px', 
+              height: '56px', 
+              background: 'linear-gradient(135deg, #C5A46D 0%, #B8935A 100%)', 
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(197, 164, 109, 0.3)'
+            }}>
+              <ShoppingOutlined style={{ fontSize: '24px', color: '#FFFFFF' }} />
             </div>
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+        <div className="luxury-card p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 mb-1">用户总数</p>
-              <div className="text-3xl font-bold text-gray-900">
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>用户总数</p>
+              <div style={{ fontSize: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
                 {isLoading ? <Spin size="small" /> : statsData.totalUsers.toLocaleString()}
               </div>
-              <p className="text-sm text-orange-600 mt-1">
+              <p style={{ fontSize: '13px', color: '#DC2626', marginTop: '8px', fontWeight: 500 }}>
                 <span className="inline-block mr-1">↗</span>
                 较昨日 +8%
               </p>
             </div>
-            <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-              <UserOutlined className="text-2xl text-orange-600" />
+            <div style={{ 
+              width: '56px', 
+              height: '56px', 
+              background: 'linear-gradient(135deg, #7C2D12 0%, #92400E 100%)', 
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(124, 45, 18, 0.3)'
+            }}>
+              <UserOutlined style={{ fontSize: '24px', color: '#FED7AA' }} />
             </div>
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-lg shadow-sm border hover:shadow-md transition-shadow">
+        <div className="luxury-card p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-gray-500 mb-1">今日销售额</p>
-              <div className="text-3xl font-bold text-gray-900">
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>今日销售额</p>
+              <div style={{ fontSize: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
                 {isLoading ? <Spin size="small" /> : `¥${statsData.todayRevenue.toLocaleString()}`}
               </div>
-              <p className="text-sm text-purple-600 mt-1">
+              <p style={{ fontSize: '13px', color: '#7C3AED', marginTop: '8px', fontWeight: 500 }}>
                 <span className="inline-block mr-1">📈</span>
                 今日订单: {statsData.todayOrders} 笔
               </p>
             </div>
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <DollarOutlined className="text-2xl text-purple-600" />
+            <div style={{ 
+              width: '56px', 
+              height: '56px', 
+              background: 'linear-gradient(135deg, #581C87 0%, #6B21A8 100%)', 
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(88, 28, 135, 0.3)'
+            }}>
+              <DollarOutlined style={{ fontSize: '24px', color: '#DDD6FE' }} />
             </div>
           </div>
         </div>

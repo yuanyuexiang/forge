@@ -234,13 +234,14 @@ function ProductsContent() {
   ];
 
   return (
-    <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
+    <div style={{ height: '100%', padding: '24px', backgroundColor: '#F9FAFB' }}>
       <div className="mb-6 flex justify-between items-center">
-        <Title level={4} className="mb-0">商品管理</Title>
+        <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>商品管理</Title>
         <Button 
           type="primary" 
           icon={<PlusOutlined />}
           onClick={() => openModal()}
+          style={{ backgroundColor: '#C5A46D', borderColor: '#C5A46D', color: '#111827', fontWeight: 600 }}
         >
           新增商品
         </Button>

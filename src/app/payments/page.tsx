@@ -281,7 +281,7 @@ function PaymentsContent() {
   ];
 
   return (
-    <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
+    <div style={{ height: '100%', padding: '24px', backgroundColor: '#FFFFFF' }}>
       {/* 统计卡片 */}
       <Row gutter={16} style={{ marginBottom: 16 }}>
         <Col span={6}>
