@@ -328,7 +328,7 @@ function PaymentsContent() {
 
       {/* 搜索和筛选栏 */}
       <div className="mb-6 flex justify-between items-center">
-        <Title level={2} className="mb-0">支付管理</Title>
+        <Title level={4} className="mb-0">支付管理</Title>
         <Space>
           <Select
             value={statusFilter}

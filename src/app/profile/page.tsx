@@ -61,7 +61,7 @@ function ProfileContent() {
 
   return (
     <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
-      <Title level={2} className="mb-6">账号详情</Title>
+      <Title level={4} className="mb-6">账号详情</Title>
       
       <div className="max-w-2xl">
         <Card>

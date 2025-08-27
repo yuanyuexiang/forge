@@ -236,7 +236,7 @@ function ProductsContent() {
   return (
     <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
       <div className="mb-6 flex justify-between items-center">
-        <Title level={2} className="mb-0">商品管理</Title>
+        <Title level={4} className="mb-0">商品管理</Title>
         <Button 
           type="primary" 
           icon={<PlusOutlined />}

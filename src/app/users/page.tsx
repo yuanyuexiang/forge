@@ -157,7 +157,7 @@ function UsersContent() {
 
       {/* 搜索和筛选栏 */}
       <div className="mb-6 flex justify-between items-center">
-        <Title level={2} className="mb-0">用户管理</Title>
+        <Title level={4} className="mb-0">用户管理</Title>
         <Space>
           <Search
             placeholder="搜索用户名或邮箱"
