@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { 
   Table, 
   Button, 
@@ -15,7 +15,9 @@ import {
   Typography,
   Row,
   Col,
-  Switch
+  Switch,
+  Upload,
+  Image
 } from 'antd';
 import { 
   PlusOutlined, 
@@ -25,7 +27,9 @@ import {
   EyeInvisibleOutlined,
   ClockCircleOutlined,
   FileTextOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
+  UploadOutlined,
+  LoadingOutlined
 } from '@ant-design/icons';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import AdminLayout from '../components/AdminLayout';
@@ -87,6 +91,12 @@ function ProductsContent() {
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
+  
+  // 图片上传状态
+  const [mainImageUploading, setMainImageUploading] = useState(false);
+  const [imagesUploading, setImagesUploading] = useState(false);
+  const [mainImageList, setMainImageList] = useState<any[]>([]);
+  const [imageList, setImageList] = useState<any[]>([]);
 
   // 查询产品列表
   const { data: productsData, loading, error, refetch } = useGetProductsQuery();
@@ -145,6 +155,31 @@ function ProductsContent() {
     setEditingProduct(product || null);
     setModalVisible(true);
     if (product) {
+      // 初始化主图
+      if (product.main_image) {
+        setMainImageList([{
+          uid: product.main_image,
+          name: '主图',
+          status: 'done',
+          url: `/api/assets/${product.main_image}`
+        }]);
+      } else {
+        setMainImageList([]);
+      }
+
+      // 初始化商品图片
+      if (product.images && Array.isArray(product.images)) {
+        const imagesList = product.images.map((imageId: string, index: number) => ({
+          uid: imageId,
+          name: `图片${index + 1}`,
+          status: 'done',
+          url: `/api/assets/${imageId}`
+        }));
+        setImageList(imagesList);
+      } else {
+        setImageList([]);
+      }
+
       form.setFieldsValue({
         name: product.name,
         subtitle: product.subtitle,
@@ -156,12 +191,15 @@ function ProductsContent() {
         barcode: product.barcode,
         category_id: product.category_id?.id,
         status: product.status,
-        images: product.images ? product.images.join('\n') : '',
+        main_image: product.main_image,
+        images: product.images,
         video_url: product.video_url,
         is_on_sale: product.is_on_sale
       });
     } else {
       form.resetFields();
+      setMainImageList([]);
+      setImageList([]);
     }
   };
 
@@ -170,6 +208,8 @@ function ProductsContent() {
     setModalVisible(false);
     setEditingProduct(null);
     form.resetFields();
+    setMainImageList([]);
+    setImageList([]);
   };
 
   // 保存商品
@@ -181,10 +221,14 @@ function ProductsContent() {
       const transformedValues = {
         ...values,
         category_id: values.category_id ? { id: values.category_id } : undefined,
-        // 处理图片数组：将换行分隔的文本转换为数组
-        images: values.images ? 
-          values.images.split('\n').filter((url: string) => url.trim()) : 
-          [],
+        // 处理图片数据：确保是文件ID而不是对象
+        main_image: typeof values.main_image === 'string' ? values.main_image : 
+                   (values.main_image?.file?.uid || values.main_image?.uid || null),
+        // 处理图片数组：确保是文件ID数组格式
+        images: Array.isArray(values.images) ? 
+                values.images.map((img: any) => 
+                  typeof img === 'string' ? img : (img?.file?.uid || img?.uid || img)
+                ).filter(Boolean) : [],
         // 确保数值字段的正确类型
         price: values.price ? Number(values.price) : undefined,
         market_price: values.market_price ? Number(values.market_price) : undefined,
@@ -200,7 +244,11 @@ function ProductsContent() {
       
       // 调试日志
       console.log('Original form values:', values);
+      console.log('Main image value:', values.main_image);
+      console.log('Images value:', values.images);
       console.log('Transformed values:', transformedValues);
+      console.log('Final main_image:', transformedValues.main_image);
+      console.log('Final images:', transformedValues.images);
       
       if (editingProduct) {
         // 更新产品
@@ -234,6 +282,133 @@ function ProductsContent() {
     }
   };
 
+  // 主图上传处理
+  const handleMainImageUpload = useCallback(async (file: any) => {
+    setMainImageUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // 获取认证token
+      const authToken = localStorage.getItem('directus_auth_token') || 
+                       localStorage.getItem('authToken') ||
+                       sessionStorage.getItem('directus_auth_token');
+      
+      // 使用fetch直接上传到Directus
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        // 假设返回的结果包含文件ID
+        const fileId = result.data?.id;
+        
+        setMainImageList([{
+          uid: fileId,
+          name: file.name,
+          status: 'done',
+          url: `/api/assets/${fileId}`,
+          response: result
+        }]);
+        
+        // 更新表单值
+        form.setFieldValue('main_image', fileId);
+        message.success('主图上传成功');
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Upload response:', errorData);
+        throw new Error(errorData.error || '上传失败');
+      }
+    } catch (error) {
+      console.error('主图上传失败:', error);
+      message.error(`主图上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    } finally {
+      setMainImageUploading(false);
+    }
+    return false; // 阻止默认上传行为
+  }, [form]);
+
+  // 商品图片上传处理
+  const handleImagesUpload = useCallback(async (file: any) => {
+    setImagesUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      // 获取认证token
+      const authToken = localStorage.getItem('directus_auth_token') || 
+                       localStorage.getItem('authToken') ||
+                       sessionStorage.getItem('directus_auth_token');
+      
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        const fileId = result.data?.id;
+        
+        const newImage = {
+          uid: fileId,
+          name: file.name,
+          status: 'done',
+          url: `/api/assets/${fileId}`,
+          response: result
+        };
+        
+        const newImageList = [...imageList, newImage];
+        setImageList(newImageList);
+        
+        // 更新表单值 - 将所有图片ID组成数组
+        const imageIds = newImageList.map(img => img.uid);
+        form.setFieldValue('images', imageIds);
+        message.success('图片上传成功');
+      } else {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Upload response:', errorData);
+        throw new Error(errorData.error || '上传失败');
+      }
+    } catch (error) {
+      console.error('图片上传失败:', error);
+      message.error(`图片上传失败: ${error instanceof Error ? error.message : '未知错误'}`);
+    } finally {
+      setImagesUploading(false);
+    }
+    return false;
+  }, [form, imageList]);
+
+  // 移除图片
+  const handleRemoveImage = useCallback((file: any, isMainImage: boolean = false) => {
+    if (isMainImage) {
+      setMainImageList([]);
+      form.setFieldValue('main_image', null);
+    } else {
+      const newImageList = imageList.filter(img => img.uid !== file.uid);
+      setImageList(newImageList);
+      const imageIds = newImageList.map(img => img.uid);
+      form.setFieldValue('images', imageIds);
+    }
+  }, [form, imageList]);
+
+  // 主图文件列表变化处理
+  const handleMainImageChange = useCallback(({ fileList }: any) => {
+    setMainImageList(fileList);
+  }, []);
+
+  // 商品图片文件列表变化处理
+  const handleImagesChange = useCallback(({ fileList }: any) => {
+    setImageList(fileList);
+  }, []);
+
   // 过滤商品
   const filteredProducts = products.filter((product: Product) =>
     product.name.toLowerCase().includes(searchText.toLowerCase()) ||
@@ -241,6 +416,39 @@ function ProductsContent() {
   );
 
   const columns = [
+    {
+      title: '主图',
+      dataIndex: 'main_image',
+      key: 'main_image',
+      width: 80,
+      render: (main_image: string) => (
+        main_image ? (
+          <Image
+            width={60}
+            height={60}
+            src={main_image.startsWith('http') ? main_image : `/api/assets/${main_image}`}
+            alt="商品主图"
+            style={{ objectFit: 'cover', borderRadius: '4px' }}
+            fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dyHgXNJBSWpFCYh2zi+oLMpMzyhRcASGUqqCZ16yno6CkYGRAQMDKMwhqj/fAIcloxgHQqxAjIHBEugw5sUIsSQpBobtQPdLciLEVJYzMPBHMDBsayhILEqEO4DxG0txmrERhM29nYGBddr//5/DGRjYNRkY/l7////39v///y4Dmn+LgeHANwDrkl1AuO+pmgAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAwqADAAQAAAABAAAAwwAAAAD9b/HnAAAHlklEQVR4Ae3dP3Ik1xkE8A8b6IoNEFpjQSfvwCfeOXfgJvwR6FTPWlwu6JAySy0r4AxOgG7eokOCOhYpQSwLKQLJZ7sKM9p6ZfD/+d9/vQ=="
+          />
+        ) : (
+          <div 
+            style={{ 
+              width: 60, 
+              height: 60, 
+              backgroundColor: '#f5f5f5', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              borderRadius: '4px',
+              color: '#999'
+            }}
+          >
+            无图片
+          </div>
+        )
+      ),
+    },
     {
       title: '商品名称',
       dataIndex: 'name',
@@ -576,14 +784,64 @@ function ProductsContent() {
           </Form.Item>
 
           <Form.Item
-            label="商品图片"
-            name="images"
-            tooltip="多个图片URL用换行分隔"
+            label="主图"
+            tooltip="商品的主要展示图片"
           >
-            <Input.TextArea 
-              rows={3} 
-              placeholder="请输入图片URL，多个图片请换行分隔&#10;例如：&#10;https://example.com/image1.jpg&#10;https://example.com/image2.jpg"
-            />
+            <Form.Item name="main_image" hidden>
+              <Input />
+            </Form.Item>
+            <Upload
+              listType="picture-card"
+              fileList={mainImageList}
+              beforeUpload={handleMainImageUpload}
+              onRemove={(file) => handleRemoveImage(file, true)}
+              onChange={handleMainImageChange}
+              maxCount={1}
+              accept="image/*"
+              showUploadList={{
+                showPreviewIcon: true,
+                showRemoveIcon: true,
+                showDownloadIcon: false
+              }}
+            >
+              {mainImageList.length < 1 && (
+                <div>
+                  {mainImageUploading ? <LoadingOutlined /> : <UploadOutlined />}
+                  <div style={{ marginTop: 8 }}>上传主图</div>
+                </div>
+              )}
+            </Upload>
+          </Form.Item>
+
+          <Form.Item
+            label="商品图片"
+            tooltip="商品的详细图片，支持多张"
+          >
+            <Form.Item name="images" hidden>
+              <Input />
+            </Form.Item>
+            <Upload
+              listType="picture-card"
+              fileList={imageList}
+              beforeUpload={handleImagesUpload}
+              onRemove={(file) => handleRemoveImage(file, false)}
+              onChange={handleImagesChange}
+              maxCount={10}
+              accept="image/*"
+              multiple
+              showUploadList={{
+                showPreviewIcon: true,
+                showRemoveIcon: true,
+                showDownloadIcon: false
+              }}
+            >
+              {imageList.length < 10 && (
+                <div>
+                  {imagesUploading ? <LoadingOutlined /> : <UploadOutlined />}
+                  <div style={{ marginTop: 8 }}>上传图片</div>
+                </div>
+              )}
+            </Upload>
           </Form.Item>
 
           <Form.Item
