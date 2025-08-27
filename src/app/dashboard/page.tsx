@@ -6,7 +6,8 @@ import {
   ShoppingCartOutlined, 
   UserOutlined, 
   ShoppingOutlined,
-  DashboardOutlined
+  DashboardOutlined,
+  DollarOutlined
 } from '@ant-design/icons';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import AdminLayout from '../components/AdminLayout';
@@ -19,8 +20,13 @@ import {
 const { Title } = Typography;
 
 function DashboardContent() {
+  // 获取今日日期（格式：YYYY-MM-DD）
+  const today = new Date().toISOString().split('T')[0];
+  
   // 使用 GraphQL hooks 获取仪表板数据
-  const { data: dashboardData, loading: dashboardLoading, error: dashboardError } = useGetDashboardDataQuery();
+  const { data: dashboardData, loading: dashboardLoading, error: dashboardError } = useGetDashboardDataQuery({
+    variables: { today }
+  });
   const { loading: usersLoading } = useGetRecentUsersQuery({ variables: { limit: 5 } });
   const { loading: productsLoading } = useGetRecentProductsQuery({ variables: { limit: 5 } });
 
@@ -31,7 +37,10 @@ function DashboardContent() {
     totalOrders: dashboardData?.orders_aggregated[0]?.countAll || 0,
     totalProducts: dashboardData?.products_aggregated[0]?.countAll || 0,
     totalUsers: dashboardData?.users_aggregated[0]?.countAll || 0,
-    totalCategories: dashboardData?.categories_aggregated[0]?.countAll || 0
+    totalCategories: dashboardData?.categories_aggregated[0]?.countAll || 0,
+    totalRevenue: dashboardData?.total_revenue[0]?.sum?.total_price || 0,
+    todayOrders: dashboardData?.today_orders[0]?.countAll || 0,
+    todayRevenue: dashboardData?.today_revenue[0]?.sum?.total_price || 0
   };
 
   if (dashboardError) {
@@ -118,15 +127,15 @@ function DashboardContent() {
             <div>
               <p className="text-sm text-gray-500 mb-1">今日销售额</p>
               <div className="text-3xl font-bold text-gray-900">
-                {loading ? <Spin size="small" /> : `¥${(statsData.totalOrders * 89).toLocaleString()}`}
+                {loading ? <Spin size="small" /> : `¥${statsData.todayRevenue.toLocaleString()}`}
               </div>
               <p className="text-sm text-purple-600 mt-1">
-                <span className="inline-block mr-1">↗</span>
-                较昨日 +15%
+                <span className="inline-block mr-1">📈</span>
+                今日订单: {statsData.todayOrders} 笔
               </p>
             </div>
             <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <DashboardOutlined className="text-2xl text-purple-600" />
+              <DollarOutlined className="text-2xl text-purple-600" />
             </div>
           </div>
         </div>

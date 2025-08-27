@@ -3078,10 +3078,12 @@ export type DeleteCategoryMutationVariables = Exact<{
 
 export type DeleteCategoryMutation = { __typename?: 'Mutation', delete_categories_item?: { __typename?: 'delete_one', id: string } | null };
 
-export type GetDashboardDataQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetDashboardDataQueryVariables = Exact<{
+  today?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
-export type GetDashboardDataQuery = { __typename?: 'Query', users_aggregated: Array<{ __typename?: 'users_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }> };
+export type GetDashboardDataQuery = { __typename?: 'Query', users_aggregated: Array<{ __typename?: 'users_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }>, total_revenue: Array<{ __typename?: 'orders_aggregated', sum?: { __typename?: 'orders_aggregated_fields', total_price?: number | null } | null }>, today_orders: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, today_revenue: Array<{ __typename?: 'orders_aggregated', sum?: { __typename?: 'orders_aggregated_fields', total_price?: number | null } | null }> };
 
 export type GetRecentUsersQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -3569,7 +3571,7 @@ export type DeleteCategoryMutationHookResult = ReturnType<typeof useDeleteCatego
 export type DeleteCategoryMutationResult = ApolloReactCommon.MutationResult<DeleteCategoryMutation>;
 export type DeleteCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
 export const GetDashboardDataDocument = gql`
-    query GetDashboardData {
+    query GetDashboardData($today: String) {
   users_aggregated {
     countAll
   }
@@ -3581,6 +3583,21 @@ export const GetDashboardDataDocument = gql`
   }
   categories_aggregated {
     countAll
+  }
+  total_revenue: orders_aggregated(filter: {status: {_eq: "completed"}}) {
+    sum {
+      total_price
+    }
+  }
+  today_orders: orders_aggregated(filter: {created_at: {_gte: $today}}) {
+    countAll
+  }
+  today_revenue: orders_aggregated(
+    filter: {created_at: {_gte: $today}, status: {_eq: "completed"}}
+  ) {
+    sum {
+      total_price
+    }
   }
 }
     `;
@@ -3597,6 +3614,7 @@ export const GetDashboardDataDocument = gql`
  * @example
  * const { data, loading, error } = useGetDashboardDataQuery({
  *   variables: {
+ *      today: // value for 'today'
  *   },
  * });
  */

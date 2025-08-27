@@ -1,4 +1,4 @@
-query GetDashboardData {
+query GetDashboardData($today: String) {
   users_aggregated {
     countAll
   }
@@ -10,6 +10,27 @@ query GetDashboardData {
   }
   categories_aggregated {
     countAll
+  }
+  # 总销售额（所有已完成订单）
+  total_revenue: orders_aggregated(filter: { status: { _eq: "completed" } }) {
+    sum {
+      total_price
+    }
+  }
+  # 今日订单数
+  today_orders: orders_aggregated(filter: { 
+    created_at: { _gte: $today } 
+  }) {
+    countAll
+  }
+  # 今日销售额
+  today_revenue: orders_aggregated(filter: { 
+    created_at: { _gte: $today }
+    status: { _eq: "completed" }
+  }) {
+    sum {
+      total_price
+    }
   }
 }
 
