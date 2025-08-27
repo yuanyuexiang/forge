@@ -105,7 +105,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <Sider trigger={null} collapsible collapsed={collapsed}>
         <div className="h-16 flex items-center justify-center bg-blue-600">
           <Title level={4} className="text-white m-0">
-            {collapsed ? 'EC' : '电商后台'}
+            {collapsed ? 'EC' : '服装店后台'}
           </Title>
         </div>
         <Menu

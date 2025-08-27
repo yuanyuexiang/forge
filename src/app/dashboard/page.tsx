@@ -49,18 +49,11 @@ function DashboardContent() {
 
   return (
     <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
-      {/* 系统状态提示 */}
-      <div className="mb-4">
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 text-sm">
-          <span className="text-blue-800">🚀 已连接到 Directus 后端系统</span>
-        </div>
-      </div>
-
       {/* 页面标题区域 */}
       <div className="mb-6">
         <Title level={2} className="mb-2">仪表盘概览</Title>
         <p className="text-gray-600">
-          查看您的电商平台关键数据和业务指标
+          查看您的服装店平台关键数据和业务指标
         </p>
       </div>
       
