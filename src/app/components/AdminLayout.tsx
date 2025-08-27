@@ -164,35 +164,37 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             }}
           />
           
-          <Dropdown
-            menu={{ items: userMenuItems }}
-            placement="bottomRight"
-            arrow
-          >
-            <div 
-              className="flex items-center cursor-pointer px-2 py-1 rounded"
-              style={{ 
-                transition: 'background-color 0.2s',
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#374151';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-              }}
+
+          <div className="flex flex-row">
+            <span style={{ fontSize: '12px', color: '#D1D5DB' ,marginLeft: '8px'}}>
+              {user.email}
+            </span>
+          
+            <Dropdown
+              menu={{ items: userMenuItems }}
+              placement="bottomRight"
+              arrow
             >
-              <Avatar 
-                icon={<UserOutlined />} 
-                className="mr-2"
-                style={{ backgroundColor: '#C5A46D' }}
-              />
-              <div className="flex flex-col">
-                <span style={{ fontSize: '12px', color: '#D1D5DB' ,marginLeft: '8px'}}>
-                  {user.email}
-                </span>
+              <div 
+                className="flex items-center cursor-pointer px-2 py-1 rounded"
+                style={{ 
+                  transition: 'background-color 0.2s',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#374151';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+              >
+                <Avatar 
+                  icon={<UserOutlined />} 
+                  className="mr-2"
+                  style={{ backgroundColor: '#C5A46D' }}
+                />
               </div>
-            </div>
-          </Dropdown>
+            </Dropdown>
+          </div>
         </Header>
         
         <Content style={{ 
