@@ -20,7 +20,6 @@ interface AuthContextType {
   logout: () => void;
   loading: boolean;
   refreshToken: () => Promise<boolean>;
-  isAuthenticated: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -124,6 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // 设置用户信息
       setUser(data.user);
       
+      router.push('/dashboard');
       return true;
     } catch (error) {
       console.error('Login error:', error);
@@ -150,24 +150,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const isTokenValid = await checkTokenExpiration();
         
         if (isTokenValid) {
-          // 如果 token 有效，我们需要获取用户信息
-          // 暂时设置一个基本的用户对象，实际应用中可以调用用户信息 API
+          // 从 token 中提取用户信息
           try {
             const payload = JSON.parse(atob(accessToken.split('.')[1]));
+            // 这里可能需要根据您的 token payload 结构调整
             setUser({
               id: payload.id,
               email: payload.email || '',
+              // 可能需要额外的 API 调用来获取完整的用户信息
             });
           } catch (error) {
             console.error('Error parsing token:', error);
-            // 如果无法解析 token，清除认证状态
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
+            logout();
           }
-        } else {
-          // token 无效，清除认证状态
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
         }
       }
       
@@ -194,7 +189,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     logout,
     loading,
     refreshToken,
-    isAuthenticated: !!user,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

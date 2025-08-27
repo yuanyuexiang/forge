@@ -23,13 +23,13 @@ export default function LoginPage() {
     setLoading(true);
     
     try {
-      const result = await login(values.email, values.password);
+      const success = await login(values.email, values.password);
       
-      if (result.success) {
+      if (success) {
         message.success('登录成功！');
         router.push('/dashboard');
       } else {
-        message.error(result.error || '登录失败！');
+        message.error('登录失败，请检查邮箱和密码！');
       }
     } catch {
       message.error('登录失败，请重试！');

@@ -34,7 +34,7 @@ function ProfileContent() {
   React.useEffect(() => {
     if (user) {
       form.setFieldsValue({
-        name: user.name,
+        name: user.first_name || user.last_name ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : '',
         email: user.email,
       });
     }
@@ -53,7 +53,7 @@ function ProfileContent() {
 
   const handleCancel = () => {
     form.setFieldsValue({
-      name: user?.name,
+      name: user?.first_name || user?.last_name ? `${user?.first_name || ''} ${user?.last_name || ''}`.trim() : '',
       email: user?.email,
     });
     setEditing(false);
@@ -68,7 +68,12 @@ function ProfileContent() {
           <div className="text-center mb-6">
             <Avatar size={80} icon={<UserOutlined />} className="mb-4" />
             <div>
-              <Title level={4} className="mb-1">{user?.name || '未设置'}</Title>
+              <Title level={4} className="mb-1">
+                {user?.first_name || user?.last_name 
+                  ? `${user?.first_name || ''} ${user?.last_name || ''}`.trim()
+                  : '未设置'
+                }
+              </Title>
               <Text type="secondary">{user?.email}</Text>
             </div>
             <Upload
