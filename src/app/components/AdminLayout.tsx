@@ -38,6 +38,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname === '/users') return 'users';
     if (pathname === '/categories') return 'categories';
     if (pathname === '/payments') return 'payments';
+    if (pathname === '/profile') return 'profile';
     return 'dashboard';
   };
 
@@ -82,12 +83,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const userMenuItems = [
     {
-      key: 'api-settings',
-      icon: <SettingOutlined />,
-      label: 'API 设置',
-      onClick: () => {
-        // 这里可以添加 API 设置逻辑
-      },
+      key: 'profile',
+      icon: <UserOutlined />,
+      label: '账号详情',
+      onClick: () => router.push('/profile'),
     },
     {
       key: 'logout',
