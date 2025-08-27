@@ -20,6 +20,14 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: false,
   },
+  // Turbopack 配置
+  turbopack: {
+    resolveAlias: {
+      // 确保使用正确的 React 版本
+      'react': 'react',
+      'react-dom': 'react-dom',
+    }
+  },
 };
 
 export default nextConfig;

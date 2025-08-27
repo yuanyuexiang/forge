@@ -1,0 +1,669 @@
+'use client';
+
+import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
+import {
+  Form,
+  Input,
+  InputNumber,
+  Select,
+  Switch,
+  Button,
+  Row,
+  Col,
+  Typography,
+  Card,
+  message,
+  Upload,
+  Spin,
+  Divider,
+  Space
+} from 'antd';
+import {
+  ArrowLeftOutlined,
+  SaveOutlined,
+  UploadOutlined,
+  LoadingOutlined,
+  FileTextOutlined,
+  ClockCircleOutlined,
+  CheckCircleOutlined,
+  EyeInvisibleOutlined
+} from '@ant-design/icons';
+import { ProtectedRoute } from '../../components/ProtectedRoute';
+import AdminLayout from '../../components/AdminLayout';
+import { 
+  useGetProductsQuery,
+  useGetCategoriesQuery,
+  useCreateProductMutation,
+  useUpdateProductMutation,
+  GetProductsQuery
+} from '../../../generated/graphql';
+
+const { Title } = Typography;
+const { Option } = Select;
+const { TextArea } = Input;
+
+// 使用生成的类型
+type Product = GetProductsQuery['products'][0];
+
+function ProductEditContent() {
+  const router = useRouter();
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [product, setProduct] = useState<Product | null>(null);
+  
+  // 图片上传相关状态
+  const [mainImageList, setMainImageList] = useState<any[]>([]);
+  const [imageList, setImageList] = useState<any[]>([]);
+  const [mainImageUploading, setMainImageUploading] = useState(false);
+  const [imagesUploading, setImagesUploading] = useState(false);
+
+  const isEditMode = params.id !== 'new';
+
+  // 查询商品列表
+  const { data: productsData, refetch } = useGetProductsQuery();
+  
+  // 查询分类列表
+  const { data: categoriesData } = useGetCategoriesQuery();
+  
+  // 创建商品
+  const [createProduct] = useCreateProductMutation({
+    onCompleted: () => {
+      message.success('商品创建成功');
+      const returnParams = searchParams.get('return');
+      if (returnParams) {
+        const decodedParams = decodeURIComponent(returnParams);
+        router.push(`/products?${decodedParams}`);
+      } else {
+        router.push('/products');
+      }
+    },
+    onError: (error) => {
+      console.error('创建商品失败:', error);
+      message.error('创建商品失败');
+      setSaving(false);
+    }
+  });
+
+  // 更新商品
+  const [updateProduct] = useUpdateProductMutation({
+    onCompleted: () => {
+      message.success('商品更新成功');
+      const returnParams = searchParams.get('return');
+      if (returnParams) {
+        const decodedParams = decodeURIComponent(returnParams);
+        router.push(`/products?${decodedParams}`);
+      } else {
+        router.push('/products');
+      }
+    },
+    onError: (error) => {
+      console.error('更新商品失败:', error);
+      message.error('更新商品失败');
+      setSaving(false);
+    }
+  });
+
+  const products = productsData?.products || [];
+  const categories = categoriesData?.categories || [];
+
+  // 生成带认证的图片URL
+  const getImageUrl = useCallback((imageId: string): string => {
+    if (!imageId) return '';
+    if (imageId.startsWith('http')) return imageId;
+    
+    const authToken = localStorage.getItem('directus_auth_token') || 
+                     localStorage.getItem('authToken');
+    
+    if (authToken) {
+      return `/api/assets/${imageId}?token=${encodeURIComponent(authToken)}`;
+    }
+    
+    return `/api/assets/${imageId}`;
+  }, []);
+
+  // 获取商品数据
+  const fetchProduct = () => {
+    if (!isEditMode || !productsData) return;
+    
+    const foundProduct = products.find((p: Product) => p.id === params.id);
+    if (foundProduct) {
+      setProduct(foundProduct);
+      
+      // 初始化表单数据
+      form.setFieldsValue({
+        name: foundProduct.name,
+        subtitle: foundProduct.subtitle,
+        description: foundProduct.description,
+        brand: foundProduct.brand,
+        price: foundProduct.price,
+        market_price: foundProduct.market_price,
+        stock: foundProduct.stock,
+        barcode: foundProduct.barcode,
+        category_id: foundProduct.category_id?.id,
+        status: foundProduct.status,
+        main_image: foundProduct.main_image,
+        images: foundProduct.images,
+        video_url: foundProduct.video_url,
+        is_on_sale: foundProduct.is_on_sale
+      });
+
+      // 初始化主图
+      if (foundProduct.main_image) {
+        setMainImageList([{
+          uid: foundProduct.main_image,
+          name: '主图',
+          status: 'done',
+          url: getImageUrl(foundProduct.main_image)
+        }]);
+      }
+
+      // 初始化商品图片
+      if (foundProduct.images && Array.isArray(foundProduct.images)) {
+        const imagesList = foundProduct.images.map((imageId: string, index: number) => ({
+          uid: imageId,
+          name: `图片${index + 1}`,
+          status: 'done',
+          url: getImageUrl(imageId)
+        }));
+        setImageList(imagesList);
+      }
+    } else if (isEditMode) {
+      message.error('商品不存在');
+      router.push('/products');
+    }
+  };
+
+  // 主图上传处理
+  const handleMainImageUpload = useCallback(async (file: File) => {
+    setMainImageUploading(true);
+    try {
+      const authToken = localStorage.getItem('directus_auth_token') || 
+                       localStorage.getItem('authToken') ||
+                       localStorage.getItem('directus_token');
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('storage', 'local');
+      formData.append('type', file.type);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('上传失败');
+      }
+
+      const result = await response.json();
+      const fileId = result.data.id;
+
+      // 更新表单值
+      form.setFieldValue('main_image', fileId);
+
+      // 更新上传列表
+      setMainImageList([{
+        uid: fileId,
+        name: file.name,
+        status: 'done',
+        url: getImageUrl(fileId)
+      }]);
+
+      message.success('主图上传成功');
+    } catch (error) {
+      console.error('主图上传失败:', error);
+      message.error('主图上传失败');
+    } finally {
+      setMainImageUploading(false);
+    }
+    return false;
+  }, [form, getImageUrl]);
+
+  // 商品图片上传处理
+  const handleImagesUpload = useCallback(async (file: File) => {
+    setImagesUploading(true);
+    try {
+      const authToken = localStorage.getItem('directus_auth_token') || 
+                       localStorage.getItem('authToken') ||
+                       localStorage.getItem('directus_token');
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('storage', 'local');
+      formData.append('type', file.type);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('上传失败');
+      }
+
+      const result = await response.json();
+      const fileId = result.data.id;
+
+      // 更新图片列表
+      const newImageList = [...imageList, {
+        uid: fileId,
+        name: file.name,
+        status: 'done',
+        url: getImageUrl(fileId)
+      }];
+      setImageList(newImageList);
+
+      // 更新表单值
+      const imageIds = newImageList.map(img => img.uid);
+      form.setFieldValue('images', imageIds);
+
+      message.success('图片上传成功');
+    } catch (error) {
+      console.error('图片上传失败:', error);
+      message.error('图片上传失败');
+    } finally {
+      setImagesUploading(false);
+    }
+    return false;
+  }, [form, getImageUrl, imageList]);
+
+  // 删除图片处理
+  const handleRemoveImage = useCallback((file: any, isMainImage: boolean) => {
+    if (isMainImage) {
+      setMainImageList([]);
+      form.setFieldValue('main_image', '');
+    } else {
+      const newImageList = imageList.filter(item => item.uid !== file.uid);
+      setImageList(newImageList);
+      const imageIds = newImageList.map(img => img.uid);
+      form.setFieldValue('images', imageIds);
+    }
+  }, [form, imageList]);
+
+  // 主图变化处理
+  const handleMainImageChange = useCallback(({ fileList }: any) => {
+    setMainImageList(fileList);
+  }, []);
+
+  // 商品图片变化处理
+  const handleImagesChange = useCallback(({ fileList }: any) => {
+    setImageList(fileList);
+  }, []);
+
+  // 保存商品
+  const handleSave = async () => {
+    try {
+      const values = await form.validateFields();
+      setSaving(true);
+
+      // 转换数据格式
+      const productData = {
+        name: values.name,
+        subtitle: values.subtitle || '',
+        description: values.description || '',
+        brand: values.brand || '',
+        price: Number(values.price),
+        market_price: values.market_price ? Number(values.market_price) : null,
+        stock: Number(values.stock),
+        barcode: values.barcode || '',
+        category_id: values.category_id ? { id: values.category_id } : null,
+        status: values.status,
+        main_image: values.main_image || '',
+        images: values.images || [],
+        video_url: values.video_url || '',
+        is_on_sale: Boolean(values.is_on_sale)
+      };
+
+      if (isEditMode) {
+        // 更新商品
+        await updateProduct({
+          variables: {
+            id: params.id as string,
+            data: productData
+          }
+        });
+      } else {
+        // 创建商品
+        await createProduct({
+          variables: {
+            data: productData
+          }
+        });
+      }
+    } catch (error) {
+      console.error('保存商品失败:', error);
+      message.error('保存商品失败');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // 返回列表
+  const handleBack = () => {
+    const returnParams = searchParams.get('return');
+    if (returnParams) {
+      // 解码返回参数并重建 URL
+      const decodedParams = decodeURIComponent(returnParams);
+      router.push(`/products?${decodedParams}`);
+    } else {
+      router.push('/products');
+    }
+  };
+
+  useEffect(() => {
+    fetchProduct();
+  }, [params.id, productsData]);
+
+  if (loading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '400px' 
+      }}>
+        <Spin size="large" />
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ padding: '24px', backgroundColor: '#F9FAFB', minHeight: '100vh' }}>
+      {/* 头部 */}
+      <div className="mb-6 flex justify-between items-center">
+        <div className="flex items-center">
+          <Button 
+            icon={<ArrowLeftOutlined />} 
+            onClick={handleBack}
+            style={{ marginRight: 16 }}
+          >
+            返回
+          </Button>
+          <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>
+            {isEditMode ? '编辑商品' : '新增商品'}
+          </Title>
+        </div>
+        <Space>
+          <Button onClick={handleBack}>
+            取消
+          </Button>
+          <Button 
+            type="primary" 
+            icon={<SaveOutlined />}
+            loading={saving}
+            onClick={handleSave}
+            style={{ backgroundColor: '#C5A46D', borderColor: '#C5A46D' }}
+          >
+            保存
+          </Button>
+        </Space>
+      </div>
+
+      {/* 表单内容 */}
+      <Row gutter={24}>
+        <Col span={16}>
+          <Card title="基本信息" style={{ marginBottom: 24 }}>
+            <Form
+              form={form}
+              layout="vertical"
+            >
+              <Form.Item
+                label="商品名称"
+                name="name"
+                rules={[{ required: true, message: '请输入商品名称' }]}
+              >
+                <Input placeholder="请输入商品名称" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="副标题"
+                name="subtitle"
+              >
+                <Input placeholder="请输入商品副标题" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="商品描述"
+                name="description"
+              >
+                <TextArea rows={4} placeholder="请输入商品描述" />
+              </Form.Item>
+
+              <Form.Item
+                label="品牌"
+                name="brand"
+              >
+                <Input placeholder="请输入品牌名称" size="large" />
+              </Form.Item>
+
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    label="价格"
+                    name="price"
+                    rules={[
+                      { required: true, message: '请输入价格' },
+                      { type: 'number', min: 0, message: '价格不能为负数' }
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      placeholder="请输入价格"
+                      min={0}
+                      step={0.01}
+                      precision={2}
+                      size="large"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="市场价"
+                    name="market_price"
+                    rules={[
+                      { type: 'number', min: 0, message: '市场价不能为负数' }
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      placeholder="请输入市场价"
+                      min={0}
+                      step={0.01}
+                      precision={2}
+                      size="large"
+                    />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Row gutter={16}>
+                <Col span={12}>
+                  <Form.Item
+                    label="库存"
+                    name="stock"
+                    rules={[
+                      { required: true, message: '请输入库存数量' },
+                      { type: 'number', min: 0, message: '库存不能为负数' }
+                    ]}
+                  >
+                    <InputNumber
+                      style={{ width: '100%' }}
+                      placeholder="请输入库存数量"
+                      min={0}
+                      step={1}
+                      size="large"
+                    />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="商品条码"
+                    name="barcode"
+                  >
+                    <Input placeholder="请输入商品条码" size="large" />
+                  </Form.Item>
+                </Col>
+              </Row>
+
+              <Form.Item
+                label="商品视频"
+                name="video_url"
+              >
+                <Input placeholder="请输入视频URL" size="large" />
+              </Form.Item>
+            </Form>
+          </Card>
+
+          <Card title="商品图片">
+            <Form form={form} layout="vertical">
+              <Form.Item
+                label="主图"
+                tooltip="商品的主要展示图片"
+              >
+                <Form.Item name="main_image" hidden>
+                  <Input />
+                </Form.Item>
+                <Upload
+                  listType="picture-card"
+                  fileList={mainImageList}
+                  beforeUpload={handleMainImageUpload}
+                  onRemove={(file) => handleRemoveImage(file, true)}
+                  onChange={handleMainImageChange}
+                  maxCount={1}
+                  accept="image/*"
+                  showUploadList={{
+                    showPreviewIcon: true,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false
+                  }}
+                >
+                  {mainImageList.length < 1 && (
+                    <div>
+                      {mainImageUploading ? <LoadingOutlined /> : <UploadOutlined />}
+                      <div style={{ marginTop: 8 }}>上传主图</div>
+                    </div>
+                  )}
+                </Upload>
+              </Form.Item>
+
+              <Divider />
+
+              <Form.Item
+                label="商品图片"
+                tooltip="商品的详细图片，支持多张"
+              >
+                <Form.Item name="images" hidden>
+                  <Input />
+                </Form.Item>
+                <Upload
+                  listType="picture-card"
+                  fileList={imageList}
+                  beforeUpload={handleImagesUpload}
+                  onRemove={(file) => handleRemoveImage(file, false)}
+                  onChange={handleImagesChange}
+                  maxCount={10}
+                  accept="image/*"
+                  multiple
+                  showUploadList={{
+                    showPreviewIcon: true,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false
+                  }}
+                >
+                  {imageList.length < 10 && (
+                    <div>
+                      {imagesUploading ? <LoadingOutlined /> : <UploadOutlined />}
+                      <div style={{ marginTop: 8 }}>上传图片</div>
+                    </div>
+                  )}
+                </Upload>
+              </Form.Item>
+            </Form>
+          </Card>
+        </Col>
+
+        <Col span={8}>
+          <Card title="商品设置">
+            <Form form={form} layout="vertical">
+              <Form.Item
+                label="分类"
+                name="category_id"
+              >
+                <Select placeholder="请选择分类" allowClear size="large">
+                  {categories.map((category: any) => (
+                    <Option key={category.id} value={category.id}>
+                      {category.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="商品状态"
+                name="status"
+                initialValue="draft"
+                rules={[{ required: true, message: '请选择商品状态' }]}
+              >
+                <Select placeholder="请选择商品状态" size="large">
+                  <Option value="draft">
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <FileTextOutlined style={{ marginRight: '6px', color: '#8B5CF6' }} />
+                      草稿
+                    </span>
+                  </Option>
+                  <Option value="pending_review">
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <ClockCircleOutlined style={{ marginRight: '6px', color: '#F59E0B' }} />
+                      待审核
+                    </span>
+                  </Option>
+                  <Option value="on_sale">
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <CheckCircleOutlined style={{ marginRight: '6px', color: '#10B981' }} />
+                      在售
+                    </span>
+                  </Option>
+                  <Option value="off_sale">
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <EyeInvisibleOutlined style={{ marginRight: '6px', color: '#EF4444' }} />
+                      下架
+                    </span>
+                  </Option>
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="是否特价"
+                name="is_on_sale"
+                valuePropName="checked"
+                initialValue={false}
+              >
+                <Switch />
+              </Form.Item>
+            </Form>
+          </Card>
+        </Col>
+      </Row>
+    </div>
+  );
+}
+
+export default function ProductEditPage() {
+  return (
+    <ProtectedRoute>
+      <AdminLayout>
+        <ProductEditContent />
+      </AdminLayout>
+    </ProtectedRoute>
+  );
+}
