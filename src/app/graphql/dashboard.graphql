@@ -44,6 +44,7 @@ query GetRecentProducts($limit: Int = 5) {
     name
     price
     stock
+    status
     created_at
   }
 }

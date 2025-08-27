@@ -926,14 +926,27 @@ export type Create_Payments_Input = {
 };
 
 export type Create_Products_Input = {
+  barcode?: InputMaybe<Scalars['String']['input']>;
+  brand?: InputMaybe<Scalars['String']['input']>;
   category_id?: InputMaybe<Create_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  images?: InputMaybe<Scalars['JSON']['input']>;
+  is_on_sale?: InputMaybe<Scalars['Boolean']['input']>;
+  main_image?: InputMaybe<Scalars['String']['input']>;
+  market_price?: InputMaybe<Scalars['Float']['input']>;
   name: Scalars['String']['input'];
   price: Scalars['Float']['input'];
+  rating_avg?: InputMaybe<Scalars['Float']['input']>;
+  seller_id?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
   stock?: InputMaybe<Scalars['Int']['input']>;
+  subtitle?: InputMaybe<Scalars['String']['input']>;
+  total_reviews?: InputMaybe<Scalars['Int']['input']>;
+  total_sales_volume?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['Date']['input']>;
+  video_url?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Create_Users_Input = {
@@ -2749,16 +2762,30 @@ export type Payments_Mutated = {
 
 export type Products = {
   __typename?: 'products';
+  barcode?: Maybe<Scalars['String']['output']>;
+  brand?: Maybe<Scalars['String']['output']>;
   category_id?: Maybe<Categories>;
   created_at?: Maybe<Scalars['Date']['output']>;
   created_at_func?: Maybe<Datetime_Functions>;
   description?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  images?: Maybe<Scalars['JSON']['output']>;
+  images_func?: Maybe<Count_Functions>;
+  is_on_sale?: Maybe<Scalars['Boolean']['output']>;
+  main_image?: Maybe<Scalars['String']['output']>;
+  market_price?: Maybe<Scalars['Float']['output']>;
   name: Scalars['String']['output'];
   price: Scalars['Float']['output'];
+  rating_avg?: Maybe<Scalars['Float']['output']>;
+  seller_id?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
+  subtitle?: Maybe<Scalars['String']['output']>;
+  total_reviews?: Maybe<Scalars['Int']['output']>;
+  total_sales_volume?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['Date']['output']>;
   updated_at_func?: Maybe<Datetime_Functions>;
+  video_url?: Maybe<Scalars['String']['output']>;
 };
 
 
@@ -2787,37 +2814,69 @@ export type Products_Aggregated = {
 
 export type Products_Aggregated_Count = {
   __typename?: 'products_aggregated_count';
+  barcode?: Maybe<Scalars['Int']['output']>;
+  brand?: Maybe<Scalars['Int']['output']>;
   category_id?: Maybe<Scalars['Int']['output']>;
   created_at?: Maybe<Scalars['Int']['output']>;
   description?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  images?: Maybe<Scalars['Int']['output']>;
+  is_on_sale?: Maybe<Scalars['Int']['output']>;
+  main_image?: Maybe<Scalars['Int']['output']>;
+  market_price?: Maybe<Scalars['Int']['output']>;
   name?: Maybe<Scalars['Int']['output']>;
   price?: Maybe<Scalars['Int']['output']>;
+  rating_avg?: Maybe<Scalars['Int']['output']>;
+  seller_id?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
+  subtitle?: Maybe<Scalars['Int']['output']>;
+  total_reviews?: Maybe<Scalars['Int']['output']>;
+  total_sales_volume?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['Int']['output']>;
+  video_url?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Products_Aggregated_Fields = {
   __typename?: 'products_aggregated_fields';
   category_id?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
+  market_price?: Maybe<Scalars['Float']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
+  rating_avg?: Maybe<Scalars['Float']['output']>;
+  seller_id?: Maybe<Scalars['Float']['output']>;
   stock?: Maybe<Scalars['Float']['output']>;
+  total_reviews?: Maybe<Scalars['Float']['output']>;
+  total_sales_volume?: Maybe<Scalars['Float']['output']>;
 };
 
 export type Products_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Products_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Products_Filter>>>;
+  barcode?: InputMaybe<String_Filter_Operators>;
+  brand?: InputMaybe<String_Filter_Operators>;
   category_id?: InputMaybe<Categories_Filter>;
   created_at?: InputMaybe<Date_Filter_Operators>;
   created_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   description?: InputMaybe<String_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
+  images?: InputMaybe<String_Filter_Operators>;
+  images_func?: InputMaybe<Count_Function_Filter_Operators>;
+  is_on_sale?: InputMaybe<Boolean_Filter_Operators>;
+  main_image?: InputMaybe<String_Filter_Operators>;
+  market_price?: InputMaybe<Number_Filter_Operators>;
   name?: InputMaybe<String_Filter_Operators>;
   price?: InputMaybe<Number_Filter_Operators>;
+  rating_avg?: InputMaybe<Number_Filter_Operators>;
+  seller_id?: InputMaybe<Number_Filter_Operators>;
+  status?: InputMaybe<String_Filter_Operators>;
   stock?: InputMaybe<Number_Filter_Operators>;
+  subtitle?: InputMaybe<String_Filter_Operators>;
+  total_reviews?: InputMaybe<Number_Filter_Operators>;
+  total_sales_volume?: InputMaybe<Number_Filter_Operators>;
   updated_at?: InputMaybe<Date_Filter_Operators>;
   updated_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  video_url?: InputMaybe<String_Filter_Operators>;
 };
 
 export type Products_Mutated = {
@@ -2884,14 +2943,27 @@ export type Update_Payments_Input = {
 };
 
 export type Update_Products_Input = {
+  barcode?: InputMaybe<Scalars['String']['input']>;
+  brand?: InputMaybe<Scalars['String']['input']>;
   category_id?: InputMaybe<Update_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  images?: InputMaybe<Scalars['JSON']['input']>;
+  is_on_sale?: InputMaybe<Scalars['Boolean']['input']>;
+  main_image?: InputMaybe<Scalars['String']['input']>;
+  market_price?: InputMaybe<Scalars['Float']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;
+  rating_avg?: InputMaybe<Scalars['Float']['input']>;
+  seller_id?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
   stock?: InputMaybe<Scalars['Int']['input']>;
+  subtitle?: InputMaybe<Scalars['String']['input']>;
+  total_reviews?: InputMaybe<Scalars['Int']['input']>;
+  total_sales_volume?: InputMaybe<Scalars['Int']['input']>;
   updated_at?: InputMaybe<Scalars['Date']['input']>;
+  video_url?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type Update_Users_Input = {
@@ -3004,14 +3076,27 @@ export type Version_Payments = {
 
 export type Version_Products = {
   __typename?: 'version_products';
+  barcode?: Maybe<Scalars['String']['output']>;
+  brand?: Maybe<Scalars['String']['output']>;
   category_id?: Maybe<Scalars['JSON']['output']>;
   created_at?: Maybe<Scalars['Date']['output']>;
   description?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  images?: Maybe<Scalars['JSON']['output']>;
+  is_on_sale?: Maybe<Scalars['Boolean']['output']>;
+  main_image?: Maybe<Scalars['String']['output']>;
+  market_price?: Maybe<Scalars['Float']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   price?: Maybe<Scalars['Float']['output']>;
+  rating_avg?: Maybe<Scalars['Float']['output']>;
+  seller_id?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
   stock?: Maybe<Scalars['Int']['output']>;
+  subtitle?: Maybe<Scalars['String']['output']>;
+  total_reviews?: Maybe<Scalars['Int']['output']>;
+  total_sales_volume?: Maybe<Scalars['Int']['output']>;
   updated_at?: Maybe<Scalars['Date']['output']>;
+  video_url?: Maybe<Scalars['String']['output']>;
 };
 
 export type Version_Users = {
@@ -3097,7 +3182,7 @@ export type GetRecentProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetRecentProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, price: number, stock?: number | null, created_at?: any | null }> };
+export type GetRecentProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, price: number, stock?: number | null, status?: string | null, created_at?: any | null }> };
 
 export type GetRecentOrdersQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -3207,21 +3292,21 @@ export type UpdatePaymentStatusMutation = { __typename?: 'Mutation', update_paym
 export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, description?: string | null, price: number, stock?: number | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null }> };
+export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null }> };
 
 export type GetProductByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetProductByIdQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, description?: string | null, price: number, stock?: number | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
+export type GetProductByIdQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
 
 export type CreateProductMutationVariables = Exact<{
   data: Create_Products_Input;
 }>;
 
 
-export type CreateProductMutation = { __typename?: 'Mutation', create_products_item?: { __typename?: 'products', id: string, name: string, description?: string | null, price: number, stock?: number | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
+export type CreateProductMutation = { __typename?: 'Mutation', create_products_item?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
 
 export type UpdateProductMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3229,7 +3314,7 @@ export type UpdateProductMutationVariables = Exact<{
 }>;
 
 
-export type UpdateProductMutation = { __typename?: 'Mutation', update_products_item?: { __typename?: 'products', id: string, name: string, description?: string | null, price: number, stock?: number | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
+export type UpdateProductMutation = { __typename?: 'Mutation', update_products_item?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
 
 export type DeleteProductMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3685,6 +3770,7 @@ export const GetRecentProductsDocument = gql`
     name
     price
     stock
+    status
     created_at
   }
 }
@@ -4401,13 +4487,26 @@ export const GetProductsDocument = gql`
   products {
     id
     name
+    subtitle
     description
     price
+    market_price
     stock
+    barcode
+    brand
     category_id {
       id
       name
     }
+    seller_id
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     created_at
     updated_at
   }
@@ -4450,13 +4549,26 @@ export const GetProductByIdDocument = gql`
   products_by_id(id: $id) {
     id
     name
+    subtitle
     description
     price
+    market_price
     stock
+    barcode
+    brand
     category_id {
       id
       name
     }
+    seller_id
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     created_at
     updated_at
   }
@@ -4500,13 +4612,26 @@ export const CreateProductDocument = gql`
   create_products_item(data: $data) {
     id
     name
+    subtitle
     description
     price
+    market_price
     stock
+    barcode
+    brand
     category_id {
       id
       name
     }
+    seller_id
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     created_at
     updated_at
   }
@@ -4543,13 +4668,26 @@ export const UpdateProductDocument = gql`
   update_products_item(id: $id, data: $data) {
     id
     name
+    subtitle
     description
     price
+    market_price
     stock
+    barcode
+    brand
     category_id {
       id
       name
     }
+    seller_id
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     created_at
     updated_at
   }

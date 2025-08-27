@@ -7,7 +7,11 @@ import {
   UserOutlined, 
   ShoppingOutlined,
   DashboardOutlined,
-  DollarOutlined
+  DollarOutlined,
+  FileTextOutlined,
+  ClockCircleOutlined,
+  CheckCircleOutlined,
+  EyeInvisibleOutlined
 } from '@ant-design/icons';
 import { ProtectedRoute } from '../components/ProtectedRoute';
 import AdminLayout from '../components/AdminLayout';
@@ -19,6 +23,38 @@ import {
 } from '../../generated/graphql';
 
 const { Title } = Typography;
+
+// 商品状态映射
+const getProductStatusInfo = (status: string) => {
+  const statusMap = {
+    'draft': {
+      text: '草稿',
+      color: '#8B5CF6',
+      icon: <FileTextOutlined />
+    },
+    'pending_review': {
+      text: '待审核',
+      color: '#F59E0B',
+      icon: <ClockCircleOutlined />
+    },
+    'on_sale': {
+      text: '在售',
+      color: '#10B981',
+      icon: <CheckCircleOutlined />
+    },
+    'off_sale': {
+      text: '下架',
+      color: '#EF4444',
+      icon: <EyeInvisibleOutlined />
+    }
+  };
+  
+  return statusMap[status as keyof typeof statusMap] || {
+    text: status,
+    color: '#6B7280',
+    icon: <ShoppingOutlined />
+  };
+};
 
 function DashboardContent() {
   // 获取今日日期（格式：YYYY-MM-DD）
@@ -333,18 +369,35 @@ function DashboardContent() {
                 <Spin />
               </div>
             ) : productsData?.products?.length ? (
-              productsData.products.slice(0, 3).map((product) => (
-                <div key={product.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
-                  <div>
-                    <div className="font-medium">{product.name}</div>
-                    <div className="text-sm text-gray-500">库存: {product.stock}</div>
+              productsData.products.slice(0, 3).map((product) => {
+                const statusInfo = getProductStatusInfo(product.status || '');
+                return (
+                  <div key={product.id} className="flex items-center justify-between py-3 border-b last:border-b-0">
+                    <div className="flex-1">
+                      <div className="font-medium text-gray-800">{product.name}</div>
+                      <div className="flex items-center mt-1 space-x-4">
+                        <span className="text-sm text-gray-500">库存: {product.stock}</span>
+                        <span 
+                          style={{ 
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            fontSize: '12px',
+                            color: statusInfo.color,
+                            fontWeight: 500
+                          }}
+                        >
+                          <span style={{ marginRight: '4px' }}>{statusInfo.icon}</span>
+                          {statusInfo.text}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold text-gray-800">¥{product.price?.toLocaleString()}</div>
+                      <div className="text-sm text-blue-600">最新商品</div>
+                    </div>
                   </div>
-                  <div className="text-right">
-                    <div className="font-medium">¥{product.price?.toLocaleString()}</div>
-                    <div className="text-sm text-green-600">新品</div>
-                  </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="text-center py-4 text-gray-500">
                 暂无商品数据

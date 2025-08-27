@@ -5,13 +5,26 @@ query GetProducts {
   products {
     id
     name
+    subtitle
     description
     price
+    market_price
     stock
+    barcode
+    brand
     category_id {
       id
       name
     }
+    seller_id
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     created_at
     updated_at
   }
@@ -22,13 +35,26 @@ query GetProductById($id: ID!) {
   products_by_id(id: $id) {
     id
     name
+    subtitle
     description
     price
+    market_price
     stock
+    barcode
+    brand
     category_id {
       id
       name
     }
+    seller_id
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     created_at
     updated_at
   }
@@ -39,13 +65,26 @@ mutation CreateProduct($data: create_products_input!) {
   create_products_item(data: $data) {
     id
     name
+    subtitle
     description
     price
+    market_price
     stock
+    barcode
+    brand
     category_id {
       id
       name
     }
+    seller_id
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     created_at
     updated_at
   }
@@ -56,13 +95,26 @@ mutation UpdateProduct($id: ID!, $data: update_products_input!) {
   update_products_item(id: $id, data: $data) {
     id
     name
+    subtitle
     description
     price
+    market_price
     stock
+    barcode
+    brand
     category_id {
       id
       name
     }
+    seller_id
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
     created_at
     updated_at
   }

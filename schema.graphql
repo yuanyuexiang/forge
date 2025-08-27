@@ -118,10 +118,23 @@ input create_payments_input {
 input create_products_input {
   id: ID
   name: String!
+  subtitle: String
   description: String
   price: Float!
+  market_price: Float
   stock: Int
+  barcode: String
+  brand: String
   category_id: create_categories_input
+  seller_id: Int
+  main_image: String
+  images: JSON
+  video_url: String
+  is_on_sale: Boolean
+  status: String
+  total_sales_volume: Int
+  rating_avg: Float
+  total_reviews: Int
   created_at: Date
   updated_at: Date
 }
@@ -1407,10 +1420,24 @@ type payments_mutated {
 type products {
   id: ID!
   name: String!
+  subtitle: String
   description: String
   price: Float!
+  market_price: Float
   stock: Int
+  barcode: String
+  brand: String
   category_id(filter: categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): categories
+  seller_id: Int
+  main_image: String
+  images: JSON
+  images_func: count_functions
+  video_url: String
+  is_on_sale: Boolean
+  status: String
+  total_sales_volume: Int
+  rating_avg: Float
+  total_reviews: Int
   created_at: Date
   created_at_func: datetime_functions
   updated_at: Date
@@ -1433,10 +1460,23 @@ type products_aggregated {
 type products_aggregated_count {
   id: Int
   name: Int
+  subtitle: Int
   description: Int
   price: Int
+  market_price: Int
   stock: Int
+  barcode: Int
+  brand: Int
   category_id: Int
+  seller_id: Int
+  main_image: Int
+  images: Int
+  video_url: Int
+  is_on_sale: Int
+  status: Int
+  total_sales_volume: Int
+  rating_avg: Int
+  total_reviews: Int
   created_at: Int
   updated_at: Int
 }
@@ -1444,17 +1484,36 @@ type products_aggregated_count {
 type products_aggregated_fields {
   id: Float
   price: Float
+  market_price: Float
   stock: Float
   category_id: Float
+  seller_id: Float
+  total_sales_volume: Float
+  rating_avg: Float
+  total_reviews: Float
 }
 
 input products_filter {
   id: number_filter_operators
   name: string_filter_operators
+  subtitle: string_filter_operators
   description: string_filter_operators
   price: number_filter_operators
+  market_price: number_filter_operators
   stock: number_filter_operators
+  barcode: string_filter_operators
+  brand: string_filter_operators
   category_id: categories_filter
+  seller_id: number_filter_operators
+  main_image: string_filter_operators
+  images: string_filter_operators
+  images_func: count_function_filter_operators
+  video_url: string_filter_operators
+  is_on_sale: boolean_filter_operators
+  status: string_filter_operators
+  total_sales_volume: number_filter_operators
+  rating_avg: number_filter_operators
+  total_reviews: number_filter_operators
   created_at: date_filter_operators
   created_at_func: datetime_function_filter_operators
   updated_at: date_filter_operators
@@ -1585,10 +1644,23 @@ input update_payments_input {
 input update_products_input {
   id: ID
   name: String
+  subtitle: String
   description: String
   price: Float
+  market_price: Float
   stock: Int
+  barcode: String
+  brand: String
   category_id: update_categories_input
+  seller_id: Int
+  main_image: String
+  images: JSON
+  video_url: String
+  is_on_sale: Boolean
+  status: String
+  total_sales_volume: Int
+  rating_avg: Float
+  total_reviews: Int
   created_at: Date
   updated_at: Date
 }
@@ -1695,10 +1767,23 @@ type version_payments {
 type version_products {
   id: ID
   name: String
+  subtitle: String
   description: String
   price: Float
+  market_price: Float
   stock: Int
+  barcode: String
+  brand: String
   category_id: JSON
+  seller_id: Int
+  main_image: String
+  images: JSON
+  video_url: String
+  is_on_sale: Boolean
+  status: String
+  total_sales_volume: Int
+  rating_avg: Float
+  total_reviews: Int
   created_at: Date
   updated_at: Date
 }
