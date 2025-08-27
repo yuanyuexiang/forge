@@ -161,7 +161,7 @@ function ProductsContent() {
           uid: product.main_image,
           name: '主图',
           status: 'done',
-          url: `/api/assets/${product.main_image}`
+          url: getImageUrl(product.main_image)
         }]);
       } else {
         setMainImageList([]);
@@ -173,7 +173,7 @@ function ProductsContent() {
           uid: imageId,
           name: `图片${index + 1}`,
           status: 'done',
-          url: `/api/assets/${imageId}`
+          url: getImageUrl(imageId)
         }));
         setImageList(imagesList);
       } else {
@@ -365,12 +365,16 @@ function ProductsContent() {
           response: result
         };
         
-        const newImageList = [...imageList, newImage];
-        setImageList(newImageList);
+        setImageList(prevImageList => {
+          const newImageList = [...prevImageList, newImage];
+          // 使用 setTimeout 来异步更新表单值，避免在 render 期间更新
+          setTimeout(() => {
+            const imageIds = newImageList.map(img => img.uid);
+            form.setFieldValue('images', imageIds);
+          }, 0);
+          return newImageList;
+        });
         
-        // 更新表单值 - 将所有图片ID组成数组
-        const imageIds = newImageList.map(img => img.uid);
-        form.setFieldValue('images', imageIds);
         message.success('图片上传成功');
       } else {
         const errorData = await response.json().catch(() => ({}));
@@ -384,7 +388,7 @@ function ProductsContent() {
       setImagesUploading(false);
     }
     return false;
-  }, [form, imageList]);
+  }, [form]);
 
   // 移除图片
   const handleRemoveImage = useCallback((file: any, isMainImage: boolean = false) => {
@@ -392,12 +396,18 @@ function ProductsContent() {
       setMainImageList([]);
       form.setFieldValue('main_image', null);
     } else {
-      const newImageList = imageList.filter(img => img.uid !== file.uid);
-      setImageList(newImageList);
-      const imageIds = newImageList.map(img => img.uid);
-      form.setFieldValue('images', imageIds);
+      // 先计算新的图片列表
+      setImageList(prevImageList => {
+        const newImageList = prevImageList.filter(img => img.uid !== file.uid);
+        // 使用 setTimeout 来异步更新表单值，避免在 render 期间更新
+        setTimeout(() => {
+          const imageIds = newImageList.map(img => img.uid);
+          form.setFieldValue('images', imageIds);
+        }, 0);
+        return newImageList;
+      });
     }
-  }, [form, imageList]);
+  }, [form]);
 
   // 主图文件列表变化处理
   const handleMainImageChange = useCallback(({ fileList }: any) => {
@@ -415,6 +425,21 @@ function ProductsContent() {
     (product.category_id?.name && product.category_id.name.toLowerCase().includes(searchText.toLowerCase()))
   );
 
+  // 生成带认证的图片URL
+  const getImageUrl = useCallback((imageId: string): string => {
+    if (!imageId) return '';
+    if (imageId.startsWith('http')) return imageId;
+    
+    const authToken = localStorage.getItem('directus_auth_token') || 
+                     localStorage.getItem('authToken');
+    
+    if (authToken) {
+      return `/api/assets/${imageId}?token=${encodeURIComponent(authToken)}`;
+    }
+    
+    return `/api/assets/${imageId}`;
+  }, []);
+
   const columns = [
     {
       title: '主图',
@@ -426,7 +451,7 @@ function ProductsContent() {
           <Image
             width={60}
             height={60}
-            src={main_image.startsWith('http') ? main_image : `/api/assets/${main_image}`}
+            src={getImageUrl(main_image)}
             alt="商品主图"
             style={{ objectFit: 'cover', borderRadius: '4px' }}
             fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dyHgXNJBSWpFCYh2zi+oLMpMzyhRcASGUqqCZ16yno6CkYGRAQMDKMwhqj/fAIcloxgHQqxAjIHBEugw5sUIsSQpBobtQPdLciLEVJYzMPBHMDBsayhILEqEO4DxG0txmrERhM29nYGBddr//5/DGRjYNRkY/l7////39v///y4Dmn+LgeHANwDrkl1AuO+pmgAAADhlWElmTU0AKgAAAAgAAYdpAAQAAAABAAAAGgAAAAAAAqACAAQAAAABAAAAwqADAAQAAAABAAAAwwAAAAD9b/HnAAAHlklEQVR4Ae3dP3Ik1xkE8A8b6IoNEFpjQSfvwCfeOXfgJvwR6FTPWlwu6JAySy0r4AxOgG7eokOCOhYpQSwLKQLJZ7sKM9p6ZfD/+d9/vQ=="

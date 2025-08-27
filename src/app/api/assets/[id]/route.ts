@@ -6,6 +6,7 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
+    const url = new URL(request.url);
     
     console.log('Requesting asset with ID:', id);
     
@@ -21,11 +22,19 @@ export async function GET(
     
     console.log('Fetching from Directus:', assetUrl);
     
-    // 获取认证 token 从 cookie
-    const authCookie = request.headers.get('cookie');
-    const token = authCookie?.split(';')
-      .find(c => c.trim().startsWith('directus_token='))
-      ?.split('=')[1];
+    // 获取认证 token - 优先从Authorization头，然后从查询参数，最后从cookie
+    let token = request.headers.get('authorization')?.replace('Bearer ', '');
+    
+    if (!token) {
+      token = url.searchParams.get('token');
+    }
+    
+    if (!token) {
+      const authCookie = request.headers.get('cookie');
+      token = authCookie?.split(';')
+        .find(c => c.trim().startsWith('directus_token='))
+        ?.split('=')[1];
+    }
     
     const headers: HeadersInit = {};
     if (token) {
