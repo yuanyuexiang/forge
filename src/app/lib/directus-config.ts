@@ -1,11 +1,8 @@
 // Directus API 配置 - 简化版本，基于域名自动检测
 const getDirectusUrl = () => {
-  // 如果在浏览器环境且域名包含 forge，说明是同域部署
-  if (typeof window !== 'undefined' && window.location.host.includes('forge')) {
-    return window.location.origin;
-  }
-  
-  // 默认使用 Directus 
+  // 在云端部署时，前端和 Directus 是分离的
+  // 前端：https://forge.matrix-net.tech
+  // Directus：https://directus.matrix-net.tech
   return 'https://directus.matrix-net.tech';
 };
 
@@ -22,19 +19,32 @@ export const DIRECTUS_CONFIG = {
   
   // 基础配置
   BASE_URL: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
+  
+  // 获取当前环境应该使用的 GraphQL 端点
+  getGraphQLEndpoint: () => {
+    if (shouldUseProxy()) {
+      // 本地开发：使用代理避免 CORS
+      return '/api/graphql';
+    } else {
+      // 云端部署：直接访问 Directus
+      return `${getDirectusUrl()}/graphql`;
+    }
+  },
 };
 
 // 判断是否需要使用代理
 const shouldUseProxy = () => {
   if (typeof window === 'undefined') return false; // 服务器端不使用代理
   
-  // 如果域名包含 forge，说明是同域部署，不需要代理
-  if (window.location.host.includes('forge')) {
-    return false;
-  }
+  // 只有在本地开发环境（localhost 或 127.0.0.1）才使用代理
+  const hostname = window.location.hostname;
+  const isLocalhost = hostname === 'localhost' || 
+                     hostname === '127.0.0.1' || 
+                     hostname.startsWith('192.168.') ||
+                     hostname.startsWith('10.') ||
+                     hostname.endsWith('.local');
   
-  // 其他情况（本地开发等）使用代理
-  return true;
+  return isLocalhost;
 };
 
 // 文件资产配置

@@ -1,6 +1,7 @@
 import { ApolloClient, InMemoryCache, HttpLink, from, fromPromise } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
+import { DIRECTUS_CONFIG } from './directus-config';
 
 // 刷新 token 的函数
 const refreshAccessToken = async (): Promise<string | null> => {
@@ -118,9 +119,9 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
 
 // 创建 Apollo Client
 const createApolloClient = () => {
-  // 固定使用 GraphQL API 端点
+  // 动态选择 GraphQL 端点
   const httpLink = new HttpLink({ 
-    uri: '/api/graphql',
+    uri: DIRECTUS_CONFIG.getGraphQLEndpoint(),
     fetchOptions: {
       timeout: 30000
     }
