@@ -38,6 +38,8 @@ import {
   useUpdateProductMutation,
   GetProductsQuery
 } from '../../../generated/graphql';
+import { TokenManager } from '../../lib/token-manager';
+import { FILE_CONFIG } from '../../lib/directus-config';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -110,19 +112,9 @@ function ProductEditContent() {
   const products = productsData?.products || [];
   const categories = categoriesData?.categories || [];
 
-  // 生成带认证的图片URL
+  // 生成带认证的图片URL - 使用统一配置
   const getImageUrl = useCallback((imageId: string): string => {
-    if (!imageId) return '';
-    if (imageId.startsWith('http')) return imageId;
-    
-    const authToken = localStorage.getItem('directus_auth_token') || 
-                     localStorage.getItem('authToken');
-    
-    if (authToken) {
-      return `/api/assets/${imageId}?token=${encodeURIComponent(authToken)}`;
-    }
-    
-    return `/api/assets/${imageId}`;
+    return FILE_CONFIG.getAssetUrl(imageId);
   }, []);
 
   // 获取商品数据
@@ -181,14 +173,15 @@ function ProductEditContent() {
   const handleMainImageUpload = useCallback(async (file: File) => {
     setMainImageUploading(true);
     try {
-      const authToken = localStorage.getItem('directus_auth_token') || 
-                       localStorage.getItem('authToken') ||
-                       localStorage.getItem('directus_token');
+      // 使用TokenManager获取有效令牌
+      const authToken = await TokenManager.getValidToken();
+
+      if (!authToken) {
+        throw new Error('未找到认证令牌，请重新登录');
+      }
 
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('storage', 'local');
-      formData.append('type', file.type);
 
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -230,14 +223,15 @@ function ProductEditContent() {
   const handleImagesUpload = useCallback(async (file: File) => {
     setImagesUploading(true);
     try {
-      const authToken = localStorage.getItem('directus_auth_token') || 
-                       localStorage.getItem('authToken') ||
-                       localStorage.getItem('directus_token');
+      // 使用TokenManager获取有效令牌
+      const authToken = await TokenManager.getValidToken();
+
+      if (!authToken) {
+        throw new Error('未找到认证令牌，请重新登录');
+      }
 
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('storage', 'local');
-      formData.append('type', file.type);
 
       const response = await fetch('/api/upload', {
         method: 'POST',

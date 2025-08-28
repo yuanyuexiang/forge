@@ -29,6 +29,7 @@ import {
   useDeleteProductMutation,
   GetProductsQuery
 } from '../../generated/graphql';
+import { FILE_CONFIG } from '../lib/directus-config';
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -165,19 +166,9 @@ function ProductsContent() {
     (product.category_id?.name && product.category_id.name.toLowerCase().includes(searchText.toLowerCase()))
   );
 
-  // 生成带认证的图片URL
+  // 生成带认证的图片URL - 使用统一配置
   const getImageUrl = useCallback((imageId: string): string => {
-    if (!imageId) return '';
-    if (imageId.startsWith('http')) return imageId;
-    
-    const authToken = localStorage.getItem('directus_auth_token') || 
-                     localStorage.getItem('authToken');
-    
-    if (authToken) {
-      return `/api/assets/${imageId}?token=${encodeURIComponent(authToken)}`;
-    }
-    
-    return `/api/assets/${imageId}`;
+    return FILE_CONFIG.getAssetUrl(imageId);
   }, []);
 
   const columns = [

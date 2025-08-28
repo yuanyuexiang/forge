@@ -17,8 +17,111 @@ export const DIRECTUS_CONFIG = {
   // 本地代理端点
   LOCAL_GRAPHQL_PROXY: '/api/graphql',
   
+  // 文件上传端点
+  FILE_UPLOAD_URL: `${getDirectusUrl()}/files`,
+  
   // 基础配置
   BASE_URL: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
+};
+
+// 判断是否需要使用代理
+const shouldUseProxy = () => {
+  if (typeof window === 'undefined') return false; // 服务器端不使用代理
+  
+  // 如果域名包含 forge，说明是同域部署，不需要代理
+  if (window.location.host.includes('forge')) {
+    return false;
+  }
+  
+  // 其他情况（本地开发等）使用代理
+  return true;
+};
+
+// 文件资产配置
+export const FILE_CONFIG = {
+  // 获取文件的完整 URL（直接访问）
+  getFileUrl: (fileId: string) => {
+    if (!fileId) return '';
+    if (fileId.startsWith('http')) return fileId;
+    return `${getDirectusUrl()}/assets/${fileId}`;
+  },
+  
+  // 获取带认证的资产 URL（智能选择代理或直连）
+  getAssetUrl: (fileId: string, authToken?: string) => {
+    if (!fileId) return '';
+    if (fileId.startsWith('http')) return fileId;
+    
+    // 尝试获取令牌，优先使用传入的令牌
+    let token = authToken;
+    if (!token && typeof window !== 'undefined') {
+      // 使用与TokenManager相同的优先级顺序
+      token = localStorage.getItem('accessToken') ||
+              localStorage.getItem('directus_auth_token') || 
+              localStorage.getItem('authToken') ||
+              localStorage.getItem('directus_token') ||
+              undefined;
+    }
+    
+    // 判断是否使用代理
+    const useProxy = shouldUseProxy();
+    
+    if (useProxy) {
+      // 本地开发环境：使用代理
+      const baseUrl = `${DIRECTUS_CONFIG.BASE_URL}/api/assets/${fileId}`;
+      return token ? `${baseUrl}?token=${encodeURIComponent(token)}` : baseUrl;
+    } else {
+      // 云端部署环境：直接访问 Directus
+      const baseUrl = `${getDirectusUrl()}/assets/${fileId}`;
+      return token ? `${baseUrl}?access_token=${encodeURIComponent(token)}` : baseUrl;
+    }
+  },
+  
+  // 获取带变换参数的图片 URL
+  getImageUrl: (fileId: string, transforms?: {
+    width?: number;
+    height?: number;
+    quality?: number;
+    format?: 'jpg' | 'png' | 'webp' | 'avif';
+    fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside';
+  }, authToken?: string) => {
+    if (!fileId) return '';
+    if (fileId.startsWith('http')) return fileId;
+    
+    // 尝试获取令牌，优先使用传入的令牌
+    let token = authToken;
+    if (!token && typeof window !== 'undefined') {
+      // 使用与TokenManager相同的优先级顺序
+      token = localStorage.getItem('accessToken') ||
+              localStorage.getItem('directus_auth_token') || 
+              localStorage.getItem('authToken') ||
+              localStorage.getItem('directus_token') ||
+              undefined;
+    }
+    
+    const useProxy = shouldUseProxy();
+    const params = new URLSearchParams();
+    
+    // 添加变换参数
+    if (transforms) {
+      Object.entries(transforms).forEach(([key, value]) => {
+        if (value !== undefined) {
+          params.append(key, value.toString());
+        }
+      });
+    }
+    
+    // 添加认证参数
+    if (token) {
+      const tokenParam = useProxy ? 'token' : 'access_token';
+      params.append(tokenParam, token);
+    }
+    
+    const baseUrl = useProxy 
+      ? `${DIRECTUS_CONFIG.BASE_URL}/api/assets/${fileId}`
+      : `${getDirectusUrl()}/assets/${fileId}`;
+    
+    return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
+  }
 };
 
 // GraphQL 查询辅助函数（客户端使用，通过代理）
