@@ -1,9 +1,11 @@
 'use client';
 
-import { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
-import { TokenManager } from '../lib/token-manager';
-import { authLogger } from '../lib/logger';
+import { message } from 'antd';
+import { TokenManager } from '@lib/auth/token-manager';
+import { authLogger } from '@lib/utils/logger';
+import { APP_CONFIG } from '@config/app-config';
 
 interface User {
   id: string;
@@ -21,6 +23,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<boolean>;
   logout: () => void;
   loading: boolean;
+  isLoading: boolean;  // 添加 isLoading 别名
   refreshToken: () => Promise<boolean>;
   isAuthenticated: boolean;
 }
@@ -35,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // 检查并刷新 token 的函数
   const refreshToken = async (): Promise<boolean> => {
     try {
-      const refreshTokenValue = localStorage.getItem('refreshToken');
+      const refreshTokenValue = localStorage.getItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN);
       if (!refreshTokenValue) {
         return false;
       }
@@ -50,8 +53,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       if (!response.ok) {
         // Refresh token 过期或无效，清除存储并返回 false
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN);
+        localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN);
         setUser(null);
         return false;
       }
@@ -59,16 +62,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
       
       // 更新存储的 token
-      localStorage.setItem('accessToken', data.access_token);
+      localStorage.setItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN, data.access_token);
       if (data.refresh_token) {
-        localStorage.setItem('refreshToken', data.refresh_token);
+        localStorage.setItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN, data.refresh_token);
       }
 
       return true;
     } catch (error) {
       authLogger.error('Token refresh failed', error);
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN);
+      localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN);
       setUser(null);
       return false;
     }
@@ -118,9 +121,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const data = await response.json();
 
       // 存储 tokens
-      localStorage.setItem('accessToken', data.access_token);
+      localStorage.setItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN, data.access_token);
       if (data.refresh_token) {
-        localStorage.setItem('refreshToken', data.refresh_token);
+        localStorage.setItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN, data.refresh_token);
       }
 
       // 设置用户信息
@@ -136,8 +139,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN);
+    localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN);
     setUser(null);
     router.push('/login');
   };
@@ -163,13 +166,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } catch (error) {
             authLogger.error('Error parsing token', error);
             // 如果无法解析 token，清除认证状态
-            localStorage.removeItem('accessToken');
-            localStorage.removeItem('refreshToken');
+            localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN);
+            localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN);
           }
         } else {
           // token 无效，清除认证状态
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
+          localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN);
+          localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN);
         }
       }
       
@@ -185,7 +188,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (user) {
         await checkTokenExpiration();
       }
-    }, 60000); // 每分钟检查一次
+    }, APP_CONFIG.AUTH.TOKEN_REFRESH_INTERVAL); // 使用配置文件中的间隔
 
     return () => clearInterval(interval);
   }, [user]);
@@ -195,6 +198,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     login,
     logout,
     loading,
+    isLoading: loading,  // 添加 isLoading 别名
     refreshToken,
     isAuthenticated: !!user,
   };

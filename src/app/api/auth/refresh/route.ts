@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { DIRECTUS_CONFIG } from '../../../lib/directus-config';
+import { DIRECTUS_CONFIG } from '@lib/api/directus-config';
 
 export async function POST(request: NextRequest) {
   try {

@@ -2,9 +2,9 @@ import { ApolloClient, InMemoryCache, HttpLink, from, fromPromise } from "@apoll
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { DIRECTUS_CONFIG } from './directus-config';
-import { TokenManager } from './token-manager';
-import { getEnvironmentInfo } from './environment';
-import { authLogger, apiLogger } from './logger';
+import { TokenManager } from '../auth/token-manager';
+import { getEnvironmentInfo } from '../utils/environment';
+import { authLogger, apiLogger } from '../utils/logger';
 
 // 刷新 token 的函数
 const refreshAccessToken = async (): Promise<string | null> => {

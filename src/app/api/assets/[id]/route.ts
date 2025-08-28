@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { APP_CONFIG } from '@config/app-config';
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
@@ -16,9 +17,9 @@ export async function GET(
       return NextResponse.redirect(id);
     }
     
-    // 使用硬编码的Directus URL，或者从环境变量获取
-    const directusUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL || 'https://directus.matrix-net.tech';
-    const assetUrl = `${directusUrl}/assets/${id}`;
+    // 使用配置文件中的Directus URL，或者从环境变量获取
+    const directusUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL || APP_CONFIG.API.DIRECTUS.DEFAULT_URL;
+    const assetUrl = `${directusUrl}${APP_CONFIG.API.DIRECTUS.ASSETS_ENDPOINT}/${id}`;
     
     console.log('Fetching from Directus:', assetUrl);
     

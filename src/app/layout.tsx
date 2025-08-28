@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import StyledComponentsRegistry from './providers/AntdRegistry';
-import ApolloProvider from './providers/ApolloProvider';
-import { AuthProvider } from './providers/AuthProvider';
+import StyledComponentsRegistry from '@providers/AntdRegistry';
+import ApolloProvider from '@providers/ApolloProvider';
+import { AuthProvider } from '@providers/AuthProvider';
 
 // 抑制 Ant Design 兼容性警告
-import '../lib/suppress-warnings';
+import '@lib/utils/suppress-warnings';
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

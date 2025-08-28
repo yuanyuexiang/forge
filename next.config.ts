@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -26,7 +27,31 @@ const nextConfig: NextConfig = {
       // 确保使用正确的 React 版本
       'react': 'react',
       'react-dom': 'react-dom',
+      // 路径别名
+      '@components': './src/components',
+      '@lib': './src/lib',
+      '@providers': './src/providers',
+      '@types': './src/types',
+      '@hooks': './src/hooks',
+      '@graphql': './src/graphql',
+      '@generated': './src/generated',
+      '@config': './src/config',
     }
+  },
+  // Webpack 配置（用于非 Turbopack 模式）
+  webpack: (config: any) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@components': path.resolve('./src/components'),
+      '@lib': path.resolve('./src/lib'),
+      '@providers': path.resolve('./src/providers'),
+      '@types': path.resolve('./src/types'),
+      '@hooks': path.resolve('./src/hooks'),
+      '@graphql': path.resolve('./src/graphql'),
+      '@generated': path.resolve('./src/generated'),
+      '@config': path.resolve('./src/config'),
+    };
+    return config;
   },
 };
 

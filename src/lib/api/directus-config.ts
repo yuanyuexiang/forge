@@ -1,7 +1,8 @@
 // Directus API 配置 - 基于环境自动检测
-import { TokenManager } from './token-manager';
-import { getEnvironmentInfo, isLocalEnvironment } from './environment';
-import { apiLogger } from './logger';
+import { TokenManager } from '../auth/token-manager';
+import { APP_CONFIG } from '@config/app-config';
+import { getEnvironmentInfo, isLocalEnvironment } from '../utils/environment';
+import { apiLogger } from '../utils/logger';
 
 /*
  * GraphQL 架构说明：
@@ -22,7 +23,7 @@ const getDirectusUrl = () => {
   }
   
   // 本地开发时使用远程 Directus
-  return 'https://directus.matrix-net.tech';
+  return process.env.NEXT_PUBLIC_DIRECTUS_URL || APP_CONFIG.API.DIRECTUS.DEFAULT_URL;
 };
 
 export const DIRECTUS_CONFIG = {

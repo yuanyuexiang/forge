@@ -13,18 +13,15 @@ interface EnvironmentInfo {
   nodeEnv: Environment;
 }
 
+import { APP_CONFIG } from '@config/app-config';
+
 /**
- * 检查是否为本地开发环境的主机名
- * 统一的本地主机名检测逻辑
+ * 检测是否为本地开发环境
  */
 export function isLocalHostname(hostname: string): boolean {
-  return hostname === 'localhost' ||
-         hostname === '127.0.0.1' ||
-         hostname.startsWith('192.168.') ||
-         hostname.startsWith('10.') ||
-         hostname.startsWith('172.') ||
-         hostname.endsWith('.local') ||
-         hostname.includes('127.0.0.1');
+  return APP_CONFIG.SERVERS.LOCALHOST_HOSTS.some(host => 
+    hostname === host || hostname.startsWith(host)
+  ) || hostname.includes('127.0.0.1');
 }
 
 /**
@@ -94,14 +91,16 @@ export function getEnvironmentFromRequest(host: string): {
   isDevelopment: boolean;
   targetUrl: string;
 } {
-  const isLocal = isLocalHostname(host) || host.includes('localhost');
+  const isLocal = isLocalHostname(host) || APP_CONFIG.SERVERS.LOCALHOST_HOSTS.some(localhost => 
+    host.includes(localhost)
+  );
   const isDevelopment = isLocal || process.env.NODE_ENV === 'development';
   
   // 确定目标 URL
   let targetUrl: string;
   if (isLocal) {
     // 本地开发环境：代理到远程 Directus
-    targetUrl = 'https://directus.matrix-net.tech';
+    targetUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL || APP_CONFIG.API.DIRECTUS.DEFAULT_URL;
   } else {
     // 云端环境：使用当前域名
     // 这里假设协议是 https，可以根据需要调整

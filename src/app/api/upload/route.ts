@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { TokenManager } from '../../lib/token-manager';
-import { DIRECTUS_CONFIG } from '../../lib/directus-config';
+import { TokenManager } from '@lib/auth/token-manager';
+import { DIRECTUS_CONFIG } from '@lib/api/directus-config';
 
 export async function POST(request: NextRequest) {
   try {

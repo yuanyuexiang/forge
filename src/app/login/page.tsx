@@ -5,7 +5,7 @@ import { Form, Input, Button, Card, Typography, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useAuth } from '../providers/AuthProvider';
+import { useAuth } from '@providers/AuthProvider';
 
 const { Title } = Typography;
 

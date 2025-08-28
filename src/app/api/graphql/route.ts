@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { DIRECTUS_CONFIG } from '../../lib/directus-config';
-import { getEnvironmentFromRequest } from '../../lib/environment';
-import { proxyLogger } from '../../lib/logger';
+import { DIRECTUS_CONFIG } from '@lib/api/directus-config';
+import { getEnvironmentFromRequest } from '@lib/utils/environment';
+import { proxyLogger } from '@lib/utils/logger';
 
 export async function POST(request: NextRequest) {
   try {

@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Spin } from 'antd';
-import { useAuth } from '../providers/AuthProvider';
+import { LoadingOutlined } from '@ant-design/icons';
+import { useAuth } from '@providers/AuthProvider';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;

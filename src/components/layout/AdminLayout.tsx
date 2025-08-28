@@ -12,10 +12,11 @@ import {
   MenuUnfoldOutlined,
   SettingOutlined,
   TagOutlined,
-  CreditCardOutlined
+  CreditCardOutlined,
+  DatabaseOutlined
 } from '@ant-design/icons';
 import { useRouter, usePathname } from 'next/navigation';
-import { useAuth } from '../providers/AuthProvider';
+import { useAuth } from '@providers/AuthProvider';
 
 const { Header, Sider, Content } = Layout;
 const { Title } = Typography;

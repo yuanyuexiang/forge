@@ -13,8 +13,7 @@ import {
   CheckCircleOutlined,
   EyeInvisibleOutlined
 } from '@ant-design/icons';
-import { ProtectedRoute } from '../components/ProtectedRoute';
-import AdminLayout from '../components/AdminLayout';
+import { ProtectedRoute, AdminLayout } from '@components';
 import { 
   useGetDashboardDataQuery,
   useGetRecentUsersQuery,

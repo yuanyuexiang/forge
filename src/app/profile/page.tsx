@@ -19,9 +19,8 @@ import {
   SaveOutlined,
   UploadOutlined
 } from '@ant-design/icons';
-import { ProtectedRoute } from '../components/ProtectedRoute';
-import AdminLayout from '../components/AdminLayout';
-import { useAuth } from '../providers/AuthProvider';
+import { ProtectedRoute, AdminLayout } from '@components';
+import { useAuth } from '@providers/AuthProvider';
 
 const { Title, Text } = Typography;
 

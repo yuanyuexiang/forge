@@ -27,8 +27,7 @@ import {
   useUpdateUserMutation,
   GetUsersQuery
 } from '../../generated/graphql';
-import { ProtectedRoute } from '../components/ProtectedRoute';
-import AdminLayout from '../components/AdminLayout';
+import { ProtectedRoute, AdminLayout } from '@components';
 
 const { Title, Text } = Typography;
 const { Search } = Input;

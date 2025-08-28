@@ -22,14 +22,13 @@ import {
   FileTextOutlined,
   CheckCircleOutlined
 } from '@ant-design/icons';
-import { ProtectedRoute } from '../components/ProtectedRoute';
-import AdminLayout from '../components/AdminLayout';
+import { ProtectedRoute, AdminLayout } from '@components';
 import { 
   useGetProductsQuery,
   useDeleteProductMutation,
   GetProductsQuery
-} from '../../generated/graphql';
-import { FILE_CONFIG } from '../lib/directus-config';
+} from '@generated/graphql';
+import { FILE_CONFIG } from '@lib/api';
 
 const { Search } = Input;
 const { Title } = Typography;

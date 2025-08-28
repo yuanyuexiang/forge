@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { executeServerSideGraphQLQuery, AUTH_QUERIES } from '../../lib/directus-config';
-import { authLogger } from '../../lib/logger';
+import { executeServerSideGraphQLQuery, AUTH_QUERIES } from '@lib/api/directus-config';
+import { authLogger } from '@lib/utils/logger';
 
 export async function POST(request: NextRequest) {
   try {

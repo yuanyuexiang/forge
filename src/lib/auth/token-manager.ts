@@ -1,3 +1,5 @@
+import { APP_CONFIG } from '@config/app-config';
+
 // 认证令牌管理工具
 export class TokenManager {
   private static refreshPromise: Promise<string | null> | null = null;
@@ -6,7 +8,7 @@ export class TokenManager {
   static getCurrentToken(): string | null {
     if (typeof window === 'undefined') return null;
     
-    return localStorage.getItem('accessToken') ||           // AuthProvider 使用的键名
+    return localStorage.getItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN) ||           // AuthProvider 使用的键名
            localStorage.getItem('directus_auth_token') || 
            localStorage.getItem('authToken') ||
            localStorage.getItem('directus_token');
@@ -16,7 +18,7 @@ export class TokenManager {
   static getRefreshToken(): string | null {
     if (typeof window === 'undefined') return null;
     
-    return localStorage.getItem('refreshToken') ||          // AuthProvider 使用的键名
+    return localStorage.getItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN) ||          // AuthProvider 使用的键名
            localStorage.getItem('directus_refresh_token') || 
            localStorage.getItem('refresh_token');
   }
@@ -26,12 +28,12 @@ export class TokenManager {
     if (typeof window === 'undefined') return;
     
     // 保存到 AuthProvider 使用的键名
-    localStorage.setItem('accessToken', accessToken);
+    localStorage.setItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN, accessToken);
     localStorage.setItem('directus_auth_token', accessToken);
     localStorage.setItem('authToken', accessToken);
     
     if (refreshToken) {
-      localStorage.setItem('refreshToken', refreshToken);
+      localStorage.setItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN, refreshToken);
       localStorage.setItem('directus_refresh_token', refreshToken);
       localStorage.setItem('refresh_token', refreshToken);
     }
@@ -42,11 +44,11 @@ export class TokenManager {
     if (typeof window === 'undefined') return;
     
     // 清除所有可能的令牌键名
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.ACCESS_TOKEN);
     localStorage.removeItem('directus_auth_token');
     localStorage.removeItem('authToken');
     localStorage.removeItem('directus_token');
-    localStorage.removeItem('refreshToken');
+    localStorage.removeItem(APP_CONFIG.AUTH.STORAGE_KEYS.REFRESH_TOKEN);
     localStorage.removeItem('directus_refresh_token');
     localStorage.removeItem('refresh_token');
   }

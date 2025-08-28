@@ -29,17 +29,17 @@ import {
   CheckCircleOutlined,
   EyeInvisibleOutlined
 } from '@ant-design/icons';
-import { ProtectedRoute } from '../../components/ProtectedRoute';
-import AdminLayout from '../../components/AdminLayout';
+import { ProtectedRoute } from '@components/auth';
+import { AdminLayout } from '@components/layout';
 import { 
   useGetProductsQuery,
   useGetCategoriesQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   GetProductsQuery
-} from '../../../generated/graphql';
-import { TokenManager } from '../../lib/token-manager';
-import { FILE_CONFIG } from '../../lib/directus-config';
+} from '@generated/graphql';
+import { TokenManager } from '@lib/auth';
+import { FILE_CONFIG } from '@lib/api';
 
 const { Title } = Typography;
 const { Option } = Select;
