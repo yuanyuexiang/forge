@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { TokenManager } from '../lib/token-manager';
+import { authLogger } from '../lib/logger';
 
 interface User {
   id: string;
@@ -65,7 +66,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return true;
     } catch (error) {
-      console.error('Token refresh failed:', error);
+      authLogger.error('Token refresh failed', error);
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
       setUser(null);
@@ -93,7 +94,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
       return true;
     } catch (error) {
-      console.error('Error checking token expiration:', error);
+      authLogger.error('Error checking token expiration', error);
       return false;
     }
   };
@@ -127,7 +128,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       
       return true;
     } catch (error) {
-      console.error('Login error:', error);
+      authLogger.error('Login error', error);
       return false;
     } finally {
       setLoading(false);
@@ -160,7 +161,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               email: payload.email || '',
             });
           } catch (error) {
-            console.error('Error parsing token:', error);
+            authLogger.error('Error parsing token', error);
             // 如果无法解析 token，清除认证状态
             localStorage.removeItem('accessToken');
             localStorage.removeItem('refreshToken');

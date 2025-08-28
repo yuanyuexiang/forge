@@ -1,5 +1,7 @@
 // Directus API 配置 - 基于环境自动检测
 import { TokenManager } from './token-manager';
+import { getEnvironmentInfo, isLocalEnvironment } from './environment';
+import { apiLogger } from './logger';
 
 /*
  * GraphQL 架构说明：
@@ -9,13 +11,12 @@ import { TokenManager } from './token-manager';
  */
 
 const getDirectusUrl = () => {
+  const env = getEnvironmentInfo();
+  
   // 检查是否在浏览器环境
-  if (typeof window !== 'undefined') {
+  if (env.isBrowser) {
     // 云端部署时，Directus 在同一域名下
-    if (window.location.hostname !== 'localhost' && 
-        !window.location.hostname.startsWith('127.0.0.1') &&
-        !window.location.hostname.startsWith('192.168.') &&
-        !window.location.hostname.endsWith('.local')) {
+    if (!env.isLocal) {
       return window.location.origin; // 使用当前域名
     }
   }
@@ -36,7 +37,10 @@ export const DIRECTUS_CONFIG = {
   FILE_UPLOAD_URL: `${getDirectusUrl()}/files`,
   
   // 基础配置
-  BASE_URL: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3000',
+  BASE_URL: (() => {
+    const env = getEnvironmentInfo();
+    return env.isBrowser ? window.location.origin : 'http://localhost:3000';
+  })(),
   
   // 获取当前环境应该使用的 GraphQL 端点
   getGraphQLEndpoint: () => {
@@ -49,17 +53,11 @@ export const DIRECTUS_CONFIG = {
 
 // 判断是否需要使用代理
 const shouldUseProxy = () => {
-  if (typeof window === 'undefined') return false; // 服务器端不使用代理
+  const env = getEnvironmentInfo();
+  if (env.isServer) return false; // 服务器端不使用代理
   
-  // 只有在本地开发环境（localhost 或 127.0.0.1）才使用代理
-  const hostname = window.location.hostname;
-  const isLocalhost = hostname === 'localhost' || 
-                     hostname === '127.0.0.1' || 
-                     hostname.startsWith('192.168.') ||
-                     hostname.startsWith('10.') ||
-                     hostname.endsWith('.local');
-  
-  return isLocalhost;
+  // 只有在本地开发环境才使用代理
+  return env.isLocal;
 };
 
 // 文件资产配置
@@ -78,9 +76,12 @@ export const FILE_CONFIG = {
     
     // 尝试获取令牌，优先使用传入的令牌
     let token = authToken;
-    if (!token && typeof window !== 'undefined') {
-      // 使用 TokenManager 统一获取令牌
-      token = TokenManager.getCurrentToken() || undefined;
+    if (!token) {
+      const env = getEnvironmentInfo();
+      if (env.isBrowser) {
+        // 使用 TokenManager 统一获取令牌
+        token = TokenManager.getCurrentToken() || undefined;
+      }
     }
     
     // 判断是否使用代理
@@ -110,9 +111,12 @@ export const FILE_CONFIG = {
     
     // 尝试获取令牌，优先使用传入的令牌
     let token = authToken;
-    if (!token && typeof window !== 'undefined') {
-      // 使用 TokenManager 统一获取令牌
-      token = TokenManager.getCurrentToken() || undefined;
+    if (!token) {
+      const env = getEnvironmentInfo();
+      if (env.isBrowser) {
+        // 使用 TokenManager 统一获取令牌
+        token = TokenManager.getCurrentToken() || undefined;
+      }
     }
     
     const useProxy = shouldUseProxy();
@@ -168,13 +172,13 @@ export async function executeServerSideGraphQLQuery(
     const result = await response.json();
     
     if (result.errors) {
-      console.error('服务器端 GraphQL 错误:', result.errors);
+      apiLogger.error('服务器端 GraphQL 错误', result.errors);
       throw new Error(result.errors[0]?.message || 'GraphQL 查询失败');
     }
     
     return result.data;
   } catch (error) {
-    console.error('服务器端 GraphQL 请求失败:', error);
+    apiLogger.error('服务器端 GraphQL 请求失败', error);
     throw error;
   }
 }

@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { DIRECTUS_CONFIG } from '../../lib/directus-config';
+import { getEnvironmentFromRequest } from '../../lib/environment';
+import { proxyLogger } from '../../lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
@@ -16,22 +18,18 @@ export async function POST(request: NextRequest) {
     }
 
     // 根据环境确定目标 URL
-    let targetUrl: string;
     const host = request.headers.get('host') || '';
     const protocol = request.nextUrl.protocol;
+    const { isLocal, targetUrl: baseTargetUrl } = getEnvironmentFromRequest(host);
     
-    if (host.includes('localhost') || host.includes('127.0.0.1') || host.includes('192.168.')) {
-      // 本地开发环境：代理到远程 Directus
-      targetUrl = 'https://directus.matrix-net.tech/graphql';
-    } else {
-      // 云端环境：使用当前域名的 GraphQL 端点
-      targetUrl = `${protocol}//${host}/graphql`;
-    }
+    const targetUrl = `${baseTargetUrl}/graphql`;
     
-    console.log('GraphQL Proxy - Environment:', host.includes('localhost') ? 'local' : 'production');
-    console.log('GraphQL Proxy - Forwarding request to:', targetUrl);
-    console.log('GraphQL Proxy - Request preview:', body.substring(0, 200) + '...');
-    console.log('GraphQL Proxy - Has auth:', !!authHeader);
+    proxyLogger.info('GraphQL Proxy Request', {
+      environment: isLocal ? 'local' : 'production',
+      targetUrl,
+      hasAuth: !!authHeader,
+      requestPreview: body.substring(0, 200) + '...'
+    });
 
     const response = await fetch(targetUrl, {
       method: 'POST',
@@ -41,15 +39,17 @@ export async function POST(request: NextRequest) {
 
     const data = await response.text();
     
-    console.log('GraphQL Proxy - Response status:', response.status);
-    console.log('GraphQL Proxy - Response preview:', data.substring(0, 200) + '...');
+    proxyLogger.debug('GraphQL Proxy Response', {
+      status: response.status,
+      responsePreview: data.substring(0, 200) + '...'
+    });
 
     // 如果响应不是 JSON，可能是错误
     let jsonData;
     try {
       jsonData = JSON.parse(data);
     } catch {
-      console.error('GraphQL Proxy - Invalid JSON response:', data);
+      proxyLogger.error('GraphQL Proxy - Invalid JSON response', data);
       return NextResponse.json(
         { 
           errors: [{ 
@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     });
 
   } catch (error) {
-    console.error('GraphQL Proxy Error:', error);
+    proxyLogger.error('GraphQL Proxy Error', error);
     return NextResponse.json(
       { 
         errors: [{ 

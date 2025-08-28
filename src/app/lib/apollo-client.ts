@@ -3,6 +3,8 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { DIRECTUS_CONFIG } from './directus-config';
 import { TokenManager } from './token-manager';
+import { getEnvironmentInfo } from './environment';
+import { authLogger, apiLogger } from './logger';
 
 // 刷新 token 的函数
 const refreshAccessToken = async (): Promise<string | null> => {
@@ -33,7 +35,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
     return data.access_token;
   } catch (error) {
-    console.error('Token refresh failed:', error);
+    authLogger.error('Token refresh failed', error);
     TokenManager.clearTokens();
     return null;
   }
@@ -45,21 +47,24 @@ const authLink = setContext(async (_, { headers }) => {
   let token = TokenManager.getCurrentToken();
   
   // 检查 token 是否即将过期（如果是 JWT）
-  if (token && typeof window !== 'undefined') {
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const currentTime = Math.floor(Date.now() / 1000);
-      const timeUntilExpiry = payload.exp - currentTime;
+  if (token) {
+    const env = getEnvironmentInfo();
+    if (env.isBrowser) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const currentTime = Math.floor(Date.now() / 1000);
+        const timeUntilExpiry = payload.exp - currentTime;
 
-      // 如果 token 在 5 分钟内过期，尝试刷新
-      if (timeUntilExpiry < 300) {
-        const newToken = await refreshAccessToken();
-        if (newToken) {
-          token = newToken;
+        // 如果 token 在 5 分钟内过期，尝试刷新
+        if (timeUntilExpiry < 300) {
+          const newToken = await refreshAccessToken();
+          if (newToken) {
+            token = newToken;
+          }
         }
+      } catch (error) {
+        authLogger.error('Error checking token expiration', error);
       }
-    } catch (error) {
-      console.error('Error checking token expiration:', error);
     }
   }
   
@@ -75,18 +80,20 @@ const authLink = setContext(async (_, { headers }) => {
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path }) => {
-      console.error(
-        `GraphQL error: Message: ${message}, Location: ${locations}, Path: ${path}`
+      apiLogger.error(
+        'GraphQL error',
+        { message, locations, path }
       );
     });
   }
 
   if (networkError) {
-    console.error(`Network error: ${networkError}`);
+    apiLogger.error('Network error', networkError);
     
     // 如果是401错误（token过期），尝试刷新token并重试请求
     if ('statusCode' in networkError && networkError.statusCode === 401) {
-      if (typeof window !== 'undefined') {
+      const env = getEnvironmentInfo();
+      if (env.isBrowser) {
         return fromPromise(
           refreshAccessToken().then((newToken) => {
             if (newToken) {

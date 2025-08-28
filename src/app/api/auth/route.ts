@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { AUTH_QUERIES, executeServerSideGraphQLQuery } from '../../lib/directus-config';
+import { executeServerSideGraphQLQuery, AUTH_QUERIES } from '../../lib/directus-config';
+import { authLogger } from '../../lib/logger';
 
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
     
-    console.log('Directus Auth - 使用服务器端 GraphQL 认证:', email);
+    authLogger.info('Directus Auth - 使用服务器端 GraphQL 认证', { email });
     
     // 使用服务器端 GraphQL 查询函数进行认证
     try {
@@ -28,7 +29,7 @@ export async function POST(request: NextRequest) {
             false // 使用普通端点
           );
           
-          console.log('GraphQL 认证完全成功！');
+          authLogger.info('GraphQL 认证完全成功！');
           return NextResponse.json({
             access_token: authData.auth_login.access_token,
             refresh_token: authData.auth_login.refresh_token,
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest) {
             }
           });
         } catch (userError) {
-          console.warn('GraphQL 用户信息获取失败，但认证成功:', userError);
+          authLogger.warn('GraphQL 用户信息获取失败，但认证成功', userError);
           return NextResponse.json({
             access_token: authData.auth_login.access_token,
             refresh_token: authData.auth_login.refresh_token,
@@ -59,7 +60,7 @@ export async function POST(request: NextRequest) {
         );
       }
     } catch (authError: any) {
-      console.error('GraphQL 认证错误:', authError);
+      authLogger.error('GraphQL 认证错误', authError);
       return NextResponse.json(
         { 
           errors: [{ 
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
     }
     
   } catch (error) {
-    console.error('Directus GraphQL Auth Error:', error);
+    authLogger.error('Directus GraphQL Auth Error', error);
     return NextResponse.json(
       { 
         errors: [{ message: '服务器连接失败，请稍后重试' }] 
