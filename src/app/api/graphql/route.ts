@@ -15,8 +15,20 @@ export async function POST(request: NextRequest) {
       headers.set('Authorization', authHeader);
     }
 
-    // 使用配置中的 GraphQL URL
-    const targetUrl = DIRECTUS_CONFIG.GRAPHQL_URL;
+    // 根据环境确定目标 URL
+    let targetUrl: string;
+    const host = request.headers.get('host') || '';
+    const protocol = request.nextUrl.protocol;
+    
+    if (host.includes('localhost') || host.includes('127.0.0.1') || host.includes('192.168.')) {
+      // 本地开发环境：代理到远程 Directus
+      targetUrl = 'https://directus.matrix-net.tech/graphql';
+    } else {
+      // 云端环境：使用当前域名的 GraphQL 端点
+      targetUrl = `${protocol}//${host}/graphql`;
+    }
+    
+    console.log('GraphQL Proxy - Environment:', host.includes('localhost') ? 'local' : 'production');
     console.log('GraphQL Proxy - Forwarding request to:', targetUrl);
     console.log('GraphQL Proxy - Request preview:', body.substring(0, 200) + '...');
     console.log('GraphQL Proxy - Has auth:', !!authHeader);

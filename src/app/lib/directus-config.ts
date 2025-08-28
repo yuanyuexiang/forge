@@ -1,8 +1,17 @@
-// Directus API 配置 - 简化版本，基于域名自动检测
+// Directus API 配置 - 基于环境自动检测
 const getDirectusUrl = () => {
-  // 在云端部署时，前端和 Directus 是分离的
-  // 前端：https://forge.matrix-net.tech
-  // Directus：https://directus.matrix-net.tech
+  // 检查是否在浏览器环境
+  if (typeof window !== 'undefined') {
+    // 云端部署时，Directus 在同一域名下
+    if (window.location.hostname !== 'localhost' && 
+        !window.location.hostname.startsWith('127.0.0.1') &&
+        !window.location.hostname.startsWith('192.168.') &&
+        !window.location.hostname.endsWith('.local')) {
+      return window.location.origin; // 使用当前域名
+    }
+  }
+  
+  // 本地开发时使用远程 Directus
   return 'https://directus.matrix-net.tech';
 };
 
@@ -22,13 +31,10 @@ export const DIRECTUS_CONFIG = {
   
   // 获取当前环境应该使用的 GraphQL 端点
   getGraphQLEndpoint: () => {
-    if (shouldUseProxy()) {
-      // 本地开发：使用代理避免 CORS
-      return '/api/graphql';
-    } else {
-      // 云端部署：直接访问 Directus
-      return `${getDirectusUrl()}/graphql`;
-    }
+    // 无论在哪个环境，都统一使用代理端点
+    // 本地开发：代理到 directus.matrix-net.tech
+    // 云端部署：代理到本地的 Directus 实例
+    return '/api/graphql';
   },
 };
 
