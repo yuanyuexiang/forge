@@ -216,7 +216,7 @@ function ProductsContent() {
       title: '副标题',
       dataIndex: 'subtitle',
       key: 'subtitle',
-      width: 150,
+      width: 300,
       render: (subtitle: string) => subtitle || '-',
     },
     {

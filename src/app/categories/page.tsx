@@ -154,12 +154,14 @@ function CategoriesContent() {
       title: '分类名称',
       dataIndex: 'name',
       key: 'name',
+      width: 200,
       sorter: (a: Category, b: Category) => a.name.localeCompare(b.name),
     },
     {
       title: '描述',
       dataIndex: 'description',
       key: 'description',
+      width: 500,
       render: (description: string) => description || '暂无描述',
     },
     {
@@ -172,7 +174,7 @@ function CategoriesContent() {
     {
       title: '操作',
       key: 'action',
-      width: 150,
+      width: 200,
       render: (_: any, record: Category) => (
         <Space size="small">
           <Button
