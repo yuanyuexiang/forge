@@ -162,7 +162,7 @@ export default function LoginPage() {
             className="text-center text-sm mt-8"
             style={{ color: '#6B7280' }}
           >
-            <p>© 2025 Forge Luxury Systems. 保留所有权利</p>
+            <p>© 2025 Matrix Net Tech. 保留所有权利</p>
           </div>
         </div>
       </div>
