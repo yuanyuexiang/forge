@@ -1,6 +1,13 @@
 // Directus API 配置 - 基于环境自动检测
 import { TokenManager } from './token-manager';
 
+/*
+ * GraphQL 架构说明：
+ * - 客户端组件：使用 Apollo Client 系统 (src/generated/graphql.ts)
+ * - 服务器端 API 路由：使用 executeServerSideGraphQLQuery 函数
+ * - 认证查询：AUTH_QUERIES 用于服务器端认证逻辑
+ */
+
 const getDirectusUrl = () => {
   // 检查是否在浏览器环境
   if (typeof window !== 'undefined') {
@@ -134,44 +141,6 @@ export const FILE_CONFIG = {
   }
 };
 
-// GraphQL 查询辅助函数（客户端使用，通过代理）
-export async function executeGraphQLQuery(
-  query: string, 
-  variables: any = {}, 
-  authToken?: string,
-  useProxy: boolean = true  // 默认使用代理，避免CORS问题
-) {
-  const url = useProxy 
-    ? `${DIRECTUS_CONFIG.BASE_URL}${DIRECTUS_CONFIG.LOCAL_GRAPHQL_PROXY}`
-    : DIRECTUS_CONFIG.GRAPHQL_URL;
-
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...(authToken && { 'Authorization': `Bearer ${authToken}` }),
-      },
-      body: JSON.stringify({
-        query,
-        variables,
-      }),
-    });
-
-    const result = await response.json();
-    
-    if (result.errors) {
-      console.error('GraphQL 错误:', result.errors);
-      throw new Error(result.errors[0]?.message || 'GraphQL 查询失败');
-    }
-    
-    return result.data;
-  } catch (error) {
-    console.error('GraphQL 请求失败:', error);
-    throw error;
-  }
-}
-
 // 服务器端 GraphQL 查询辅助函数（直接连接，不通过代理）
 export async function executeServerSideGraphQLQuery(
   query: string, 
@@ -232,75 +201,6 @@ export const AUTH_QUERIES = {
           id
           name
         }
-      }
-    }
-  `,
-};
-
-// 业务数据 GraphQL 查询
-export const DATA_QUERIES = {
-  PRODUCTS: `
-    query {
-      products {
-        id
-        name
-        description
-        price
-        stock
-        created_at
-        updated_at
-      }
-    }
-  `,
-  
-  CATEGORIES: `
-    query {
-      categories {
-        id
-        name
-        description
-      }
-    }
-  `,
-  
-  ORDERS: `
-    query {
-      orders {
-        id
-        user_id
-        total_price
-        status
-        created_at
-        updated_at
-      }
-    }
-  `,
-  
-  PAYMENTS: `
-    query {
-      payments {
-        id
-        order_id
-        payment_method
-        amount
-        status
-        paid_at
-        created_at
-        updated_at
-      }
-    }
-  `,
-  
-  USERS: `
-    query {
-      users {
-        id
-        first_name
-        last_name
-        email
-        status
-        created_at
-        last_access
       }
     }
   `,
