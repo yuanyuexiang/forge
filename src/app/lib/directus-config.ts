@@ -1,4 +1,6 @@
 // Directus API 配置 - 基于环境自动检测
+import { TokenManager } from './token-manager';
+
 const getDirectusUrl = () => {
   // 检查是否在浏览器环境
   if (typeof window !== 'undefined') {
@@ -70,12 +72,8 @@ export const FILE_CONFIG = {
     // 尝试获取令牌，优先使用传入的令牌
     let token = authToken;
     if (!token && typeof window !== 'undefined') {
-      // 使用与TokenManager相同的优先级顺序
-      token = localStorage.getItem('accessToken') ||
-              localStorage.getItem('directus_auth_token') || 
-              localStorage.getItem('authToken') ||
-              localStorage.getItem('directus_token') ||
-              undefined;
+      // 使用 TokenManager 统一获取令牌
+      token = TokenManager.getCurrentToken() || undefined;
     }
     
     // 判断是否使用代理
@@ -106,12 +104,8 @@ export const FILE_CONFIG = {
     // 尝试获取令牌，优先使用传入的令牌
     let token = authToken;
     if (!token && typeof window !== 'undefined') {
-      // 使用与TokenManager相同的优先级顺序
-      token = localStorage.getItem('accessToken') ||
-              localStorage.getItem('directus_auth_token') || 
-              localStorage.getItem('authToken') ||
-              localStorage.getItem('directus_token') ||
-              undefined;
+      // 使用 TokenManager 统一获取令牌
+      token = TokenManager.getCurrentToken() || undefined;
     }
     
     const useProxy = shouldUseProxy();

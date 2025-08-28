@@ -2,11 +2,12 @@ import { ApolloClient, InMemoryCache, HttpLink, from, fromPromise } from "@apoll
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { DIRECTUS_CONFIG } from './directus-config';
+import { TokenManager } from './token-manager';
 
 // 刷新 token 的函数
 const refreshAccessToken = async (): Promise<string | null> => {
   try {
-    const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = TokenManager.getRefreshToken();
     if (!refreshToken) {
       return null;
     }
@@ -21,32 +22,27 @@ const refreshAccessToken = async (): Promise<string | null> => {
 
     if (!response.ok) {
       // Refresh token 无效，清除存储
-      localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
+      TokenManager.clearTokens();
       return null;
     }
 
     const data = await response.json();
     
     // 更新存储的 token
-    localStorage.setItem('accessToken', data.access_token);
-    if (data.refresh_token) {
-      localStorage.setItem('refreshToken', data.refresh_token);
-    }
+    TokenManager.saveTokens(data.access_token, data.refresh_token);
 
     return data.access_token;
   } catch (error) {
     console.error('Token refresh failed:', error);
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('refreshToken');
+    TokenManager.clearTokens();
     return null;
   }
 };
 
 // 创建认证链接
 const authLink = setContext(async (_, { headers }) => {
-  // 从localStorage获取token
-  let token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+  // 使用 TokenManager 获取 token
+  let token = TokenManager.getCurrentToken();
   
   // 检查 token 是否即将过期（如果是 JWT）
   if (token && typeof window !== 'undefined') {
@@ -105,8 +101,7 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
               return newToken;
             } else {
               // 刷新失败，重定向到登录页
-              localStorage.removeItem('accessToken');
-              localStorage.removeItem('refreshToken');
+              TokenManager.clearTokens();
               window.location.href = '/login';
               throw new Error('Authentication failed');
             }

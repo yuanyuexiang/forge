@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { TokenManager } from '../lib/token-manager';
 
 interface User {
   id: string;
@@ -74,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // 检查 token 是否即将过期并自动刷新
   const checkTokenExpiration = async () => {
-    const accessToken = localStorage.getItem('accessToken');
+    const accessToken = TokenManager.getCurrentToken();
     if (!accessToken) {
       return false;
     }
@@ -143,7 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   // 初始化时检查现有的认证状态
   useEffect(() => {
     const initAuth = async () => {
-      const accessToken = localStorage.getItem('accessToken');
+      const accessToken = TokenManager.getCurrentToken();
       
       if (accessToken) {
         // 检查 token 是否有效/即将过期
