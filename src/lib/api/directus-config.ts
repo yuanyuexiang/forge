@@ -184,29 +184,104 @@ export async function executeServerSideGraphQLQuery(
   }
 }
 
-// 认证相关的 GraphQL 查询
+// 认证相关的 GraphQL 查询（基于系统端点）
 export const AUTH_QUERIES = {
+  // 登录 Mutation（系统端点）
   LOGIN: `
-    mutation AuthLogin($email: String!, $password: String!) {
-      auth_login(email: $email, password: $password) {
+    mutation AuthLogin($email: String!, $password: String!, $mode: auth_mode, $otp: String) {
+      auth_login(email: $email, password: $password, mode: $mode, otp: $otp) {
         access_token
+        expires
         refresh_token
       }
     }
   `,
   
+  // 刷新 Token Mutation（系统端点）
+  REFRESH_TOKEN: `
+    mutation AuthRefresh($refresh_token: String!, $mode: auth_mode) {
+      auth_refresh(refresh_token: $refresh_token, mode: $mode) {
+        access_token
+        expires
+        refresh_token
+      }
+    }
+  `,
+  
+  // 登出 Mutation（系统端点）
+  LOGOUT: `
+    mutation AuthLogout($refresh_token: String!, $mode: auth_mode) {
+      auth_logout(refresh_token: $refresh_token, mode: $mode)
+    }
+  `,
+  
+  // 获取当前用户信息 Query（主端点）
   GET_CURRENT_USER: `
-    query {
+    query GetCurrentUser {
       users_me {
         id
-        email
         first_name
         last_name
+        email
+        language
+        theme
+        avatar {
+          id
+          title
+          filename_disk
+          type
+          width
+          height
+        }
         role {
           id
           name
+          description
+          icon
+          enforce_tfa
+          admin_access
+          app_access
+        }
+        last_access
+        last_page
+        provider
+        external_identifier
+        email_notifications
+        status
+      }
+    }
+  `,
+  
+  // 更新用户信息 Mutation（系统端点）
+  UPDATE_USER_ME: `
+    mutation UpdateCurrentUser($data: update_directus_users_input!) {
+      update_users_me(data: $data) {
+        id
+        first_name
+        last_name
+        email
+        language
+        theme
+        avatar {
+          id
+          title
+          filename_disk
         }
       }
+    }
+  `,
+  
+  // 密码重置请求 Mutation（系统端点）
+  PASSWORD_REQUEST: `
+    mutation AuthPasswordRequest($email: String!, $reset_url: String) {
+      auth_password_request(email: $email, reset_url: $reset_url)
+    }
+  `,
+  
+  // 密码重置 Mutation（系统端点）
+  PASSWORD_RESET: `
+    mutation AuthPasswordReset($token: String!, $password: String!) {
+      auth_password_reset(token: $token, password: $password)
     }
   `,
 };

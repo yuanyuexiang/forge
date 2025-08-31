@@ -4,17 +4,22 @@ import { authLogger } from '@lib/utils/logger';
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, password } = await request.json();
+    const { email, password, otp } = await request.json();
     
-    authLogger.info('Directus Auth - 使用服务器端 GraphQL 认证', { email });
+    authLogger.info('GraphQL System Auth - 开始认证流程', { email });
     
-    // 使用服务器端 GraphQL 查询函数进行认证
+    // 使用 GraphQL 系统端点进行认证
     try {
       const authData = await executeServerSideGraphQLQuery(
         AUTH_QUERIES.LOGIN,
-        { email, password },
+        { 
+          email, 
+          password, 
+          mode: 'json', // 使用 JSON 模式
+          ...(otp && { otp }) // 如果提供了 OTP，包含在请求中
+        },
         undefined,
-        true // 使用 system 端点
+        true // 使用系统端点
       );
 
       if (authData?.auth_login?.access_token) {
@@ -26,14 +31,15 @@ export async function POST(request: NextRequest) {
             AUTH_QUERIES.GET_CURRENT_USER,
             {},
             token,
-            false // 使用普通端点
+            false // 使用普通端点获取用户信息
           );
           
-          authLogger.info('GraphQL 认证完全成功！');
+          authLogger.info('GraphQL System Auth - 认证完全成功！');
+          
           return NextResponse.json({
             access_token: authData.auth_login.access_token,
             refresh_token: authData.auth_login.refresh_token,
-            expires: null, // GraphQL 认证可能不返回 expires
+            expires: authData.auth_login.expires,
             user: userData?.users_me || {
               id: null,
               email,
@@ -46,12 +52,13 @@ export async function POST(request: NextRequest) {
           return NextResponse.json({
             access_token: authData.auth_login.access_token,
             refresh_token: authData.auth_login.refresh_token,
-            expires: null,
+            expires: authData.auth_login.expires,
             user: { id: null, email, first_name: null, last_name: null }
           });
         }
       } else {
         // 认证失败
+        authLogger.warn('GraphQL System Auth - 认证失败', { email });
         return NextResponse.json(
           { 
             errors: [{ message: '登录失败，请检查邮箱和密码' }] 
@@ -60,7 +67,7 @@ export async function POST(request: NextRequest) {
         );
       }
     } catch (authError: any) {
-      authLogger.error('GraphQL 认证错误', authError);
+      authLogger.error('GraphQL System Auth - 认证错误', authError);
       return NextResponse.json(
         { 
           errors: [{ 
@@ -72,7 +79,7 @@ export async function POST(request: NextRequest) {
     }
     
   } catch (error) {
-    authLogger.error('Directus GraphQL Auth Error', error);
+    authLogger.error('GraphQL System Auth - 服务器错误', error);
     return NextResponse.json(
       { 
         errors: [{ message: '服务器连接失败，请稍后重试' }] 

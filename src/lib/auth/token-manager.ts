@@ -78,7 +78,9 @@ export class TokenManager {
     }
 
     try {
-      console.log('TokenManager: Attempting to refresh token...');
+      console.log('TokenManager: Attempting to refresh token using GraphQL...');
+      
+      // 使用 GraphQL 系统端点刷新 token
       const response = await fetch('/api/auth/refresh', {
         method: 'POST',
         headers: {
@@ -88,7 +90,7 @@ export class TokenManager {
       });
 
       if (!response.ok) {
-        console.error('TokenManager: Refresh failed with status', response.status);
+        console.error('TokenManager: GraphQL refresh failed with status', response.status);
         this.clearTokens();
         return null;
       }
@@ -97,14 +99,14 @@ export class TokenManager {
       
       if (data.access_token) {
         this.saveTokens(data.access_token, data.refresh_token);
-        console.log('TokenManager: Token refreshed successfully');
+        console.log('TokenManager: Token refreshed successfully via GraphQL');
         return data.access_token;
       } else {
-        console.error('TokenManager: No access token in refresh response');
+        console.error('TokenManager: No access token in GraphQL refresh response');
         return null;
       }
     } catch (error) {
-      console.error('TokenManager: Refresh token error:', error);
+      console.error('TokenManager: GraphQL refresh token error:', error);
       this.clearTokens();
       return null;
     }
