@@ -50,13 +50,13 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   // 根据当前路径确定选中的菜单项
   const getSelectedKey = () => {
     if (pathname === '/dashboard') return 'dashboard';
-    if (pathname === '/products') return 'products';
-    if (pathname === '/boutiques') return 'boutiques';
-    if (pathname === '/orders') return 'orders';
-    if (pathname === '/users') return 'users';
-    if (pathname === '/categories') return 'categories';
-    if (pathname === '/payments') return 'payments';
-    if (pathname === '/profile') return 'profile';
+    if (pathname.startsWith('/products')) return 'products';
+    if (pathname.startsWith('/boutiques')) return 'boutiques';
+    if (pathname.startsWith('/orders')) return 'orders';
+    if (pathname.startsWith('/users')) return 'users';
+    if (pathname.startsWith('/categories')) return 'categories';
+    if (pathname.startsWith('/payments')) return 'payments';
+    if (pathname.startsWith('/profile')) return 'profile';
     return 'dashboard';
   };
 

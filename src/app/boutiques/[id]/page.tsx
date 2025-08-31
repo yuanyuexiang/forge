@@ -14,9 +14,7 @@ import {
   Card,
   message,
   Upload,
-  Spin,
-  Rate,
-  Space
+  Spin
 } from 'antd';
 import {
   ArrowLeftOutlined,
@@ -40,7 +38,6 @@ import { FILE_CONFIG } from '@lib/api';
 
 const { Title } = Typography;
 const { Option } = Select;
-const { TextArea } = Input;
 
 // 使用生成的类型
 type Boutique = GetBoutiquesQuery['boutiques'][0];
@@ -67,7 +64,7 @@ function BoutiqueEditContent() {
   
   // 创建店铺
   const [createBoutique] = useCreateBoutiqueMutation({
-    onCompleted: (data) => {
+    onCompleted: () => {
       message.success('店铺创建成功');
       refetch(); // 刷新店铺列表缓存
       const returnParams = searchParams.get('return');
@@ -126,29 +123,33 @@ function BoutiqueEditContent() {
         stars: foundBoutique.stars,
         status: foundBoutique.status,
         sort: foundBoutique.sort,
+        main_image: foundBoutique.main_image || '',
+        images: foundBoutique.images || []
       });
 
-      // 初始化图片数据
+      // 初始化主图数据
       if (foundBoutique.main_image) {
         setMainImageList([{
           uid: foundBoutique.main_image,
-          name: '主图片',
+          name: '主图',
           status: 'done',
-          url: getImageUrl(foundBoutique.main_image),
-          response: { data: { id: foundBoutique.main_image } }
+          url: getImageUrl(foundBoutique.main_image)
         }]);
       }
 
+      // 初始化店铺图片
       if (foundBoutique.images && Array.isArray(foundBoutique.images)) {
-        const imageListData = foundBoutique.images.map((imageId: string, index: number) => ({
+        const imagesList = foundBoutique.images.map((imageId: string, index: number) => ({
           uid: imageId,
           name: `图片${index + 1}`,
           status: 'done',
-          url: getImageUrl(imageId),
-          response: { data: { id: imageId } }
+          url: getImageUrl(imageId)
         }));
-        setImageList(imageListData);
+        setImageList(imagesList);
       }
+    } else if (isEditMode) {
+      message.error('店铺不存在');
+      router.push('/boutiques');
     }
   };
 
@@ -181,13 +182,15 @@ function BoutiqueEditContent() {
       const result = await response.json();
       const fileId = result.data.id;
 
+      // 更新表单值
+      form.setFieldValue('main_image', fileId);
+
       // 更新上传列表
       setMainImageList([{
         uid: fileId,
         name: file.name,
         status: 'done',
-        url: getImageUrl(fileId),
-        response: { data: { id: fileId } }
+        url: getImageUrl(fileId)
       }]);
 
       message.success('主图上传成功');
@@ -198,9 +201,9 @@ function BoutiqueEditContent() {
       setMainImageUploading(false);
     }
     return false;
-  }, [getImageUrl]);
+  }, [form, getImageUrl]);
 
-  // 图片列表上传处理
+  // 店铺图片上传处理
   const handleImagesUpload = useCallback(async (file: File) => {
     setImagesUploading(true);
     try {
@@ -234,10 +237,13 @@ function BoutiqueEditContent() {
         uid: fileId,
         name: file.name,
         status: 'done',
-        url: getImageUrl(fileId),
-        response: { data: { id: fileId } }
+        url: getImageUrl(fileId)
       }];
       setImageList(newImageList);
+
+      // 更新表单值
+      const imageIds = newImageList.map(img => img.uid);
+      form.setFieldValue('images', imageIds);
 
       message.success('图片上传成功');
     } catch (error) {
@@ -247,52 +253,47 @@ function BoutiqueEditContent() {
       setImagesUploading(false);
     }
     return false;
-  }, [getImageUrl, imageList]);
+  }, [form, getImageUrl, imageList]);
 
   // 删除图片处理
   const handleRemoveImage = useCallback((file: any, isMainImage: boolean) => {
     if (isMainImage) {
       setMainImageList([]);
+      form.setFieldValue('main_image', '');
     } else {
       const newImageList = imageList.filter(item => item.uid !== file.uid);
       setImageList(newImageList);
+      const imageIds = newImageList.map(img => img.uid);
+      form.setFieldValue('images', imageIds);
     }
-  }, [imageList]);
+  }, [form, imageList]);
 
   // 主图变化处理
   const handleMainImageChange = useCallback(({ fileList }: any) => {
     setMainImageList(fileList);
   }, []);
 
-  // 图片列表变化处理
+  // 店铺图片变化处理
   const handleImagesChange = useCallback(({ fileList }: any) => {
     setImageList(fileList);
   }, []);
 
-  // 提交表单
-  const handleSubmit = async () => {
+  // 保存店铺
+  const handleSave = async () => {
     try {
       setSaving(true);
       const values = await form.validateFields();
       
-      // 处理主图片
-      const mainImageId = mainImageList.length > 0 && mainImageList[0].response?.data?.id 
-        ? mainImageList[0].response.data.id 
-        : (mainImageList[0]?.uid || null);
-
-      // 处理图片列表
-      const images = imageList
-        .map(file => file.response?.data?.id || file.uid)
-        .filter(Boolean);
-
       const submitData = {
         name: values.name,
         stars: values.stars || 0,
         status: values.status || 'draft',
         sort: values.sort || 0,
-        main_image: mainImageId,
-        images: images.length > 0 ? images : null,
+        main_image: values.main_image || null,
+        images: values.images && values.images.length > 0 ? values.images : null,
       };
+
+      console.log('Submitting boutique data:', submitData);
 
       if (isEditMode) {
         await updateBoutique({
@@ -346,39 +347,45 @@ function BoutiqueEditContent() {
   }
 
   return (
-    <div style={{ height: '100%', padding: '24px', backgroundColor: '#F9FAFB' }}>
-      {/* 顶部操作栏 */}
+    <div style={{ padding: '24px', backgroundColor: '#F9FAFB', minHeight: '100vh' }}>
+      {/* 头部 */}
       <div className="mb-6 flex justify-between items-center">
         <div className="flex items-center">
           <Button 
             icon={<ArrowLeftOutlined />} 
             onClick={handleBack}
-            style={{ marginRight: '16px' }}
+            style={{ marginRight: 16 }}
           >
-            返回列表
+            返回
           </Button>
           <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>
             {isEditMode ? '编辑店铺' : '新增店铺'}
           </Title>
         </div>
-        
-        <Space>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <Button onClick={handleBack}>
+            取消
+          </Button>
           <Button 
             type="primary" 
-            icon={saving ? <LoadingOutlined /> : <SaveOutlined />}
+            icon={<SaveOutlined />}
             loading={saving}
-            onClick={handleSubmit}
-            style={{ backgroundColor: '#C5A46D', borderColor: '#C5A46D', color: '#111827', fontWeight: 600 }}
+            onClick={handleSave}
+            style={{ backgroundColor: '#C5A46D', borderColor: '#C5A46D' }}
           >
-            {saving ? '保存中...' : '保存'}
+            保存
           </Button>
-        </Space>
+        </div>
       </div>
 
+      {/* 表单内容 */}
       <Row gutter={24}>
         <Col span={16}>
-          <Card title="基本信息">
-            <Form form={form} layout="vertical">
+          <Card title="基本信息" style={{ marginBottom: 24 }}>
+            <Form
+              form={form}
+              layout="vertical"
+            >
               <Form.Item
                 label="店铺名称"
                 name="name"
@@ -391,7 +398,12 @@ function BoutiqueEditContent() {
                 label="店铺评分"
                 name="stars"
               >
-                <Rate />
+                <InputNumber 
+                  min={1}
+                  max={5}
+                  placeholder="请输入店铺评分 (1-5)"
+                  style={{ width: '100%' }}
+                />
               </Form.Item>
 
               <Form.Item
@@ -405,39 +417,61 @@ function BoutiqueEditContent() {
                   min={0}
                 />
               </Form.Item>
+            </Form>
+          </Card>
 
+          <Card title="店铺图片">
+            <Form form={form} layout="vertical">
               <Form.Item
-                label="主图片"
-                name="main_image"
+                label="主图"
+                tooltip="店铺的主要展示图片"
               >
+                <Form.Item name="main_image" hidden>
+                  <Input />
+                </Form.Item>
                 <Upload
                   listType="picture-card"
                   fileList={mainImageList}
-                  onChange={handleMainImageChange}
                   beforeUpload={handleMainImageUpload}
                   onRemove={(file) => handleRemoveImage(file, true)}
+                  onChange={handleMainImageChange}
                   maxCount={1}
+                  accept="image/*"
+                  showUploadList={{
+                    showPreviewIcon: true,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false
+                  }}
                 >
-                  {mainImageList.length >= 1 ? null : (
+                  {mainImageList.length < 1 && (
                     <div>
                       {mainImageUploading ? <LoadingOutlined /> : <UploadOutlined />}
-                      <div style={{ marginTop: 8 }}>上传主图片</div>
+                      <div style={{ marginTop: 8 }}>上传主图</div>
                     </div>
                   )}
                 </Upload>
               </Form.Item>
 
               <Form.Item
-                label="图片列表"
-                name="images"
+                label="店铺图片"
+                tooltip="店铺的详细图片，支持多张"
               >
+                <Form.Item name="images" hidden>
+                  <Input />
+                </Form.Item>
                 <Upload
                   listType="picture-card"
                   fileList={imageList}
-                  onChange={handleImagesChange}
                   beforeUpload={handleImagesUpload}
                   onRemove={(file) => handleRemoveImage(file, false)}
-                  multiple
+                  onChange={handleImagesChange}
+                  maxCount={10}
+                  accept="image/*"
+                  showUploadList={{
+                    showPreviewIcon: true,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false
+                  }}
                 >
                   <div>
                     {imagesUploading ? <LoadingOutlined /> : <UploadOutlined />}

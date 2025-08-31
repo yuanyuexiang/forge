@@ -108,6 +108,15 @@ function BoutiquesContent() {
 
   const boutiques = boutiquesData?.boutiques || [];
 
+  // 调试: 检查店铺数据结构 (可在生产环境中移除)
+  if (process.env.NODE_ENV === 'development') {
+    console.log('Boutiques data:', boutiques);
+    if (boutiques.length > 0) {
+      console.log('First boutique images:', boutiques[0].images);
+      console.log('First boutique main_image:', boutiques[0].main_image);
+    }
+  }
+
   // 处理错误
   if (error) {
     message.error('获取店铺列表失败');
@@ -160,6 +169,27 @@ function BoutiquesContent() {
     return FILE_CONFIG.getAssetUrl(imageId);
   }, []);
 
+  // 解析图片字段，处理 JSON 字符串或数组
+  const parseImages = useCallback((images: any): string[] => {
+    if (!images) return [];
+    
+    try {
+      // 如果是字符串，尝试解析为JSON
+      if (typeof images === 'string') {
+        const parsed = JSON.parse(images);
+        return Array.isArray(parsed) ? parsed : [];
+      }
+      // 如果已经是数组，直接返回
+      if (Array.isArray(images)) {
+        return images;
+      }
+      return [];
+    } catch (error) {
+      console.warn('解析图片数据失败:', error, images);
+      return [];
+    }
+  }, []);
+
   // 表格列定义
   const columns = [
     {
@@ -167,16 +197,40 @@ function BoutiquesContent() {
       dataIndex: 'main_image',
       key: 'main_image',
       width: 80,
-      render: (imageId: string) => (
-        imageId ? (
-          <Image
-            src={getImageUrl(imageId)}
-            alt="店铺图片"
-            width={60}
-            height={60}
-            style={{ objectFit: 'cover', borderRadius: '4px' }}
-            fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dy"
-          />
+      render: (main_image: string, record: Boutique) => {
+        // 开发环境调试日志
+        if (process.env.NODE_ENV === 'development') {
+          console.log('店铺主图数据:', { 
+            main_image, 
+            images: record.images,
+            record: record.name,
+            main_image_type: typeof main_image,
+            images_type: typeof record.images,
+            generated_url: main_image ? getImageUrl(main_image) : 'no image'
+          });
+        }
+        
+        return main_image ? (
+          <div>
+            <Image
+              src={getImageUrl(main_image)}
+              alt="店铺图片"
+              width={60}
+              height={60}
+              style={{ objectFit: 'cover', borderRadius: '4px' }}
+              fallback="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMIAAADDCAYAAADQvc6UAAABRWlDQ1BJQ0MgUHJvZmlsZQAAKJFjYGASSSwoyGFhYGDIzSspCnJ3UoiIjFJgf8LAwSDCIMogwMCcmFxc4BgQ4ANUwgCjUcG3awyMIPqyLsis7PPOq3QdDFcvjV3jOD1boQVTPQrgSkktTgbSf4A4LbmgqISBgTEFyFYuLykAsTuAbJEioKOA7DkgdjqEvQHEToKwj4DVhAQ5A9k3gGyB5IxEoBmML4BsnSQk8XQkNtReEOBxcfXxUQg1Mjc0dy"
+              onError={(e) => {
+                if (process.env.NODE_ENV === 'development') {
+                  console.error('图片加载失败:', main_image, getImageUrl(main_image), e);
+                }
+              }}
+            />
+            {process.env.NODE_ENV === 'development' && (
+              <div style={{ fontSize: '10px', color: '#666', marginTop: '2px' }}>
+                {main_image.startsWith('rc-upload-') ? '临时文件' : 'ID: ' + main_image.substring(0, 8)}
+              </div>
+            )}
+          </div>
         ) : (
           <div 
             style={{ 
@@ -192,8 +246,8 @@ function BoutiquesContent() {
           >
             <ShopOutlined />
           </div>
-        )
-      ),
+        );
+      },
     },
     {
       title: '店铺名称',
