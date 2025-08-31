@@ -75,6 +75,7 @@ function ProductEditContent() {
   const [createProduct] = useCreateProductMutation({
     onCompleted: () => {
       message.success('商品创建成功');
+      refetch(); // 刷新商品列表缓存
       const returnParams = searchParams.get('return');
       if (returnParams) {
         const decodedParams = decodeURIComponent(returnParams);
@@ -94,6 +95,7 @@ function ProductEditContent() {
   const [updateProduct] = useUpdateProductMutation({
     onCompleted: () => {
       message.success('商品更新成功');
+      refetch(); // 刷新商品列表缓存
       const returnParams = searchParams.get('return');
       if (returnParams) {
         const decodedParams = decodeURIComponent(returnParams);

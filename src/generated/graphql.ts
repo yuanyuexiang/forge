@@ -36,6 +36,8 @@ export enum EventEnum {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  create_boutiques_item?: Maybe<Boutiques>;
+  create_boutiques_items: Array<Boutiques>;
   create_categories_item?: Maybe<Categories>;
   create_categories_items: Array<Categories>;
   create_order_items_item?: Maybe<Order_Items>;
@@ -48,6 +50,8 @@ export type Mutation = {
   create_products_items: Array<Products>;
   create_users_item?: Maybe<Users>;
   create_users_items: Array<Users>;
+  delete_boutiques_item?: Maybe<Delete_One>;
+  delete_boutiques_items?: Maybe<Delete_Many>;
   delete_categories_item?: Maybe<Delete_One>;
   delete_categories_items?: Maybe<Delete_Many>;
   delete_order_items_item?: Maybe<Delete_One>;
@@ -60,6 +64,9 @@ export type Mutation = {
   delete_products_items?: Maybe<Delete_Many>;
   delete_users_item?: Maybe<Delete_One>;
   delete_users_items?: Maybe<Delete_Many>;
+  update_boutiques_batch: Array<Boutiques>;
+  update_boutiques_item?: Maybe<Boutiques>;
+  update_boutiques_items: Array<Boutiques>;
   update_categories_batch: Array<Categories>;
   update_categories_item?: Maybe<Categories>;
   update_categories_items: Array<Categories>;
@@ -78,6 +85,22 @@ export type Mutation = {
   update_users_batch: Array<Users>;
   update_users_item?: Maybe<Users>;
   update_users_items: Array<Users>;
+};
+
+
+export type MutationCreate_Boutiques_ItemArgs = {
+  data: Create_Boutiques_Input;
+};
+
+
+export type MutationCreate_Boutiques_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Boutiques_Input>>;
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -177,6 +200,16 @@ export type MutationCreate_Users_ItemsArgs = {
 };
 
 
+export type MutationDelete_Boutiques_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Boutiques_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
 export type MutationDelete_Categories_ItemArgs = {
   id: Scalars['ID']['input'];
 };
@@ -234,6 +267,35 @@ export type MutationDelete_Users_ItemArgs = {
 
 export type MutationDelete_Users_ItemsArgs = {
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
+export type MutationUpdate_Boutiques_BatchArgs = {
+  data?: InputMaybe<Array<Update_Boutiques_Input>>;
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Boutiques_ItemArgs = {
+  data: Update_Boutiques_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Boutiques_ItemsArgs = {
+  data: Update_Boutiques_Input;
+  filter?: InputMaybe<Boutiques_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -412,6 +474,10 @@ export type MutationUpdate_Users_ItemsArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  boutiques: Array<Boutiques>;
+  boutiques_aggregated: Array<Boutiques_Aggregated>;
+  boutiques_by_id?: Maybe<Boutiques>;
+  boutiques_by_version?: Maybe<Version_Boutiques>;
   categories: Array<Categories>;
   categories_aggregated: Array<Categories_Aggregated>;
   categories_by_id?: Maybe<Categories>;
@@ -436,6 +502,39 @@ export type Query = {
   users_aggregated: Array<Users_Aggregated>;
   users_by_id?: Maybe<Users>;
   users_by_version?: Maybe<Version_Users>;
+};
+
+
+export type QueryBoutiquesArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryBoutiques_AggregatedArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryBoutiques_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryBoutiques_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
 };
 
 
@@ -638,6 +737,7 @@ export type QueryUsers_By_VersionArgs = {
 
 export type Subscription = {
   __typename?: 'Subscription';
+  boutiques_mutated?: Maybe<Boutiques_Mutated>;
   categories_mutated?: Maybe<Categories_Mutated>;
   directus_access_mutated?: Maybe<Directus_Access_Mutated>;
   directus_activity_mutated?: Maybe<Directus_Activity_Mutated>;
@@ -665,6 +765,11 @@ export type Subscription = {
   payments_mutated?: Maybe<Payments_Mutated>;
   products_mutated?: Maybe<Products_Mutated>;
   users_mutated?: Maybe<Users_Mutated>;
+};
+
+
+export type SubscriptionBoutiques_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
 };
 
 
@@ -824,6 +929,106 @@ export type Boolean_Filter_Operators = {
   _null?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
+export type Boutiques = {
+  __typename?: 'boutiques';
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
+  id: Scalars['ID']['output'];
+  images?: Maybe<Scalars['JSON']['output']>;
+  images_func?: Maybe<Count_Functions>;
+  main_image?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  sort?: Maybe<Scalars['Int']['output']>;
+  stars?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type BoutiquesUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type BoutiquesUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Boutiques_Aggregated = {
+  __typename?: 'boutiques_aggregated';
+  avg?: Maybe<Boutiques_Aggregated_Fields>;
+  avgDistinct?: Maybe<Boutiques_Aggregated_Fields>;
+  count?: Maybe<Boutiques_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Boutiques_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Boutiques_Aggregated_Fields>;
+  min?: Maybe<Boutiques_Aggregated_Fields>;
+  sum?: Maybe<Boutiques_Aggregated_Fields>;
+  sumDistinct?: Maybe<Boutiques_Aggregated_Fields>;
+};
+
+export type Boutiques_Aggregated_Count = {
+  __typename?: 'boutiques_aggregated_count';
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  images?: Maybe<Scalars['Int']['output']>;
+  main_image?: Maybe<Scalars['Int']['output']>;
+  name?: Maybe<Scalars['Int']['output']>;
+  sort?: Maybe<Scalars['Int']['output']>;
+  stars?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Boutiques_Aggregated_Fields = {
+  __typename?: 'boutiques_aggregated_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  sort?: Maybe<Scalars['Float']['output']>;
+  stars?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Boutiques_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Boutiques_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Boutiques_Filter>>>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  images?: InputMaybe<String_Filter_Operators>;
+  images_func?: InputMaybe<Count_Function_Filter_Operators>;
+  main_image?: InputMaybe<String_Filter_Operators>;
+  name?: InputMaybe<String_Filter_Operators>;
+  sort?: InputMaybe<Number_Filter_Operators>;
+  stars?: InputMaybe<Number_Filter_Operators>;
+  status?: InputMaybe<String_Filter_Operators>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
+};
+
+export type Boutiques_Mutated = {
+  __typename?: 'boutiques_mutated';
+  data?: Maybe<Boutiques>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
+};
+
 export type Categories = {
   __typename?: 'categories';
   created_at?: Maybe<Scalars['Date']['output']>;
@@ -891,12 +1096,137 @@ export type Count_Functions = {
   count?: Maybe<Scalars['Int']['output']>;
 };
 
+export type Create_Boutiques_Input = {
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  images?: InputMaybe<Scalars['JSON']['input']>;
+  main_image?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['Int']['input']>;
+  stars?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
+};
+
 export type Create_Categories_Input = {
   created_at?: InputMaybe<Scalars['Date']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   name: Scalars['String']['input'];
   updated_at?: InputMaybe<Scalars['Date']['input']>;
+};
+
+export type Create_Directus_Access_Input = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  policy?: InputMaybe<Create_Directus_Policies_Input>;
+  role?: InputMaybe<Create_Directus_Roles_Input>;
+  sort?: InputMaybe<Scalars['Int']['input']>;
+  user?: InputMaybe<Create_Directus_Users_Input>;
+};
+
+export type Create_Directus_Files_Input = {
+  charset?: InputMaybe<Scalars['String']['input']>;
+  created_on?: InputMaybe<Scalars['Date']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  duration?: InputMaybe<Scalars['Int']['input']>;
+  embed?: InputMaybe<Scalars['String']['input']>;
+  filename_disk?: InputMaybe<Scalars['String']['input']>;
+  filename_download: Scalars['String']['input'];
+  filesize?: InputMaybe<Scalars['GraphQLBigInt']['input']>;
+  focal_point_x?: InputMaybe<Scalars['Int']['input']>;
+  focal_point_y?: InputMaybe<Scalars['Int']['input']>;
+  folder?: InputMaybe<Create_Directus_Folders_Input>;
+  height?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  modified_by?: InputMaybe<Create_Directus_Users_Input>;
+  modified_on?: InputMaybe<Scalars['Date']['input']>;
+  storage: Scalars['String']['input'];
+  tags?: InputMaybe<Scalars['JSON']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  tus_data?: InputMaybe<Scalars['JSON']['input']>;
+  tus_id?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  uploaded_by?: InputMaybe<Create_Directus_Users_Input>;
+  uploaded_on?: InputMaybe<Scalars['Date']['input']>;
+  width?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type Create_Directus_Folders_Input = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  name: Scalars['String']['input'];
+  parent?: InputMaybe<Create_Directus_Folders_Input>;
+};
+
+export type Create_Directus_Permissions_Input = {
+  action: Scalars['String']['input'];
+  collection: Scalars['String']['input'];
+  fields?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  permissions?: InputMaybe<Scalars['JSON']['input']>;
+  policy?: InputMaybe<Create_Directus_Policies_Input>;
+  presets?: InputMaybe<Scalars['JSON']['input']>;
+  validation?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type Create_Directus_Policies_Input = {
+  admin_access: Scalars['Boolean']['input'];
+  app_access: Scalars['Boolean']['input'];
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** $t:field_options.directus_policies.enforce_tfa */
+  enforce_tfa: Scalars['Boolean']['input'];
+  icon?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  ip_access?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  name: Scalars['String']['input'];
+  permissions?: InputMaybe<Array<InputMaybe<Create_Directus_Permissions_Input>>>;
+  roles?: InputMaybe<Array<InputMaybe<Create_Directus_Access_Input>>>;
+  users?: InputMaybe<Array<InputMaybe<Create_Directus_Access_Input>>>;
+};
+
+export type Create_Directus_Roles_Input = {
+  children?: InputMaybe<Array<InputMaybe<Create_Directus_Roles_Input>>>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  name: Scalars['String']['input'];
+  parent?: InputMaybe<Create_Directus_Roles_Input>;
+  policies?: InputMaybe<Array<InputMaybe<Create_Directus_Access_Input>>>;
+  users?: InputMaybe<Array<InputMaybe<Create_Directus_Users_Input>>>;
+};
+
+export type Create_Directus_Users_Input = {
+  appearance?: InputMaybe<Scalars['String']['input']>;
+  auth_data?: InputMaybe<Scalars['JSON']['input']>;
+  avatar?: InputMaybe<Create_Directus_Files_Input>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  email_notifications?: InputMaybe<Scalars['Boolean']['input']>;
+  external_identifier?: InputMaybe<Scalars['String']['input']>;
+  first_name?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  language?: InputMaybe<Scalars['String']['input']>;
+  last_access?: InputMaybe<Scalars['Date']['input']>;
+  last_name?: InputMaybe<Scalars['String']['input']>;
+  last_page?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['Hash']['input']>;
+  policies?: InputMaybe<Array<InputMaybe<Create_Directus_Access_Input>>>;
+  provider?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Create_Directus_Roles_Input>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Scalars['JSON']['input']>;
+  text_direction?: InputMaybe<Scalars['String']['input']>;
+  tfa_secret?: InputMaybe<Scalars['Hash']['input']>;
+  theme_dark?: InputMaybe<Scalars['String']['input']>;
+  theme_dark_overrides?: InputMaybe<Scalars['JSON']['input']>;
+  theme_light?: InputMaybe<Scalars['String']['input']>;
+  theme_light_overrides?: InputMaybe<Scalars['JSON']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  token?: InputMaybe<Scalars['Hash']['input']>;
 };
 
 export type Create_Order_Items_Input = {
@@ -927,6 +1257,7 @@ export type Create_Payments_Input = {
 
 export type Create_Products_Input = {
   barcode?: InputMaybe<Scalars['String']['input']>;
+  boutique_id?: InputMaybe<Create_Boutiques_Input>;
   brand?: InputMaybe<Scalars['String']['input']>;
   category_id?: InputMaybe<Create_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
@@ -2763,6 +3094,7 @@ export type Payments_Mutated = {
 export type Products = {
   __typename?: 'products';
   barcode?: Maybe<Scalars['String']['output']>;
+  boutique_id?: Maybe<Boutiques>;
   brand?: Maybe<Scalars['String']['output']>;
   category_id?: Maybe<Categories>;
   created_at?: Maybe<Scalars['Date']['output']>;
@@ -2786,6 +3118,16 @@ export type Products = {
   updated_at?: Maybe<Scalars['Date']['output']>;
   updated_at_func?: Maybe<Datetime_Functions>;
   video_url?: Maybe<Scalars['String']['output']>;
+};
+
+
+export type ProductsBoutique_IdArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -2815,6 +3157,7 @@ export type Products_Aggregated = {
 export type Products_Aggregated_Count = {
   __typename?: 'products_aggregated_count';
   barcode?: Maybe<Scalars['Int']['output']>;
+  boutique_id?: Maybe<Scalars['Int']['output']>;
   brand?: Maybe<Scalars['Int']['output']>;
   category_id?: Maybe<Scalars['Int']['output']>;
   created_at?: Maybe<Scalars['Int']['output']>;
@@ -2839,6 +3182,7 @@ export type Products_Aggregated_Count = {
 
 export type Products_Aggregated_Fields = {
   __typename?: 'products_aggregated_fields';
+  boutique_id?: Maybe<Scalars['Float']['output']>;
   category_id?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
   market_price?: Maybe<Scalars['Float']['output']>;
@@ -2854,6 +3198,7 @@ export type Products_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Products_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Products_Filter>>>;
   barcode?: InputMaybe<String_Filter_Operators>;
+  boutique_id?: InputMaybe<Boutiques_Filter>;
   brand?: InputMaybe<String_Filter_Operators>;
   category_id?: InputMaybe<Categories_Filter>;
   created_at?: InputMaybe<Date_Filter_Operators>;
@@ -2908,12 +3253,137 @@ export type String_Filter_Operators = {
   _starts_with?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Update_Boutiques_Input = {
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  images?: InputMaybe<Scalars['JSON']['input']>;
+  main_image?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Scalars['Int']['input']>;
+  stars?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
+};
+
 export type Update_Categories_Input = {
   created_at?: InputMaybe<Scalars['Date']['input']>;
   description?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   updated_at?: InputMaybe<Scalars['Date']['input']>;
+};
+
+export type Update_Directus_Access_Input = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  policy?: InputMaybe<Update_Directus_Policies_Input>;
+  role?: InputMaybe<Update_Directus_Roles_Input>;
+  sort?: InputMaybe<Scalars['Int']['input']>;
+  user?: InputMaybe<Update_Directus_Users_Input>;
+};
+
+export type Update_Directus_Files_Input = {
+  charset?: InputMaybe<Scalars['String']['input']>;
+  created_on?: InputMaybe<Scalars['Date']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  duration?: InputMaybe<Scalars['Int']['input']>;
+  embed?: InputMaybe<Scalars['String']['input']>;
+  filename_disk?: InputMaybe<Scalars['String']['input']>;
+  filename_download?: InputMaybe<Scalars['String']['input']>;
+  filesize?: InputMaybe<Scalars['GraphQLBigInt']['input']>;
+  focal_point_x?: InputMaybe<Scalars['Int']['input']>;
+  focal_point_y?: InputMaybe<Scalars['Int']['input']>;
+  folder?: InputMaybe<Update_Directus_Folders_Input>;
+  height?: InputMaybe<Scalars['Int']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  metadata?: InputMaybe<Scalars['JSON']['input']>;
+  modified_by?: InputMaybe<Update_Directus_Users_Input>;
+  modified_on?: InputMaybe<Scalars['Date']['input']>;
+  storage?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Scalars['JSON']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  tus_data?: InputMaybe<Scalars['JSON']['input']>;
+  tus_id?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  uploaded_by?: InputMaybe<Update_Directus_Users_Input>;
+  uploaded_on?: InputMaybe<Scalars['Date']['input']>;
+  width?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type Update_Directus_Folders_Input = {
+  id?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  parent?: InputMaybe<Update_Directus_Folders_Input>;
+};
+
+export type Update_Directus_Permissions_Input = {
+  action?: InputMaybe<Scalars['String']['input']>;
+  collection?: InputMaybe<Scalars['String']['input']>;
+  fields?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  permissions?: InputMaybe<Scalars['JSON']['input']>;
+  policy?: InputMaybe<Update_Directus_Policies_Input>;
+  presets?: InputMaybe<Scalars['JSON']['input']>;
+  validation?: InputMaybe<Scalars['JSON']['input']>;
+};
+
+export type Update_Directus_Policies_Input = {
+  admin_access?: InputMaybe<Scalars['Boolean']['input']>;
+  app_access?: InputMaybe<Scalars['Boolean']['input']>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  /** $t:field_options.directus_policies.enforce_tfa */
+  enforce_tfa?: InputMaybe<Scalars['Boolean']['input']>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  ip_access?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  permissions?: InputMaybe<Array<InputMaybe<Update_Directus_Permissions_Input>>>;
+  roles?: InputMaybe<Array<InputMaybe<Update_Directus_Access_Input>>>;
+  users?: InputMaybe<Array<InputMaybe<Update_Directus_Access_Input>>>;
+};
+
+export type Update_Directus_Roles_Input = {
+  children?: InputMaybe<Array<InputMaybe<Update_Directus_Roles_Input>>>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  icon?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  parent?: InputMaybe<Update_Directus_Roles_Input>;
+  policies?: InputMaybe<Array<InputMaybe<Update_Directus_Access_Input>>>;
+  users?: InputMaybe<Array<InputMaybe<Update_Directus_Users_Input>>>;
+};
+
+export type Update_Directus_Users_Input = {
+  appearance?: InputMaybe<Scalars['String']['input']>;
+  auth_data?: InputMaybe<Scalars['JSON']['input']>;
+  avatar?: InputMaybe<Update_Directus_Files_Input>;
+  description?: InputMaybe<Scalars['String']['input']>;
+  email?: InputMaybe<Scalars['String']['input']>;
+  email_notifications?: InputMaybe<Scalars['Boolean']['input']>;
+  external_identifier?: InputMaybe<Scalars['String']['input']>;
+  first_name?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  language?: InputMaybe<Scalars['String']['input']>;
+  last_access?: InputMaybe<Scalars['Date']['input']>;
+  last_name?: InputMaybe<Scalars['String']['input']>;
+  last_page?: InputMaybe<Scalars['String']['input']>;
+  location?: InputMaybe<Scalars['String']['input']>;
+  password?: InputMaybe<Scalars['Hash']['input']>;
+  policies?: InputMaybe<Array<InputMaybe<Update_Directus_Access_Input>>>;
+  provider?: InputMaybe<Scalars['String']['input']>;
+  role?: InputMaybe<Update_Directus_Roles_Input>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  tags?: InputMaybe<Scalars['JSON']['input']>;
+  text_direction?: InputMaybe<Scalars['String']['input']>;
+  tfa_secret?: InputMaybe<Scalars['Hash']['input']>;
+  theme_dark?: InputMaybe<Scalars['String']['input']>;
+  theme_dark_overrides?: InputMaybe<Scalars['JSON']['input']>;
+  theme_light?: InputMaybe<Scalars['String']['input']>;
+  theme_light_overrides?: InputMaybe<Scalars['JSON']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  token?: InputMaybe<Scalars['Hash']['input']>;
 };
 
 export type Update_Order_Items_Input = {
@@ -2944,6 +3414,7 @@ export type Update_Payments_Input = {
 
 export type Update_Products_Input = {
   barcode?: InputMaybe<Scalars['String']['input']>;
+  boutique_id?: InputMaybe<Update_Boutiques_Input>;
   brand?: InputMaybe<Scalars['String']['input']>;
   category_id?: InputMaybe<Update_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
@@ -3036,6 +3507,21 @@ export type Users_Mutated = {
   key: Scalars['ID']['output'];
 };
 
+export type Version_Boutiques = {
+  __typename?: 'version_boutiques';
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  images?: Maybe<Scalars['JSON']['output']>;
+  main_image?: Maybe<Scalars['String']['output']>;
+  name?: Maybe<Scalars['String']['output']>;
+  sort?: Maybe<Scalars['Int']['output']>;
+  stars?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
 export type Version_Categories = {
   __typename?: 'version_categories';
   created_at?: Maybe<Scalars['Date']['output']>;
@@ -3077,6 +3563,7 @@ export type Version_Payments = {
 export type Version_Products = {
   __typename?: 'version_products';
   barcode?: Maybe<Scalars['String']['output']>;
+  boutique_id?: Maybe<Scalars['JSON']['output']>;
   brand?: Maybe<Scalars['String']['output']>;
   category_id?: Maybe<Scalars['JSON']['output']>;
   created_at?: Maybe<Scalars['Date']['output']>;
@@ -3129,6 +3616,40 @@ export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'users', id: string, name: string, email: string, created_at?: any | null, updated_at?: any | null }> };
 
+export type GetBoutiquesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null }> };
+
+export type GetBoutiqueByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetBoutiqueByIdQuery = { __typename?: 'Query', boutiques_by_id?: { __typename?: 'boutiques', id: string, name?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+
+export type CreateBoutiqueMutationVariables = Exact<{
+  data: Create_Boutiques_Input;
+}>;
+
+
+export type CreateBoutiqueMutation = { __typename?: 'Mutation', create_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null } | null };
+
+export type UpdateBoutiqueMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: Update_Boutiques_Input;
+}>;
+
+
+export type UpdateBoutiqueMutation = { __typename?: 'Mutation', update_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_updated?: any | null } | null };
+
+export type DeleteBoutiqueMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteBoutiqueMutation = { __typename?: 'Mutation', delete_boutiques_item?: { __typename?: 'delete_one', id: string } | null };
+
 export type GetCategoriesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -3168,21 +3689,7 @@ export type GetDashboardDataQueryVariables = Exact<{
 }>;
 
 
-export type GetDashboardDataQuery = { __typename?: 'Query', users: Array<{ __typename?: 'users', id: string }>, products: Array<{ __typename?: 'products', id: string }>, orders: Array<{ __typename?: 'orders', id: string }>, categories: Array<{ __typename?: 'categories', id: string }>, completed_orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null }>, today_orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null }> };
-
-export type GetRecentUsersQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars['Int']['input']>;
-}>;
-
-
-export type GetRecentUsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'users', id: string, name: string, email: string, created_at?: any | null }> };
-
-export type GetRecentProductsQueryVariables = Exact<{
-  limit?: InputMaybe<Scalars['Int']['input']>;
-}>;
-
-
-export type GetRecentProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, price: number, stock?: number | null, status?: string | null, created_at?: any | null }> };
+export type GetDashboardDataQuery = { __typename?: 'Query', users: Array<{ __typename?: 'users', id: string }>, products: Array<{ __typename?: 'products', id: string }>, orders: Array<{ __typename?: 'orders', id: string }>, categories: Array<{ __typename?: 'categories', id: string }>, boutiques: Array<{ __typename?: 'boutiques', id: string }>, users_aggregated: Array<{ __typename?: 'users_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }>, boutiques_aggregated: Array<{ __typename?: 'boutiques_aggregated', countAll?: number | null }>, completed_orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null }>, today_orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null }> };
 
 export type GetRecentOrdersQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -3467,6 +3974,215 @@ export type GetAllUsersQueryHookResult = ReturnType<typeof useGetAllUsersQuery>;
 export type GetAllUsersLazyQueryHookResult = ReturnType<typeof useGetAllUsersLazyQuery>;
 export type GetAllUsersSuspenseQueryHookResult = ReturnType<typeof useGetAllUsersSuspenseQuery>;
 export type GetAllUsersQueryResult = ApolloReactCommon.QueryResult<GetAllUsersQuery, GetAllUsersQueryVariables>;
+export const GetBoutiquesDocument = gql`
+    query GetBoutiques {
+  boutiques {
+    id
+    name
+    main_image
+    images
+    stars
+    status
+    sort
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetBoutiquesQuery__
+ *
+ * To run a query within a React component, call `useGetBoutiquesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBoutiquesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBoutiquesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetBoutiquesQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetBoutiquesQuery, GetBoutiquesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
+      }
+export function useGetBoutiquesLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiquesQuery, GetBoutiquesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
+        }
+export function useGetBoutiquesSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiquesQuery, GetBoutiquesQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiquesQuery, GetBoutiquesQueryVariables>(GetBoutiquesDocument, options);
+        }
+export type GetBoutiquesQueryHookResult = ReturnType<typeof useGetBoutiquesQuery>;
+export type GetBoutiquesLazyQueryHookResult = ReturnType<typeof useGetBoutiquesLazyQuery>;
+export type GetBoutiquesSuspenseQueryHookResult = ReturnType<typeof useGetBoutiquesSuspenseQuery>;
+export type GetBoutiquesQueryResult = ApolloReactCommon.QueryResult<GetBoutiquesQuery, GetBoutiquesQueryVariables>;
+export const GetBoutiqueByIdDocument = gql`
+    query GetBoutiqueById($id: ID!) {
+  boutiques_by_id(id: $id) {
+    id
+    name
+    main_image
+    images
+    stars
+    status
+    sort
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetBoutiqueByIdQuery__
+ *
+ * To run a query within a React component, call `useGetBoutiqueByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBoutiqueByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBoutiqueByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetBoutiqueByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetBoutiqueByIdQuery, GetBoutiqueByIdQueryVariables> & ({ variables: GetBoutiqueByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetBoutiqueByIdQuery, GetBoutiqueByIdQueryVariables>(GetBoutiqueByIdDocument, options);
+      }
+export function useGetBoutiqueByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetBoutiqueByIdQuery, GetBoutiqueByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetBoutiqueByIdQuery, GetBoutiqueByIdQueryVariables>(GetBoutiqueByIdDocument, options);
+        }
+export function useGetBoutiqueByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetBoutiqueByIdQuery, GetBoutiqueByIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetBoutiqueByIdQuery, GetBoutiqueByIdQueryVariables>(GetBoutiqueByIdDocument, options);
+        }
+export type GetBoutiqueByIdQueryHookResult = ReturnType<typeof useGetBoutiqueByIdQuery>;
+export type GetBoutiqueByIdLazyQueryHookResult = ReturnType<typeof useGetBoutiqueByIdLazyQuery>;
+export type GetBoutiqueByIdSuspenseQueryHookResult = ReturnType<typeof useGetBoutiqueByIdSuspenseQuery>;
+export type GetBoutiqueByIdQueryResult = ApolloReactCommon.QueryResult<GetBoutiqueByIdQuery, GetBoutiqueByIdQueryVariables>;
+export const CreateBoutiqueDocument = gql`
+    mutation CreateBoutique($data: create_boutiques_input!) {
+  create_boutiques_item(data: $data) {
+    id
+    name
+    main_image
+    images
+    stars
+    status
+    sort
+    date_created
+  }
+}
+    `;
+export type CreateBoutiqueMutationFn = ApolloReactCommon.MutationFunction<CreateBoutiqueMutation, CreateBoutiqueMutationVariables>;
+
+/**
+ * __useCreateBoutiqueMutation__
+ *
+ * To run a mutation, you first call `useCreateBoutiqueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBoutiqueMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBoutiqueMutation, { data, loading, error }] = useCreateBoutiqueMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateBoutiqueMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateBoutiqueMutation, CreateBoutiqueMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateBoutiqueMutation, CreateBoutiqueMutationVariables>(CreateBoutiqueDocument, options);
+      }
+export type CreateBoutiqueMutationHookResult = ReturnType<typeof useCreateBoutiqueMutation>;
+export type CreateBoutiqueMutationResult = ApolloReactCommon.MutationResult<CreateBoutiqueMutation>;
+export type CreateBoutiqueMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateBoutiqueMutation, CreateBoutiqueMutationVariables>;
+export const UpdateBoutiqueDocument = gql`
+    mutation UpdateBoutique($id: ID!, $data: update_boutiques_input!) {
+  update_boutiques_item(id: $id, data: $data) {
+    id
+    name
+    main_image
+    images
+    stars
+    status
+    sort
+    date_updated
+  }
+}
+    `;
+export type UpdateBoutiqueMutationFn = ApolloReactCommon.MutationFunction<UpdateBoutiqueMutation, UpdateBoutiqueMutationVariables>;
+
+/**
+ * __useUpdateBoutiqueMutation__
+ *
+ * To run a mutation, you first call `useUpdateBoutiqueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBoutiqueMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBoutiqueMutation, { data, loading, error }] = useUpdateBoutiqueMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateBoutiqueMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateBoutiqueMutation, UpdateBoutiqueMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateBoutiqueMutation, UpdateBoutiqueMutationVariables>(UpdateBoutiqueDocument, options);
+      }
+export type UpdateBoutiqueMutationHookResult = ReturnType<typeof useUpdateBoutiqueMutation>;
+export type UpdateBoutiqueMutationResult = ApolloReactCommon.MutationResult<UpdateBoutiqueMutation>;
+export type UpdateBoutiqueMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateBoutiqueMutation, UpdateBoutiqueMutationVariables>;
+export const DeleteBoutiqueDocument = gql`
+    mutation DeleteBoutique($id: ID!) {
+  delete_boutiques_item(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteBoutiqueMutationFn = ApolloReactCommon.MutationFunction<DeleteBoutiqueMutation, DeleteBoutiqueMutationVariables>;
+
+/**
+ * __useDeleteBoutiqueMutation__
+ *
+ * To run a mutation, you first call `useDeleteBoutiqueMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBoutiqueMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBoutiqueMutation, { data, loading, error }] = useDeleteBoutiqueMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteBoutiqueMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteBoutiqueMutation, DeleteBoutiqueMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteBoutiqueMutation, DeleteBoutiqueMutationVariables>(DeleteBoutiqueDocument, options);
+      }
+export type DeleteBoutiqueMutationHookResult = ReturnType<typeof useDeleteBoutiqueMutation>;
+export type DeleteBoutiqueMutationResult = ApolloReactCommon.MutationResult<DeleteBoutiqueMutation>;
+export type DeleteBoutiqueMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteBoutiqueMutation, DeleteBoutiqueMutationVariables>;
 export const GetCategoriesDocument = gql`
     query GetCategories {
   categories {
@@ -3664,17 +4380,35 @@ export type DeleteCategoryMutationResult = ApolloReactCommon.MutationResult<Dele
 export type DeleteCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
 export const GetDashboardDataDocument = gql`
     query GetDashboardData($today: String) {
-  users(limit: 0) {
+  users(limit: 1000) {
     id
   }
-  products(limit: 0) {
+  products(limit: 1000) {
     id
   }
-  orders(limit: 0) {
+  orders(limit: 1000) {
     id
   }
-  categories(limit: 0) {
+  categories(limit: 1000) {
     id
+  }
+  boutiques(limit: 1000) {
+    id
+  }
+  users_aggregated {
+    countAll
+  }
+  products_aggregated {
+    countAll
+  }
+  orders_aggregated {
+    countAll
+  }
+  categories_aggregated {
+    countAll
+  }
+  boutiques_aggregated {
+    countAll
   }
   completed_orders: orders(filter: {status: {_eq: "completed"}}) {
     id
@@ -3720,94 +4454,6 @@ export type GetDashboardDataQueryHookResult = ReturnType<typeof useGetDashboardD
 export type GetDashboardDataLazyQueryHookResult = ReturnType<typeof useGetDashboardDataLazyQuery>;
 export type GetDashboardDataSuspenseQueryHookResult = ReturnType<typeof useGetDashboardDataSuspenseQuery>;
 export type GetDashboardDataQueryResult = ApolloReactCommon.QueryResult<GetDashboardDataQuery, GetDashboardDataQueryVariables>;
-export const GetRecentUsersDocument = gql`
-    query GetRecentUsers($limit: Int = 5) {
-  users(limit: $limit, sort: ["-created_at"]) {
-    id
-    name
-    email
-    created_at
-  }
-}
-    `;
-
-/**
- * __useGetRecentUsersQuery__
- *
- * To run a query within a React component, call `useGetRecentUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetRecentUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetRecentUsersQuery({
- *   variables: {
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useGetRecentUsersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetRecentUsersQuery, GetRecentUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetRecentUsersQuery, GetRecentUsersQueryVariables>(GetRecentUsersDocument, options);
-      }
-export function useGetRecentUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetRecentUsersQuery, GetRecentUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetRecentUsersQuery, GetRecentUsersQueryVariables>(GetRecentUsersDocument, options);
-        }
-export function useGetRecentUsersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetRecentUsersQuery, GetRecentUsersQueryVariables>) {
-          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetRecentUsersQuery, GetRecentUsersQueryVariables>(GetRecentUsersDocument, options);
-        }
-export type GetRecentUsersQueryHookResult = ReturnType<typeof useGetRecentUsersQuery>;
-export type GetRecentUsersLazyQueryHookResult = ReturnType<typeof useGetRecentUsersLazyQuery>;
-export type GetRecentUsersSuspenseQueryHookResult = ReturnType<typeof useGetRecentUsersSuspenseQuery>;
-export type GetRecentUsersQueryResult = ApolloReactCommon.QueryResult<GetRecentUsersQuery, GetRecentUsersQueryVariables>;
-export const GetRecentProductsDocument = gql`
-    query GetRecentProducts($limit: Int = 5) {
-  products(limit: $limit, sort: ["-created_at"]) {
-    id
-    name
-    price
-    stock
-    status
-    created_at
-  }
-}
-    `;
-
-/**
- * __useGetRecentProductsQuery__
- *
- * To run a query within a React component, call `useGetRecentProductsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetRecentProductsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetRecentProductsQuery({
- *   variables: {
- *      limit: // value for 'limit'
- *   },
- * });
- */
-export function useGetRecentProductsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetRecentProductsQuery, GetRecentProductsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetRecentProductsQuery, GetRecentProductsQueryVariables>(GetRecentProductsDocument, options);
-      }
-export function useGetRecentProductsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetRecentProductsQuery, GetRecentProductsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetRecentProductsQuery, GetRecentProductsQueryVariables>(GetRecentProductsDocument, options);
-        }
-export function useGetRecentProductsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetRecentProductsQuery, GetRecentProductsQueryVariables>) {
-          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetRecentProductsQuery, GetRecentProductsQueryVariables>(GetRecentProductsDocument, options);
-        }
-export type GetRecentProductsQueryHookResult = ReturnType<typeof useGetRecentProductsQuery>;
-export type GetRecentProductsLazyQueryHookResult = ReturnType<typeof useGetRecentProductsLazyQuery>;
-export type GetRecentProductsSuspenseQueryHookResult = ReturnType<typeof useGetRecentProductsSuspenseQuery>;
-export type GetRecentProductsQueryResult = ApolloReactCommon.QueryResult<GetRecentProductsQuery, GetRecentProductsQueryVariables>;
 export const GetRecentOrdersDocument = gql`
     query GetRecentOrders($limit: Int = 5) {
   orders(limit: $limit, sort: ["-created_at"]) {

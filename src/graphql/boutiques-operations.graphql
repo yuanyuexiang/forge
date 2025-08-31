@@ -1,0 +1,66 @@
+# 店铺相关的GraphQL操作
+
+# 查询所有店铺
+query GetBoutiques {
+  boutiques {
+    id
+    name
+    main_image
+    images
+    stars
+    status
+    sort
+    date_created
+    date_updated
+  }
+}
+
+# 根据ID查询店铺
+query GetBoutiqueById($id: ID!) {
+  boutiques_by_id(id: $id) {
+    id
+    name
+    main_image
+    images
+    stars
+    status
+    sort
+    date_created
+    date_updated
+  }
+}
+
+# 创建店铺
+mutation CreateBoutique($data: create_boutiques_input!) {
+  create_boutiques_item(data: $data) {
+    id
+    name
+    main_image
+    images
+    stars
+    status
+    sort
+    date_created
+  }
+}
+
+# 更新店铺
+mutation UpdateBoutique($id: ID!, $data: update_boutiques_input!) {
+  update_boutiques_item(id: $id, data: $data) {
+    id
+    name
+    main_image
+    images
+    stars
+    status
+    sort
+    date_updated
+  }
+}
+
+# 删除店铺
+mutation DeleteBoutique($id: ID!) {
+  delete_boutiques_item(id: $id) {
+    id
+  }
+}

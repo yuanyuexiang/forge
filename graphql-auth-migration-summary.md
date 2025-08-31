@@ -1,93 +1,142 @@
-# GraphQL 系统认证迁移完成总结
+# GraphQL 系统认证与业务模型更新总结
 
-## 迁移概述
-已成功将项目从混合 REST/GraphQL 认证架构迁移到完全基于 GraphQL 系统端点的认证架构。
+## 更新概述
+基于最新的 schema.graphql 和 system-schema.graphql，已完成：
+1. 完整的 GraphQL 系统认证架构迁移
+2. 全面的业务模型 GraphQL 查询定义
+3. 面向平板商品展示的完整解决方案
 
 ## 主要变更
 
-### 1. GraphQL 查询定义 (src/graphql/auth-system.graphql)
-- ✅ 新增完整的认证相关 GraphQL mutations 和 queries
-- ✅ 支持登录、登出、token 刷新、密码重置等完整流程
-- ✅ 支持双因素认证（TFA）
-- ✅ 支持用户注册和邀请流程
+### 1. 业务模型定义 (src/graphql/business-operations.graphql)
+- ✅ **Boutiques（商铺）**：商家店铺管理，包含评星、状态、图片
+- ✅ **Categories（分类）**：商品分类体系
+- ✅ **Products（商品）**：核心商品信息，关联商铺和分类
+- ✅ **Orders（订单）**：订单主表，关联用户
+- ✅ **Order Items（订单项）**：订单明细，关联商品和数量
+- ✅ **Payments（支付）**：支付记录，关联订单
+- ✅ **Users（用户）**：客户信息管理
 
-### 2. 认证配置更新 (src/lib/api/directus-config.ts)
-- ✅ 更新 AUTH_QUERIES 使用系统端点的完整 schema
-- ✅ 增强 executeServerSideGraphQLQuery 函数
-- ✅ 添加完整的认证 mutations（登录、刷新、登出、密码重置）
+### 2. GraphQL 查询扩展 (src/lib/api/directus-config.ts)
+- ✅ 保持完整的认证查询（AUTH_QUERIES）
+- ✅ 新增业务查询（BUSINESS_QUERIES）
+- ✅ 商品查询：列表、详情、筛选、搜索
+- ✅ 商铺查询：列表、详情、评星筛选
+- ✅ 订单查询：用户订单、订单详情、订单项
+- ✅ 支付查询：支付记录、状态管理
+- ✅ 分类查询：分类列表、层级结构
 
-### 3. Token 管理增强 (src/lib/auth/token-manager.ts)
-- ✅ 更新 token 刷新逻辑，使用 GraphQL 端点
-- ✅ 改进日志记录，明确使用 GraphQL 方式
+### 3. Expo 开发文档完善 (expo-dev-guide.md)
+- ✅ 完整的业务模型架构说明
+- ✅ 实体关系图和数据模型
+- ✅ 关键页面设计指导
+- ✅ 平板适配优化建议
+- ✅ 性能优化策略
 
-### 4. API 路由更新
-- ✅ `src/app/api/auth/route.ts` - 登录 API，支持 OTP
-- ✅ `src/app/api/auth/refresh/route.ts` - Token 刷新 API
-- ✅ `src/app/api/auth/logout/route.ts` - 登出 API（新增）
-- ✅ `src/app/api/auth/password-request/route.ts` - 密码重置请求 API（新增）
-- ✅ `src/app/api/auth/password-reset/route.ts` - 密码重置 API（新增）
+## 业务模型架构
 
-### 5. Expo 开发文档更新 (expo-dev-guide.md)
-- ✅ 更新为基于 GraphQL 系统认证的架构
-- ✅ 添加双端点架构说明（系统端点 + 主端点）
-- ✅ 详细的认证流程说明
-- ✅ API 端点映射表
+### 核心实体关系
+```
+Boutiques (商铺)
+    ↓ (1:N)
+Products (商品) ← (N:1) → Categories (分类)
+    ↓ (1:N)
+Order Items (订单项) ← (N:1) → Orders (订单) ← (1:N) → Users (用户)
+    ↓ (1:N)
+Payments (支付)
+```
+
+### 商品展示核心功能
+- **多维度筛选**：按分类、价格、评分、商铺筛选
+- **商铺体系**：展示商家信息、评星、商品关联
+- **完整购物流程**：浏览→加购→下单→支付→订单管理
+- **用户体验**：搜索、排序、图片视频展示
 
 ## 技术架构优势
 
-### 统一的接口层
-- 所有认证操作统一使用 GraphQL
-- 类型安全的接口定义
+### 统一的 GraphQL 接口
+- 双端点架构：系统端点（认证）+ 主端点（业务）
+- 类型安全的查询和变更
 - 标准化的错误处理
+- 自动化的关联查询
 
-### 双端点架构
-- **系统端点** (`/graphql/system`)：处理认证、用户管理等系统操作
-- **主端点** (`/graphql`)：处理业务数据查询
+### 完整的商业模型
+- 支持多商铺场景
+- 完整的订单支付流程
+- 灵活的商品分类体系
+- 可扩展的评价和营销系统
 
-### 增强的安全性
-- 支持双因素认证（TFA）
-- 服务端登出，确保 token 失效
-- 安全的密码重置流程
+### 平板优化设计
+- 大屏展示优化
+- 触控交互友好
+- 图片视频支持
+- 响应式布局
 
-### 改进的用户体验
-- 自动 token 刷新
-- 详细的错误信息
-- 完整的认证状态管理
+## 新增功能特性
 
-## API 端点对比
+### 商铺管理
+- 商铺信息展示
+- 评星系统
+- 商铺商品关联
+- 状态管理
 
-| 功能 | 旧架构 | 新架构 |
-|------|--------|--------|
-| 登录 | REST `/auth/login` | GraphQL `auth_login` |
-| 刷新 | REST `/auth/refresh` | GraphQL `auth_refresh` |
-| 登出 | 仅客户端 | GraphQL `auth_logout` |
-| 密码重置 | 无 | GraphQL `auth_password_request/reset` |
-| 用户信息 | GraphQL `users_me` | GraphQL `users_me` |
+### 增强的商品功能
+- 市场价对比显示
+- 特价标识（is_on_sale）
+- 品牌信息
+- 条码支持
+- 库存管理
+- 销量和评价统计
+- 视频展示支持
 
-## 对 Expo 项目的指导
+### 完整的交易流程
+- 购物车功能
+- 订单创建和管理
+- 订单项明细
+- 多种支付方式
+- 支付状态跟踪
 
-### 认证流程
-1. 使用 GraphQL mutations 进行所有认证操作
-2. 双端点架构：系统端点认证，主端点业务数据
-3. Apollo Client 自动处理 token 管理
+## API 查询映射
 
-### 安全存储
-- 使用 SecureStore 存储敏感信息
-- 支持 token 自动刷新
-- 完整的登出流程
+| 功能模块 | GraphQL Query/Mutation | 端点 |
+|----------|------------------------|------|
+| 用户认证 | `auth_login`, `auth_refresh`, `auth_logout` | 系统端点 |
+| 商品浏览 | `products`, `products_by_id` | 主端点 |
+| 分类管理 | `categories` | 主端点 |
+| 商铺信息 | `boutiques`, `boutiques_by_id` | 主端点 |
+| 订单管理 | `orders`, `order_items` | 主端点 |
+| 支付处理 | `payments` | 主端点 |
+| 用户管理 | `users`, `users_by_id` | 主端点 |
 
-### 开发优势
-- 类型安全的接口
-- 统一的错误处理
-- 完整的认证功能（包括 TFA、密码重置）
+## 对 Expo 项目的完整指导
 
-## 下一步建议
+### 开发优先级
+1. **Phase 1**: 认证系统 + 商品浏览
+2. **Phase 2**: 分类筛选 + 商铺展示
+3. **Phase 3**: 购物车 + 订单系统
+4. **Phase 4**: 支付集成 + 用户中心
 
-1. **测试验证**：全面测试新的认证流程
-2. **前端适配**：更新前端组件使用新的 API 端点
-3. **文档完善**：根据实际使用情况完善 Expo 开发文档
-4. **性能优化**：监控 GraphQL 查询性能，优化缓存策略
+### 关键实现要点
+- Apollo Client 配置双端点
+- SecureStore 安全存储
+- 图片懒加载和缓存
+- 无限滚动列表
+- 响应式布局设计
+
+### 性能优化建议
+- GraphQL 查询优化
+- 图片压缩和CDN
+- 数据缓存策略
+- 预加载关键数据
+
+## 下一步行动计划
+
+1. **前端适配**：更新现有组件使用新的业务查询
+2. **页面开发**：实现商铺、分类、订单等核心页面
+3. **测试验证**：全面测试新的查询和业务流程
+4. **性能调优**：优化查询效率和用户体验
+5. **文档完善**：根据实际开发经验补充细节
 
 ---
 
-迁移已完成，项目现在拥有完整的基于 GraphQL 系统端点的认证架构！
+现在项目拥有了完整的商业级 GraphQL 架构，支持全功能的商品展示和交易系统！

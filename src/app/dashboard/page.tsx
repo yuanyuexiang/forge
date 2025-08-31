@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Typography, Spin, Button, Alert } from 'antd';
+import { useRouter } from 'next/navigation';
 import { 
   ShoppingCartOutlined, 
   UserOutlined, 
@@ -11,13 +12,12 @@ import {
   FileTextOutlined,
   ClockCircleOutlined,
   CheckCircleOutlined,
-  EyeInvisibleOutlined
+  EyeInvisibleOutlined,
+  ShopOutlined
 } from '@ant-design/icons';
 import { ProtectedRoute, AdminLayout } from '@components';
 import { 
   useGetDashboardDataQuery,
-  useGetRecentUsersQuery,
-  useGetRecentProductsQuery,
   useGetRecentOrdersQuery
 } from '../../generated/graphql';
 
@@ -56,6 +56,7 @@ const getProductStatusInfo = (status: string) => {
 };
 
 function DashboardContent() {
+  const router = useRouter();
   // 获取今日日期（格式：YYYY-MM-DD）
   const today = new Date().toISOString().split('T')[0];
   
@@ -63,42 +64,78 @@ function DashboardContent() {
   const { data: dashboardData, loading: dashboardLoading, error: dashboardError } = useGetDashboardDataQuery({
     variables: { today }
   });
-  const { data: usersData, loading: usersLoading } = useGetRecentUsersQuery({ variables: { limit: 100 } });
-  const { data: productsData, loading: productsLoading } = useGetRecentProductsQuery({ variables: { limit: 100 } });
   const { data: ordersData, loading: ordersLoading } = useGetRecentOrdersQuery({ variables: { limit: 3 } });
 
-  const loading = dashboardLoading || usersLoading || productsLoading || ordersLoading;
+  const loading = dashboardLoading || ordersLoading;
 
-  // 从 GraphQL 数据中提取统计信息，带有回退值
+  // 从 GraphQL 数据中提取统计信息，优先使用聚合数据，回退到数组长度
   const statsData = {
-    totalOrders: dashboardData?.orders?.length || ordersData?.orders?.length || 0,
-    totalProducts: dashboardData?.products?.length || productsData?.products?.length || 0,
-    totalUsers: dashboardData?.users?.length || usersData?.users?.length || 0,
-    totalCategories: dashboardData?.categories?.length || 0,
+    totalOrders: dashboardData?.orders_aggregated?.[0]?.countAll || dashboardData?.orders?.length || 0,
+    totalProducts: dashboardData?.products_aggregated?.[0]?.countAll || dashboardData?.products?.length || 0,
+    totalUsers: dashboardData?.users_aggregated?.[0]?.countAll || dashboardData?.users?.length || 0,
+    totalCategories: dashboardData?.categories_aggregated?.[0]?.countAll || dashboardData?.categories?.length || 0,
+    totalBoutiques: dashboardData?.boutiques_aggregated?.[0]?.countAll || dashboardData?.boutiques?.length || 0,
     totalRevenue: dashboardData?.completed_orders?.reduce((sum: number, order: any) => sum + (order.total_price || 0), 0) || 0,
     todayOrders: dashboardData?.today_orders?.length || 0,
     todayRevenue: dashboardData?.today_orders?.filter((order: any) => order.status === 'completed').reduce((sum: number, order: any) => sum + (order.total_price || 0), 0) || 0
   };
 
-  // 调试信息
+  // 详细调试信息
+  console.log('=== Dashboard Debug Info ===');
   console.log('Dashboard data:', dashboardData);
   console.log('Dashboard loading:', dashboardLoading);
   console.log('Dashboard error:', dashboardError);
-  console.log('Products data:', productsData);
-  console.log('Users data:', usersData);
   console.log('Orders data:', ordersData);
+  console.log('Users aggregated:', dashboardData?.users_aggregated);
+  console.log('Products aggregated:', dashboardData?.products_aggregated);
+  console.log('Orders aggregated:', dashboardData?.orders_aggregated);
+  console.log('Categories aggregated:', dashboardData?.categories_aggregated);
+  console.log('Boutiques aggregated:', dashboardData?.boutiques_aggregated);
+  console.log('Completed orders:', dashboardData?.completed_orders);
+  console.log('Today orders:', dashboardData?.today_orders);
   console.log('Final stats data:', statsData);
+  console.log('=== End Debug Info ===');
+  
+  // 检查是否有认证错误
+  const hasAuthError = dashboardError?.message?.includes('credentials') || 
+                      dashboardError?.message?.includes('Unauthorized') ||
+                      dashboardError?.message?.includes('token');
   
   // 如果所有数据都为0，显示警告信息
   const hasAnyData = statsData.totalUsers > 0 || statsData.totalProducts > 0 || statsData.totalOrders > 0;
-  const isLoading = dashboardLoading || productsLoading || usersLoading || ordersLoading;
+  const isLoading = dashboardLoading || ordersLoading;
 
   if (dashboardError) {
+    // 检查是否是认证错误
+    if (hasAuthError) {
+      return (
+        <div className="p-6">
+          <Alert 
+            message="认证失效" 
+            description={
+              <div>
+                <p>您的登录状态已过期，请重新登录以查看数据。</p>
+                <Button 
+                  type="primary" 
+                  onClick={() => router.push('/login')}
+                  style={{ marginTop: '12px' }}
+                >
+                  重新登录
+                </Button>
+              </div>
+            } 
+            type="warning" 
+            showIcon 
+          />
+        </div>
+      );
+    }
+    
     return (
       <div className="p-6">
         <Alert 
           message="数据加载失败" 
-          description="无法获取仪表板数据，请稍后重试。" 
+          description={`无法获取仪表板数据：${dashboardError.message}`} 
           type="error" 
           showIcon 
         />
@@ -126,9 +163,21 @@ function DashboardContent() {
               <ul style={{ marginLeft: '20px', marginTop: '8px' }}>
                 <li>后端数据库中暂无数据</li>
                 <li>GraphQL 查询未正确返回数据</li>
-                <li>认证token已过期，需要重新登录</li>
+                <li><strong>认证token已过期，需要重新登录</strong></li>
               </ul>
-              <p style={{ marginTop: '8px', marginBottom: 0 }}>请检查浏览器控制台的详细错误信息。</p>
+              <p style={{ marginTop: '8px', marginBottom: '12px' }}>请检查浏览器控制台的详细错误信息。</p>
+              <div>
+                <Button 
+                  type="primary" 
+                  onClick={() => router.push('/login')}
+                  style={{ marginRight: '8px' }}
+                >
+                  重新登录
+                </Button>
+                <Button onClick={() => window.location.reload()}>
+                  刷新页面
+                </Button>
+              </div>
             </div>
           }
           type="warning"
@@ -225,6 +274,33 @@ function DashboardContent() {
               boxShadow: '0 4px 12px rgba(124, 45, 18, 0.3)'
             }}>
               <UserOutlined style={{ fontSize: '24px', color: '#FED7AA' }} />
+            </div>
+          </div>
+        </div>
+        
+        <div className="luxury-card p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>店铺总数</p>
+              <div style={{ fontSize: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
+                {isLoading ? <Spin size="small" /> : statsData.totalBoutiques.toLocaleString()}
+              </div>
+              <p style={{ fontSize: '13px', color: '#059669', marginTop: '8px', fontWeight: 500 }}>
+                <span className="inline-block mr-1">🏪</span>
+                入驻店铺
+              </p>
+            </div>
+            <div style={{ 
+              width: '56px', 
+              height: '56px', 
+              background: 'linear-gradient(135deg, #065F46 0%, #047857 100%)', 
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(6, 95, 70, 0.3)'
+            }}>
+              <ShopOutlined style={{ fontSize: '24px', color: '#A7F3D0' }} />
             </div>
           </div>
         </div>
@@ -367,36 +443,11 @@ function DashboardContent() {
               <div className="text-center py-4">
                 <Spin />
               </div>
-            ) : productsData?.products?.length ? (
-              productsData.products.slice(0, 3).map((product) => {
-                const statusInfo = getProductStatusInfo(product.status || '');
-                return (
-                  <div key={product.id} className="flex items-center justify-between py-3 border-b last:border-b-0">
-                    <div className="flex-1">
-                      <div className="font-medium text-gray-800">{product.name}</div>
-                      <div className="flex items-center mt-1 space-x-4">
-                        <span className="text-sm text-gray-500">库存: {product.stock}</span>
-                        <span 
-                          style={{ 
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            fontSize: '12px',
-                            color: statusInfo.color,
-                            fontWeight: 500
-                          }}
-                        >
-                          <span style={{ marginRight: '4px' }}>{statusInfo.icon}</span>
-                          {statusInfo.text}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-semibold text-gray-800">¥{product.price?.toLocaleString()}</div>
-                      <div className="text-sm text-blue-600">最新商品</div>
-                    </div>
-                  </div>
-                );
-              })
+            ) : statsData.totalProducts > 0 ? (
+              <div className="text-center py-4 text-gray-600">
+                <div className="font-medium">总商品数: {statsData.totalProducts}</div>
+                <div className="text-sm mt-2">详细商品信息请访问商品管理页面</div>
+              </div>
             ) : (
               <div className="text-center py-4 text-gray-500">
                 暂无商品数据

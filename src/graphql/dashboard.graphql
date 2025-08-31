@@ -1,16 +1,36 @@
 query GetDashboardData($today: String) {
-  # 直接查询各个表的记录数
-  users(limit: 0) {
+  # 直接查询各个表的记录数 - 使用较小的限制以验证数据存在
+  users(limit: 1000) {
     id
   }
-  products(limit: 0) {
+  products(limit: 1000) {
     id
   }
-  orders(limit: 0) {
+  orders(limit: 1000) {
     id
   }
-  categories(limit: 0) {
+  categories(limit: 1000) {
     id
+  }
+  boutiques(limit: 1000) {
+    id
+  }
+  
+  # 使用聚合查询获取总数
+  users_aggregated {
+    countAll
+  }
+  products_aggregated {
+    countAll
+  }
+  orders_aggregated {
+    countAll
+  }
+  categories_aggregated {
+    countAll
+  }
+  boutiques_aggregated {
+    countAll
   }
   
   # 已完成订单（用于计算总销售额）
@@ -26,26 +46,6 @@ query GetDashboardData($today: String) {
     id
     total_price
     status
-  }
-}
-
-query GetRecentUsers($limit: Int = 5) {
-  users(limit: $limit, sort: ["-created_at"]) {
-    id
-    name
-    email
-    created_at
-  }
-}
-
-query GetRecentProducts($limit: Int = 5) {
-  products(limit: $limit, sort: ["-created_at"]) {
-    id
-    name
-    price
-    stock
-    status
-    created_at
   }
 }
 
