@@ -16,23 +16,83 @@ interface LoginFormValues {
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
+  const [testLoading, setTestLoading] = useState(false);
   const router = useRouter();
   const { login } = useAuth();
+
+  const testConnection = async () => {
+    setTestLoading(true);
+    try {
+      const response = await fetch('/api/graphql/system', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: 'query { __typename }'
+        })
+      });
+      
+      const result = await response.json();
+      console.log('连接测试结果:', result);
+      
+      if (response.ok) {
+        message.success('代理连接正常！');
+      } else {
+        message.error('代理连接失败！');
+      }
+    } catch (error) {
+      console.error('连接测试失败:', error);
+      message.error('连接测试失败！');
+    } finally {
+      setTestLoading(false);
+    }
+  };
+
+  const testValidCredentials = async () => {
+    setTestLoading(true);
+    try {
+      console.log('填入测试凭据到表单...');
+      
+      // 获取表单实例并设置值
+      const form = document.querySelector('form');
+      if (form) {
+        const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
+        const passwordInput = form.querySelector('input[type="password"]') as HTMLInputElement;
+        
+        if (emailInput && passwordInput) {
+          emailInput.value = 'tom.nanjing@gmail.com';
+          passwordInput.value = 'sual116y';
+          
+          // 触发change事件让Ant Design更新状态
+          emailInput.dispatchEvent(new Event('input', { bubbles: true }));
+          passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
+          
+          message.success('已填入测试凭据，请点击登录按钮');
+        }
+      }
+    } catch (error) {
+      console.error('填入凭据失败:', error);
+      message.error('填入凭据失败！');
+    } finally {
+      setTestLoading(false);
+    }
+  };
 
   const onFinish = async (values: LoginFormValues) => {
     setLoading(true);
     
     try {
+      console.log('尝试登录:', { email: values.email });
       const success = await login(values.email, values.password);
       
       if (success) {
         message.success('登录成功！');
         router.push('/dashboard');
       } else {
-        message.error('登录失败，请检查邮箱和密码！');
+        message.error('登录失败，请检查邮箱和密码！检查浏览器控制台获取更多信息。');
       }
-    } catch {
-      message.error('登录失败，请重试！');
+    } catch (error) {
+      console.error('登录异常:', error);
+      message.error('登录失败，请重试！检查浏览器控制台获取更多信息。');
     } finally {
       setLoading(false);
     }
@@ -157,6 +217,48 @@ export default function LoginPage() {
               </Button>
             </Form.Item>
           </Form>
+          
+          {/* 开发调试信息 */}
+          <div 
+            className="mt-6 p-4 rounded-lg border"
+            style={{ 
+              backgroundColor: '#F9FAFB', 
+              borderColor: '#E5E7EB',
+              fontSize: '12px'
+            }}
+          >
+            <p style={{ color: '#6B7280', marginBottom: '8px' }}>
+              🔧 开发调试信息：
+            </p>
+            <p style={{ color: '#374151', marginBottom: '4px' }}>
+              • 代理端点：/api/graphql/system
+            </p>
+            <p style={{ color: '#374151', marginBottom: '4px' }}>
+              • 目标服务器：forge.matrix-net.tech
+            </p>
+            <p style={{ color: '#F59E0B', marginBottom: '8px' }}>
+              • 请使用有效的Directus用户凭据登录
+            </p>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+              <Button 
+                size="small" 
+                onClick={testConnection}
+                loading={testLoading}
+                style={{ fontSize: '11px', height: '24px' }}
+              >
+                测试代理连接
+              </Button>
+              <Button 
+                size="small" 
+                onClick={testValidCredentials}
+                loading={testLoading}
+                style={{ fontSize: '11px', height: '24px' }}
+                type="primary"
+              >
+                测试有效凭据
+              </Button>
+            </div>
+          </div>
           
           <div 
             className="text-center text-sm mt-8"

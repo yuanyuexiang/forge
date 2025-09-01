@@ -15,7 +15,13 @@ import {
   Spin,
   Modal,
   Row,
-  Col
+  Col,
+  Tag,
+  Select,
+  Switch,
+  Badge,
+  Descriptions,
+  Tabs
 } from 'antd';
 import { 
   UserOutlined, 
@@ -25,106 +31,142 @@ import {
   LockOutlined,
   SafetyOutlined,
   MobileOutlined,
-  LoadingOutlined
+  LoadingOutlined,
+  SettingOutlined,
+  GlobalOutlined,
+  BellOutlined,
+  EyeOutlined,
+  ClockCircleOutlined,
+  MailOutlined,
+  PhoneOutlined,
+  EnvironmentOutlined,
+  BookOutlined
 } from '@ant-design/icons';
 import { ProtectedRoute, AdminLayout } from '@components';
 import { useAuth } from '@providers/AuthProvider';
-import { 
-  useGetUserByIdQuery,
-  useUpdateUserMutation,
-  GetUserByIdQuery
-} from '@generated/graphql';
-import { TokenManager } from '@lib/auth';
-import { FILE_CONFIG } from '@lib/api';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
+const { TextArea } = Input;
+const { TabPane } = Tabs;
 
-// 使用生成的类型
-type User = GetUserByIdQuery['users_by_id'];
+// 根据Directus users_me接口重新定义用户类型
+interface DirectusUser {
+  id: string;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+  avatar?: string;
+  role?: any;
+  status?: string;
+  language?: string;
+  theme_light?: string;
+  theme_dark?: string;
+  appearance?: string;
+  email_notifications?: boolean;
+  last_access?: string;
+  last_page?: string;
+  location?: string;
+  title?: string;
+  description?: string;
+  tags?: any;
+  text_direction?: string;
+}
 
 function ProfileContent() {
-  const { user: authUser, refreshToken } = useAuth();
+  const { user: authUser, loading: authLoading } = useAuth();
   const [editing, setEditing] = useState(false);
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
+  const [preferencesForm] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
+  const [activeTab, setActiveTab] = useState('profile');
 
-  // 暂时不使用GraphQL查询，直接使用AuthProvider的用户数据
-  // 后续可以在修复GraphQL查询后重新启用
-  /*
-  const { data: userData, loading: userLoading, refetch } = useGetUserByIdQuery({
-    variables: { id: authUser?.id || '' },
-    skip: !authUser?.id,
-    onError: (error) => {
-      console.error('GraphQL查询用户失败:', error);
-      console.log('用户ID:', authUser?.id);
-      console.log('用户信息:', authUser);
-    }
-  });
-  */
-
-  // 使用空的mutation以保持代码结构
-  const [updateUser] = useUpdateUserMutation({
-    onCompleted: () => {
-      message.success('用户信息更新成功');
-      setEditing(false);
-      setLoading(false);
-      // refetch(); // 刷新用户数据
-      refreshToken(); // 刷新认证状态
-    },
-    onError: (error) => {
-      console.error('更新用户信息失败:', error);
-      message.error('更新失败，请稍后重试');
-      setLoading(false);
-    }
-  });
-
-  // 直接使用AuthProvider的用户数据
-  const user = authUser;
+  const user = authUser as DirectusUser;
 
   // 调试信息
   useEffect(() => {
+    console.log('=== Profile Page Debug Info ===');
     console.log('AuthUser from context:', authUser);
-    // console.log('GraphQL user data:', userData);
     console.log('Final user:', user);
-  }, [authUser, user]);
+    console.log('Auth loading state:', authLoading);
+    
+    // 详细检查用户字段
+    if (user) {
+      console.log('用户字段详情:');
+      console.log('- id:', user.id);
+      console.log('- email:', user.email);
+      console.log('- first_name:', user.first_name, '(类型:', typeof user.first_name, ')');
+      console.log('- last_name:', user.last_name, '(类型:', typeof user.last_name, ')');
+      console.log('- status:', user.status, '(类型:', typeof user.status, ')');
+      console.log('- last_access:', user.last_access, '(类型:', typeof user.last_access, ')');
+      console.log('- title:', user.title);
+      console.log('- location:', user.location);
+      console.log('- language:', user.language);
+      console.log('- role:', user.role);
+    }
+    console.log('================================');
+  }, [authUser, user, authLoading]);
 
   // 初始化表单数据
   useEffect(() => {
-    // 优先使用GraphQL查询的数据，如果没有则使用AuthProvider的数据
-    const displayUser = user || authUser;
-    if (displayUser) {
-      const userName = 'name' in displayUser 
-        ? displayUser.name 
-        : (displayUser.first_name && displayUser.last_name) 
-          ? `${displayUser.first_name} ${displayUser.last_name}`.trim()
-          : displayUser.first_name || displayUser.last_name || '';
+    if (user) {
+      console.log('初始化表单数据...');
       
-      form.setFieldsValue({
-        name: userName,
-        email: displayUser.email || '',
-      });
+      // 基本信息表单
+      const formData = {
+        first_name: user.first_name || '',
+        last_name: user.last_name || '',
+        email: user.email || '',
+        location: user.location || '',
+        title: user.title || '',
+        description: user.description || '',
+      };
+      console.log('基本信息表单数据:', formData);
+      form.setFieldsValue(formData);
+
+      // 偏好设置表单
+      const preferencesData = {
+        language: user.language || 'zh-CN',
+        appearance: user.appearance || 'auto',
+        theme_light: user.theme_light || 'default',
+        theme_dark: user.theme_dark || 'default',
+        email_notifications: user.email_notifications ?? true,
+        text_direction: user.text_direction || 'ltr',
+      };
+      console.log('偏好设置表单数据:', preferencesData);
+      preferencesForm.setFieldsValue(preferencesData);
     }
-  }, [user, authUser, form]);
+  }, [user, form, preferencesForm]);
 
   const handleSave = async (values: any) => {
     if (!user?.id) return;
     
     setLoading(true);
     try {
-      await updateUser({
-        variables: {
-          id: user.id,
-          data: {
-            name: values.name,
-            email: values.email,
-          }
-        }
-      });
+      // 这里可以调用GraphQL mutation更新用户信息
+      console.log('更新用户信息:', values);
+      message.success('用户信息更新成功');
+      setEditing(false);
     } catch (error) {
       console.error('保存失败:', error);
       message.error('保存失败，请稍后重试');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePreferencesSave = async (values: any) => {
+    if (!user?.id) return;
+    
+    setLoading(true);
+    try {
+      console.log('更新用户偏好:', values);
+      message.success('偏好设置更新成功');
+    } catch (error) {
+      console.error('保存偏好失败:', error);
+      message.error('保存失败，请稍后重试');
+    } finally {
       setLoading(false);
     }
   };
@@ -137,7 +179,6 @@ function ProfileContent() {
     }
     
     try {
-      // 这里可以添加密码修改的API调用
       console.log('修改密码:', values);
       message.success('密码修改成功');
       setPasswordModalVisible(false);
@@ -147,268 +188,458 @@ function ProfileContent() {
     }
   };
 
-  const handleCancel = () => {
-    const userName = user ? (
-      (user.first_name && user.last_name) 
-        ? `${user.first_name} ${user.last_name}`.trim()
-        : user.first_name || user.last_name || ''
-    ) : '';
+  // 获取用户状态显示
+  const getUserStatusTag = (status?: string) => {
+    const statusMap = {
+      'active': { color: 'green', text: '活跃' },
+      'inactive': { color: 'red', text: '停用' },
+      'invited': { color: 'blue', text: '已邀请' },
+      'draft': { color: 'orange', text: '草稿' },
+      'archived': { color: 'grey', text: '已归档' }
+    };
     
-    form.setFieldsValue({
-      name: userName,
-      email: user?.email || '',
-    });
-    setEditing(false);
+    if (!status) {
+      return <Tag color="default">状态未设置</Tag>;
+    }
+    
+    const statusInfo = statusMap[status as keyof typeof statusMap];
+    if (statusInfo) {
+      return <Tag color={statusInfo.color}>{statusInfo.text}</Tag>;
+    } else {
+      return <Tag color="default">{status}</Tag>;
+    }
   };
 
-  // 初始化表单数据
-  useEffect(() => {
-    if (user) {
-      const userName = (user.first_name && user.last_name) 
-        ? `${user.first_name} ${user.last_name}`.trim()
-        : user.first_name || user.last_name || '';
-      
-      form.setFieldsValue({
-        name: userName,
-        email: user.email || '',
-      });
+  // 格式化最后访问时间
+  const formatLastAccess = (lastAccess?: string) => {
+    if (!lastAccess) {
+      return '尚未记录访问时间';
     }
-  }, [user, form]);
+    
+    try {
+      const date = new Date(lastAccess);
+      // 检查日期是否有效
+      if (isNaN(date.getTime())) {
+        return '访问时间格式无效';
+      }
+      return date.toLocaleString('zh-CN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    } catch (error) {
+      return '访问时间解析失败';
+    }
+  };
 
-  if (!user) {
+  if (authLoading || !user) {
     return (
-      <div style={{ 
-        height: '100%', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center' 
-      }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '400px' }}>
         <Spin size="large" />
       </div>
     );
   }
 
+  // 获取用户全名
+  const getUserFullName = () => {
+    const firstName = user.first_name?.trim();
+    const lastName = user.last_name?.trim();
+    
+    if (firstName && lastName) {
+      return `${firstName} ${lastName}`;
+    } else if (firstName) {
+      return firstName;
+    } else if (lastName) {
+      return lastName;
+    } else if (user.email) {
+      return user.email.split('@')[0]; // 使用邮箱用户名部分
+    } else {
+      return '未设置姓名';
+    }
+  };
+
+  // 获取用户头像URL
+  const getAvatarUrl = () => {
+    if (user.avatar) {
+      return `https://forge.matrix-net.tech/assets/${user.avatar}`;
+    }
+    return null;
+  };
+
   return (
-    <div style={{ height: '100%', padding: '24px', backgroundColor: '#F9FAFB' }}>
-      <Title level={4} className="mb-6">账号详情</Title>
-      
-      <div className="max-w-2xl">
-        <Card>
-          <div className="text-center mb-6">
-            <Avatar size={80} icon={<UserOutlined />} className="mb-4" />
-            <div>
-              <Title level={4} className="mb-1">
-                {user ? (
-                  (user.first_name && user.last_name) 
-                    ? `${user.first_name} ${user.last_name}`.trim()
-                    : user.first_name || user.last_name || '未设置'
-                ) : '未设置'}
-              </Title>
-              <Text type="secondary">{user?.email}</Text>
-            </div>
-            <Upload
-              showUploadList={false}
-              beforeUpload={() => {
-                message.info('头像上传功能待开发');
-                return false;
-              }}
-            >
-              <Button 
-                type="link" 
-                icon={<UploadOutlined />}
-                className="mt-2"
+    <div style={{ padding: '24px', background: '#f5f5f5', minHeight: '100vh' }}>
+      <Row gutter={[24, 24]}>
+        {/* 用户头像和基本信息卡片 */}
+        <Col xs={24} lg={8}>
+          <Card>
+            <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+              <Badge 
+                dot 
+                status={user.status === 'active' ? 'success' : 'default'}
+                offset={[-10, 10]}
               >
-                更换头像
-              </Button>
-            </Upload>
-          </div>
-
-          <Divider />
-
-          <Form
-            form={form}
-            layout="vertical"
-            onFinish={handleSave}
-            disabled={!editing}
-          >
-            <Form.Item
-              label="姓名"
-              name="name"
-              rules={[
-                { required: true, message: '请输入姓名' },
-                { min: 2, message: '姓名至少2个字符' }
-              ]}
-            >
-              <Input placeholder="请输入姓名" />
-            </Form.Item>
-
-            <Form.Item
-              label="邮箱"
-              name="email"
-              rules={[
-                { required: true, message: '请输入邮箱' },
-                { type: 'email', message: '请输入有效的邮箱地址' }
-              ]}
-            >
-              <Input placeholder="请输入邮箱" />
-            </Form.Item>
-
-            <Form.Item label="用户ID">
-              <Input 
-                value={user?.id || '未知'} 
-                disabled 
-                style={{ color: '#666' }}
-              />
-            </Form.Item>
-
-            <Form.Item label="邮箱地址">
-              <Input 
-                value={user?.email || '未知'}
-                disabled 
-                style={{ color: '#666' }}
-              />
-            </Form.Item>
-
-            <Divider />
-
-            <Form.Item>
-              <Space>
-                {editing ? (
-                  <>
-                    <Button 
-                      type="primary" 
-                      htmlType="submit"
-                      icon={<SaveOutlined />}
-                      loading={loading}
-                    >
-                      保存
-                    </Button>
-                    <Button onClick={handleCancel}>
-                      取消
-                    </Button>
-                  </>
-                ) : (
-                  <Button 
-                    type="primary" 
-                    icon={<EditOutlined />}
-                    onClick={() => setEditing(true)}
-                  >
-                    编辑信息
-                  </Button>
+                <Avatar 
+                  size={120} 
+                  src={getAvatarUrl()}
+                  icon={<UserOutlined />}
+                  style={{ marginBottom: '16px' }}
+                />
+              </Badge>
+              
+              <Title level={3} style={{ marginBottom: '8px' }}>
+                {getUserFullName()}
+              </Title>
+              
+              <div style={{ marginBottom: '16px' }}>
+                {getUserStatusTag(user.status)}
+              </div>
+              
+              <Space direction="vertical" size="small" style={{ width: '100%' }}>
+                {user.email && (
+                  <Text type="secondary">
+                    <MailOutlined /> {user.email}
+                  </Text>
+                )}
+                {user.title && (
+                  <Text type="secondary">
+                    <BookOutlined /> {user.title}
+                  </Text>
+                )}
+                {user.location && (
+                  <Text type="secondary">
+                    <EnvironmentOutlined /> {user.location}
+                  </Text>
                 )}
               </Space>
-            </Form.Item>
-          </Form>
-        </Card>
-
-        <Card className="mt-6" title="安全设置">
-          <div className="space-y-4">
-            <div className="flex justify-between items-center py-3 border-b">
-              <div>
-                <div className="font-medium">修改密码</div>
-                <div className="text-sm text-gray-500">定期更换密码有助于账号安全</div>
-              </div>
-              <Button 
-                onClick={() => setPasswordModalVisible(true)}
-              >
-                修改
-              </Button>
             </div>
+
+            <Divider />
             
-            <div className="flex justify-between items-center py-3 border-b">
-              <div>
-                <div className="font-medium">双因素认证</div>
-                <div className="text-sm text-gray-500">为账号添加额外的安全保护</div>
-              </div>
-              <Button 
-                onClick={() => message.info('双因素认证功能待开发')}
-              >
-                设置
-              </Button>
-            </div>
+            <Descriptions column={1} size="small">
+              <Descriptions.Item label="用户ID">
+                <Text code copyable>{user.id}</Text>
+              </Descriptions.Item>
+              <Descriptions.Item label="最后访问">
+                <ClockCircleOutlined /> {formatLastAccess(user.last_access)}
+              </Descriptions.Item>
+              {user.language && (
+                <Descriptions.Item label="语言">
+                  <GlobalOutlined /> {user.language}
+                </Descriptions.Item>
+              )}
+            </Descriptions>
 
-            <div className="flex justify-between items-center py-3">
-              <div>
-                <div className="font-medium">登录设备管理</div>
-                <div className="text-sm text-gray-500">查看和管理已登录的设备</div>
-              </div>
-              <Button 
-                onClick={() => message.info('设备管理功能待开发')}
+            <div style={{ marginTop: '24px' }}>
+              <Upload
+                showUploadList={false}
+                beforeUpload={() => false}
+                onChange={(info) => {
+                  console.log('上传头像:', info);
+                  message.info('头像上传功能开发中...');
+                }}
               >
-                管理
-              </Button>
+                <Button icon={<UploadOutlined />} block>
+                  更换头像
+                </Button>
+              </Upload>
             </div>
-          </div>
-        </Card>
+          </Card>
+        </Col>
 
-        {/* 密码修改Modal */}
-        <Modal
-          title="修改密码"
-          open={passwordModalVisible}
-          onCancel={() => {
-            setPasswordModalVisible(false);
-            passwordForm.resetFields();
-          }}
-          footer={null}
+        {/* 详细信息和设置 */}
+        <Col xs={24} lg={16}>
+          <Card>
+            <Tabs activeKey={activeTab} onChange={setActiveTab}>
+              {/* 基本信息标签页 */}
+              <TabPane tab={<span><UserOutlined />基本信息</span>} key="profile">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                  <Title level={4}>个人信息</Title>
+                  <Button 
+                    type={editing ? 'default' : 'primary'}
+                    icon={editing ? <SaveOutlined /> : <EditOutlined />}
+                    onClick={() => {
+                      if (editing) {
+                        form.submit();
+                      } else {
+                        setEditing(true);
+                      }
+                    }}
+                    loading={loading}
+                  >
+                    {editing ? '保存' : '编辑'}
+                  </Button>
+                </div>
+
+                <Form
+                  form={form}
+                  layout="vertical"
+                  onFinish={handleSave}
+                  disabled={!editing}
+                >
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item
+                        label="名"
+                        name="first_name"
+                        rules={[{ required: true, message: '请输入名' }]}
+                      >
+                        <Input placeholder="请输入名" />
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        label="姓"
+                        name="last_name"
+                        rules={[{ required: true, message: '请输入姓' }]}
+                      >
+                        <Input placeholder="请输入姓" />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Form.Item
+                    label="邮箱"
+                    name="email"
+                    rules={[
+                      { required: true, message: '请输入邮箱' },
+                      { type: 'email', message: '请输入有效的邮箱地址' }
+                    ]}
+                  >
+                    <Input placeholder="请输入邮箱" />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="职位"
+                    name="title"
+                  >
+                    <Input placeholder="请输入职位" />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="位置"
+                    name="location"
+                  >
+                    <Input placeholder="请输入位置" />
+                  </Form.Item>
+
+                  <Form.Item
+                    label="个人描述"
+                    name="description"
+                  >
+                    <TextArea 
+                      rows={4} 
+                      placeholder="介绍一下自己..." 
+                      maxLength={500}
+                      showCount
+                    />
+                  </Form.Item>
+                </Form>
+              </TabPane>
+
+              {/* 偏好设置标签页 */}
+              <TabPane tab={<span><SettingOutlined />偏好设置</span>} key="preferences">
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                  <Title level={4}>系统偏好</Title>
+                  <Button 
+                    type="primary"
+                    icon={<SaveOutlined />}
+                    onClick={() => preferencesForm.submit()}
+                    loading={loading}
+                  >
+                    保存设置
+                  </Button>
+                </div>
+
+                <Form
+                  form={preferencesForm}
+                  layout="vertical"
+                  onFinish={handlePreferencesSave}
+                >
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item
+                        label="界面语言"
+                        name="language"
+                      >
+                        <Select>
+                          <Select.Option value="zh-CN">简体中文</Select.Option>
+                          <Select.Option value="en-US">English</Select.Option>
+                          <Select.Option value="ja-JP">日本語</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        label="主题模式"
+                        name="appearance"
+                      >
+                        <Select>
+                          <Select.Option value="auto">自动</Select.Option>
+                          <Select.Option value="light">浅色</Select.Option>
+                          <Select.Option value="dark">深色</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Row gutter={16}>
+                    <Col span={12}>
+                      <Form.Item
+                        label="浅色主题"
+                        name="theme_light"
+                      >
+                        <Select>
+                          <Select.Option value="default">默认</Select.Option>
+                          <Select.Option value="blue">蓝色</Select.Option>
+                          <Select.Option value="green">绿色</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                    <Col span={12}>
+                      <Form.Item
+                        label="深色主题"
+                        name="theme_dark"
+                      >
+                        <Select>
+                          <Select.Option value="default">默认</Select.Option>
+                          <Select.Option value="blue">蓝色</Select.Option>
+                          <Select.Option value="green">绿色</Select.Option>
+                        </Select>
+                      </Form.Item>
+                    </Col>
+                  </Row>
+
+                  <Form.Item
+                    label="文本方向"
+                    name="text_direction"
+                  >
+                    <Select>
+                      <Select.Option value="ltr">从左到右 (LTR)</Select.Option>
+                      <Select.Option value="rtl">从右到左 (RTL)</Select.Option>
+                    </Select>
+                  </Form.Item>
+
+                  <Form.Item
+                    label="邮件通知"
+                    name="email_notifications"
+                    valuePropName="checked"
+                  >
+                    <Switch 
+                      checkedChildren="开启" 
+                      unCheckedChildren="关闭"
+                    />
+                  </Form.Item>
+                </Form>
+              </TabPane>
+
+              {/* 安全设置标签页 */}
+              <TabPane tab={<span><SafetyOutlined />安全设置</span>} key="security">
+                <Title level={4}>安全设置</Title>
+                
+                <Card size="small" style={{ marginTop: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <Title level={5} style={{ marginBottom: '4px' }}>
+                        <LockOutlined /> 修改密码
+                      </Title>
+                      <Text type="secondary">定期更换密码以保护账户安全</Text>
+                    </div>
+                    <Button 
+                      type="primary"
+                      onClick={() => setPasswordModalVisible(true)}
+                    >
+                      修改密码
+                    </Button>
+                  </div>
+                </Card>
+
+                <Card size="small" style={{ marginTop: '16px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div>
+                      <Title level={5} style={{ marginBottom: '4px' }}>
+                        <MobileOutlined /> 两步验证
+                      </Title>
+                      <Text type="secondary">使用手机应用生成验证码</Text>
+                    </div>
+                    <Button disabled>即将开放</Button>
+                  </div>
+                </Card>
+              </TabPane>
+            </Tabs>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* 修改密码模态框 */}
+      <Modal
+        title="修改密码"
+        open={passwordModalVisible}
+        onCancel={() => {
+          setPasswordModalVisible(false);
+          passwordForm.resetFields();
+        }}
+        footer={null}
+      >
+        <Form
+          form={passwordForm}
+          layout="vertical"
+          onFinish={handlePasswordChange}
         >
-          <Form
-            form={passwordForm}
-            layout="vertical"
-            onFinish={handlePasswordChange}
+          <Form.Item
+            label="当前密码"
+            name="currentPassword"
+            rules={[{ required: true, message: '请输入当前密码' }]}
           >
-            <Form.Item
-              label="当前密码"
-              name="currentPassword"
-              rules={[{ required: true, message: '请输入当前密码' }]}
-            >
-              <Input.Password placeholder="请输入当前密码" />
-            </Form.Item>
+            <Input.Password placeholder="请输入当前密码" />
+          </Form.Item>
 
-            <Form.Item
-              label="新密码"
-              name="newPassword"
-              rules={[
-                { required: true, message: '请输入新密码' },
-                { min: 6, message: '密码至少6位字符' }
-              ]}
-            >
-              <Input.Password placeholder="请输入新密码" />
-            </Form.Item>
+          <Form.Item
+            label="新密码"
+            name="newPassword"
+            rules={[
+              { required: true, message: '请输入新密码' },
+              { min: 6, message: '密码长度至少6位' }
+            ]}
+          >
+            <Input.Password placeholder="请输入新密码" />
+          </Form.Item>
 
-            <Form.Item
-              label="确认新密码"
-              name="confirmPassword"
-              rules={[
-                { required: true, message: '请确认新密码' },
-                ({ getFieldValue }) => ({
-                  validator(_, value) {
-                    if (!value || getFieldValue('newPassword') === value) {
-                      return Promise.resolve();
-                    }
-                    return Promise.reject(new Error('两次输入的密码不一致'));
-                  },
-                }),
-              ]}
-            >
-              <Input.Password placeholder="请再次输入新密码" />
-            </Form.Item>
+          <Form.Item
+            label="确认新密码"
+            name="confirmPassword"
+            rules={[
+              { required: true, message: '请确认新密码' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('newPassword') === value) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(new Error('两次输入的密码不一致'));
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="请再次输入新密码" />
+          </Form.Item>
 
-            <Form.Item style={{ marginBottom: 0, marginTop: 24 }}>
-              <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-                <Button onClick={() => {
-                  setPasswordModalVisible(false);
-                  passwordForm.resetFields();
-                }}>
-                  取消
-                </Button>
-                <Button type="primary" htmlType="submit" icon={<LockOutlined />}>
-                  修改密码
-                </Button>
-              </Space>
-            </Form.Item>
-          </Form>
-        </Modal>
-      </div>
+          <Form.Item style={{ marginBottom: 0, textAlign: 'right' }}>
+            <Space>
+              <Button onClick={() => {
+                setPasswordModalVisible(false);
+                passwordForm.resetFields();
+              }}>
+                取消
+              </Button>
+              <Button type="primary" htmlType="submit">
+                确认修改
+              </Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }

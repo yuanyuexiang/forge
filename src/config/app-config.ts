@@ -14,7 +14,7 @@ export const APP_CONFIG = {
   // API 配置
   API: {
     DIRECTUS: {
-      DEFAULT_URL: 'https://directus.matrix-net.tech',
+      DEFAULT_URL: 'https://forge.matrix-net.tech',
       GRAPHQL_ENDPOINT: '/graphql',
       ASSETS_ENDPOINT: '/assets',
     },

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directus 配置
-DIRECTUS_URL="https://directus.matrix-net.tech"
+DIRECTUS_URL="https://forge.matrix-net.tech"
 EMAIL="tom.nanjing@gmail.com"
 PASSWORD="sual116y"
 
@@ -27,7 +27,7 @@ echo "📥 导出 GraphQL Schema..."#!/bin/bash
 # filepath: /Users/yuanyuexiang/Desktop/workspace/forge/export-schema.sh
 
 # Directus 配置
-DIRECTUS_URL="https://directus.matrix-net.tech"
+DIRECTUS_URL="https://forge.matrix-net.tech"
 EMAIL="tom.nanjing@gmail.com"
 PASSWORD="sual116y"
 

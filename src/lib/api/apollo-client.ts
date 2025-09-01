@@ -14,26 +14,40 @@ const refreshAccessToken = async (): Promise<string | null> => {
       return null;
     }
 
-    const response = await fetch('/api/auth/refresh', {
+    // 直接使用GraphQL system端点刷新token
+    const response = await fetch('https://forge.matrix-net.tech/graphql/system', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ refresh_token: refreshToken }),
+      body: JSON.stringify({
+        query: `
+          mutation AuthRefresh($refresh_token: String!) {
+            auth_refresh(refresh_token: $refresh_token) {
+              access_token
+              refresh_token
+              expires
+            }
+          }
+        `,
+        variables: { refresh_token: refreshToken }
+      }),
     });
 
-    if (!response.ok) {
+    const result = await response.json();
+
+    if (result.errors || !result.data?.auth_refresh?.access_token) {
       // Refresh token 无效，清除存储
       TokenManager.clearTokens();
       return null;
     }
 
-    const data = await response.json();
+    const authData = result.data.auth_refresh;
     
     // 更新存储的 token
-    TokenManager.saveTokens(data.access_token, data.refresh_token);
+    TokenManager.saveTokens(authData.access_token, authData.refresh_token);
 
-    return data.access_token;
+    return authData.access_token;
   } catch (error) {
     authLogger.error('Token refresh failed', error);
     TokenManager.clearTokens();
