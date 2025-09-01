@@ -33,6 +33,7 @@ input boolean_filter_operators {
 }
 
 type boutiques {
+  address: String
   date_created: Date
   date_created_func: datetime_functions
   date_updated: Date
@@ -50,6 +51,7 @@ type boutiques {
 }
 
 input boutiques_filter {
+  address: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
   date_updated: date_filter_operators

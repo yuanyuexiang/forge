@@ -120,6 +120,7 @@ function BoutiqueEditContent() {
       // 初始化表单数据
       form.setFieldsValue({
         name: foundBoutique.name,
+        address: foundBoutique.address,
         stars: foundBoutique.stars,
         status: foundBoutique.status,
         sort: foundBoutique.sort,
@@ -286,6 +287,7 @@ function BoutiqueEditContent() {
       
       const submitData = {
         name: values.name,
+        address: values.address,
         stars: values.stars || 0,
         status: values.status || 'draft',
         sort: values.sort || 0,
@@ -395,6 +397,13 @@ function BoutiqueEditContent() {
               </Form.Item>
 
               <Form.Item
+                label="店铺地址"
+                name="address"
+              >
+                <Input placeholder="请输入店铺地址" size="large" />
+              </Form.Item>
+
+              <Form.Item
                 label="店铺评分"
                 name="stars"
               >
@@ -493,22 +502,16 @@ function BoutiqueEditContent() {
                 rules={[{ required: true, message: '请选择店铺状态' }]}
               >
                 <Select placeholder="请选择店铺状态" size="large">
-                  <Option value="draft">
-                    <span style={{ display: 'flex', alignItems: 'center' }}>
-                      <FileTextOutlined style={{ color: '#8B5CF6', marginRight: 8 }} />
-                      草稿
-                    </span>
-                  </Option>
-                  <Option value="published">
+                  <Option value="open">
                     <span style={{ display: 'flex', alignItems: 'center' }}>
                       <CheckCircleOutlined style={{ color: '#10B981', marginRight: 8 }} />
-                      已发布
+                      开放
                     </span>
                   </Option>
-                  <Option value="archived">
+                  <Option value="closed">
                     <span style={{ display: 'flex', alignItems: 'center' }}>
                       <EyeInvisibleOutlined style={{ color: '#6B7280', marginRight: 8 }} />
-                      已归档
+                      关闭
                     </span>
                   </Option>
                 </Select>

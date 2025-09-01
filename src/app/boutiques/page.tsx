@@ -42,26 +42,20 @@ type Boutique = GetBoutiquesQuery['boutiques'][0];
 // 店铺状态映射
 const getBoutiqueStatusInfo = (status: string) => {
   const statusMap = {
-    'draft': {
-      text: '草稿',
-      color: '#8B5CF6',
-      bgColor: '#F3F0FF',
-      icon: <FileTextOutlined />
-    },
-    'published': {
-      text: '已发布',
+    'open': {
+      text: '已开放',
       color: '#10B981',
       bgColor: '#ECFDF5',
       icon: <CheckCircleOutlined />
     },
-    'archived': {
-      text: '已归档',
+    'closed': {
+      text: '已关闭',
       color: '#6B7280',
       bgColor: '#F9FAFB',
       icon: <EyeInvisibleOutlined />
     },
   };
-  return statusMap[status as keyof typeof statusMap] || statusMap['draft'];
+  return statusMap[status as keyof typeof statusMap] || statusMap['open'];
 };
 
 function BoutiquesContent() {
@@ -161,7 +155,8 @@ function BoutiquesContent() {
 
   // 过滤店铺
   const filteredBoutiques = boutiques.filter((boutique: Boutique) =>
-    boutique.name?.toLowerCase().includes(searchText.toLowerCase())
+    boutique.name?.toLowerCase().includes(searchText.toLowerCase()) ||
+    boutique.address?.toLowerCase().includes(searchText.toLowerCase())
   );
 
   // 生成带认证的图片URL
@@ -265,6 +260,26 @@ function BoutiquesContent() {
         <Rate disabled value={stars || 0} />
       ),
       sorter: (a: Boutique, b: Boutique) => (a.stars || 0) - (b.stars || 0),
+    },
+    {
+      title: '地址',
+      dataIndex: 'address',
+      key: 'address',
+      width: 200,
+      render: (address: string) => (
+        <div 
+          style={{ 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis', 
+            whiteSpace: 'nowrap',
+            maxWidth: '180px'
+          }}
+          title={address}
+        >
+          {address || '-'}
+        </div>
+      ),
+      sorter: (a: Boutique, b: Boutique) => (a.address || '').localeCompare(b.address || ''),
     },
     {
       title: '状态',

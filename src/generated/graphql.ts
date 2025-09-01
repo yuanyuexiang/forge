@@ -931,6 +931,7 @@ export type Boolean_Filter_Operators = {
 
 export type Boutiques = {
   __typename?: 'boutiques';
+  address?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
@@ -983,6 +984,7 @@ export type Boutiques_Aggregated = {
 
 export type Boutiques_Aggregated_Count = {
   __typename?: 'boutiques_aggregated_count';
+  address?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
@@ -1006,6 +1008,7 @@ export type Boutiques_Aggregated_Fields = {
 export type Boutiques_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Boutiques_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Boutiques_Filter>>>;
+  address?: InputMaybe<String_Filter_Operators>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
@@ -1097,6 +1100,7 @@ export type Count_Functions = {
 };
 
 export type Create_Boutiques_Input = {
+  address?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -3254,6 +3258,7 @@ export type String_Filter_Operators = {
 };
 
 export type Update_Boutiques_Input = {
+  address?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -3509,6 +3514,7 @@ export type Users_Mutated = {
 
 export type Version_Boutiques = {
   __typename?: 'version_boutiques';
+  address?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
@@ -3619,21 +3625,21 @@ export type GetAllUsersQuery = { __typename?: 'Query', users: Array<{ __typename
 export type GetBoutiquesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null }> };
+export type GetBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null }> };
 
 export type GetBoutiqueByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetBoutiqueByIdQuery = { __typename?: 'Query', boutiques_by_id?: { __typename?: 'boutiques', id: string, name?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+export type GetBoutiqueByIdQuery = { __typename?: 'Query', boutiques_by_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
 
 export type CreateBoutiqueMutationVariables = Exact<{
   data: Create_Boutiques_Input;
 }>;
 
 
-export type CreateBoutiqueMutation = { __typename?: 'Mutation', create_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null } | null };
+export type CreateBoutiqueMutation = { __typename?: 'Mutation', create_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null } | null };
 
 export type UpdateBoutiqueMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3641,7 +3647,7 @@ export type UpdateBoutiqueMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBoutiqueMutation = { __typename?: 'Mutation', update_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_updated?: any | null } | null };
+export type UpdateBoutiqueMutation = { __typename?: 'Mutation', update_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_updated?: any | null } | null };
 
 export type DeleteBoutiqueMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3979,6 +3985,7 @@ export const GetBoutiquesDocument = gql`
   boutiques {
     id
     name
+    address
     main_image
     images
     stars
@@ -4026,6 +4033,7 @@ export const GetBoutiqueByIdDocument = gql`
   boutiques_by_id(id: $id) {
     id
     name
+    address
     main_image
     images
     stars
@@ -4074,6 +4082,7 @@ export const CreateBoutiqueDocument = gql`
   create_boutiques_item(data: $data) {
     id
     name
+    address
     main_image
     images
     stars
@@ -4114,6 +4123,7 @@ export const UpdateBoutiqueDocument = gql`
   update_boutiques_item(id: $id, data: $data) {
     id
     name
+    address
     main_image
     images
     stars

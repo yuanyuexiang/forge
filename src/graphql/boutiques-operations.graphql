@@ -5,6 +5,7 @@ query GetBoutiques {
   boutiques {
     id
     name
+    address
     main_image
     images
     stars
@@ -20,6 +21,7 @@ query GetBoutiqueById($id: ID!) {
   boutiques_by_id(id: $id) {
     id
     name
+    address
     main_image
     images
     stars
@@ -35,6 +37,7 @@ mutation CreateBoutique($data: create_boutiques_input!) {
   create_boutiques_item(data: $data) {
     id
     name
+    address
     main_image
     images
     stars
@@ -49,6 +52,7 @@ mutation UpdateBoutique($id: ID!, $data: update_boutiques_input!) {
   update_boutiques_item(id: $id, data: $data) {
     id
     name
+    address
     main_image
     images
     stars

@@ -21,6 +21,7 @@ input boolean_filter_operators {
 }
 
 type boutiques {
+  address: String
   date_created: Date
   date_created_func: datetime_functions
   date_updated: Date
@@ -51,6 +52,7 @@ type boutiques_aggregated {
 }
 
 type boutiques_aggregated_count {
+  address: Int
   date_created: Int
   date_updated: Int
   id: Int
@@ -71,6 +73,7 @@ type boutiques_aggregated_fields {
 }
 
 input boutiques_filter {
+  address: string_filter_operators
   date_created: date_filter_operators
   date_created_func: datetime_function_filter_operators
   date_updated: date_filter_operators
@@ -157,6 +160,7 @@ type count_functions {
 }
 
 input create_boutiques_input {
+  address: String
   date_created: Date
   date_updated: Date
   id: ID
@@ -1826,6 +1830,7 @@ type Subscription {
 }
 
 input update_boutiques_input {
+  address: String
   date_created: Date
   date_updated: Date
   id: ID
@@ -2076,6 +2081,7 @@ type users_mutated {
 }
 
 type version_boutiques {
+  address: String
   date_created: Date
   date_updated: Date
   id: ID
