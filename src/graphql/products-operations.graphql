@@ -31,7 +31,9 @@ query GetProducts {
     rating_avg
     total_reviews
     created_at
+    date_created
     updated_at
+    date_updated
   }
 }
 

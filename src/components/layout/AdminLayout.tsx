@@ -52,7 +52,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname.startsWith('/products')) return 'products';
     if (pathname.startsWith('/boutiques')) return 'boutiques';
     if (pathname.startsWith('/orders')) return 'orders';
-    if (pathname.startsWith('/users')) return 'users';
+    if (pathname.startsWith('/customers')) return 'customers';
     if (pathname.startsWith('/categories')) return 'categories';
     if (pathname.startsWith('/profile')) return 'profile';
     return 'dashboard';
@@ -90,10 +90,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       onClick: () => router.push('/orders'),
     },
     {
-      key: 'users',
+      key: 'customers',
       icon: <UserOutlined />,
-      label: '用户管理',
-      onClick: () => router.push('/users'),
+      label: '客户管理',
+      onClick: () => router.push('/customers'),
     },
   ];
 

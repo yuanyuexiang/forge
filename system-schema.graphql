@@ -77,25 +77,33 @@ type boutiques_mutated {
 }
 
 type categories {
-  created_at: Date
-  created_at_func: datetime_functions
+  boutique_id(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
   description: String
   id: ID!
   name: String!
-  updated_at: Date
-  updated_at_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
 }
 
 input categories_filter {
-  created_at: date_filter_operators
-  created_at_func: datetime_function_filter_operators
+  boutique_id: boutiques_filter
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
   description: string_filter_operators
   id: number_filter_operators
   name: string_filter_operators
-  updated_at: date_filter_operators
-  updated_at_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  user_updated: directus_users_filter
   _and: [categories_filter]
   _or: [categories_filter]
+  boutique: boutiques_filter
 }
 
 type categories_mutated {
@@ -2421,49 +2429,41 @@ type order_items_mutated {
 }
 
 type orders {
-  created_at: Date
-  created_at_func: datetime_functions
+  boutique_id(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
   id: ID!
   status: String
   total_price: Float
-  updated_at: Date
-  updated_at_func: datetime_functions
-  user_id(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): users
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  wechat_user_id(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): wechat_users
+  boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
 }
 
 input orders_filter {
-  created_at: date_filter_operators
-  created_at_func: datetime_function_filter_operators
+  boutique_id: boutiques_filter
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
   status: string_filter_operators
   total_price: number_filter_operators
-  updated_at: date_filter_operators
-  updated_at_func: datetime_function_filter_operators
-  user_id: users_filter
+  user_created: directus_users_filter
+  user_updated: directus_users_filter
+  wechat_user_id: wechat_users_filter
   _and: [orders_filter]
   _or: [orders_filter]
+  boutique: boutiques_filter
 }
 
 type orders_mutated {
   key: ID!
   event: EventEnum
   data: orders
-}
-
-type payments {
-  amount: Float
-  id: ID!
-  order_id(filter: orders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): orders
-  paid_at: Date
-  paid_at_func: datetime_functions
-  payment_method: String
-  status: String
-}
-
-type payments_mutated {
-  key: ID!
-  event: EventEnum
-  data: payments
 }
 
 scalar permissions_me_type
@@ -2481,6 +2481,10 @@ type products {
   category_id(filter: categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): categories
   created_at: Date
   created_at_func: datetime_functions
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
   description: String
   id: ID!
   images: JSON
@@ -2499,7 +2503,10 @@ type products {
   total_sales_volume: Int
   updated_at: Date
   updated_at_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   video_url: String
+  boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
 }
 
 input products_filter {
@@ -2509,6 +2516,10 @@ input products_filter {
   category_id: categories_filter
   created_at: date_filter_operators
   created_at_func: datetime_function_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
   description: string_filter_operators
   id: number_filter_operators
   images: string_filter_operators
@@ -2527,9 +2538,12 @@ input products_filter {
   total_sales_volume: number_filter_operators
   updated_at: date_filter_operators
   updated_at_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  user_updated: directus_users_filter
   video_url: string_filter_operators
   _and: [products_filter]
   _or: [products_filter]
+  boutique: boutiques_filter
 }
 
 type products_mutated {
@@ -2723,9 +2737,8 @@ type Subscription {
   directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   order_items_mutated(event: EventEnum): order_items_mutated
   orders_mutated(event: EventEnum): orders_mutated
-  payments_mutated(event: EventEnum): payments_mutated
   products_mutated(event: EventEnum): products_mutated
-  users_mutated(event: EventEnum): users_mutated
+  wechat_users_mutated(event: EventEnum): wechat_users_mutated
 }
 
 input update_directus_access_input {
@@ -3052,43 +3065,75 @@ input update_directus_webhooks_input {
   was_active_before_deprecation: Boolean
 }
 
-type users {
-  created_at: Date
-  created_at_func: datetime_functions
-  email: String!
-  id: ID!
-  name: String!
-  password: String!
-  updated_at: Date
-  updated_at_func: datetime_functions
-}
-
-input users_filter {
-  created_at: date_filter_operators
-  created_at_func: datetime_function_filter_operators
-  email: string_filter_operators
-  id: number_filter_operators
-  name: string_filter_operators
-  password: string_filter_operators
-  updated_at: date_filter_operators
-  updated_at_func: datetime_function_filter_operators
-  _and: [users_filter]
-  _or: [users_filter]
-}
-
 type users_me_tfa_generate_data {
   secret: String
   otpauth_url: String
 }
 
-type users_mutated {
-  key: ID!
-  event: EventEnum
-  data: users
-}
-
 """Represents NULL values"""
 scalar Void
+
+type wechat_users {
+  access_token: String
+  boutique_id(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
+  city: String
+  country: String
+  created_at: Date
+  created_at_func: datetime_functions
+  expires_at: Date
+  expires_at_func: datetime_functions
+  headimgurl: String
+  id: ID!
+  is_active: Boolean
+  language: String
+  nickname: String
+  openid: String!
+  privilege: JSON
+  privilege_func: count_functions
+  province: String
+  refresh_token: String
+  scope: String
+  sex: Int
+  unionid: String
+  updated_at: Date
+  updated_at_func: datetime_functions
+  boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
+}
+
+input wechat_users_filter {
+  access_token: string_filter_operators
+  boutique_id: boutiques_filter
+  city: string_filter_operators
+  country: string_filter_operators
+  created_at: date_filter_operators
+  created_at_func: datetime_function_filter_operators
+  expires_at: date_filter_operators
+  expires_at_func: datetime_function_filter_operators
+  headimgurl: string_filter_operators
+  id: number_filter_operators
+  is_active: boolean_filter_operators
+  language: string_filter_operators
+  nickname: string_filter_operators
+  openid: string_filter_operators
+  privilege: string_filter_operators
+  privilege_func: count_function_filter_operators
+  province: string_filter_operators
+  refresh_token: string_filter_operators
+  scope: string_filter_operators
+  sex: number_filter_operators
+  unionid: string_filter_operators
+  updated_at: date_filter_operators
+  updated_at_func: datetime_function_filter_operators
+  _and: [wechat_users_filter]
+  _or: [wechat_users_filter]
+  boutique: boutiques_filter
+}
+
+type wechat_users_mutated {
+  key: ID!
+  event: EventEnum
+  data: wechat_users
+}
 
 type write_directus_collections {
   collection: String

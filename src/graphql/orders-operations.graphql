@@ -4,10 +4,13 @@
 query GetOrders {
   orders {
     id
-    user_id {
+    wechat_user_id {
       id
-      name
-      email
+      nickname
+      openid
+      headimgurl
+      city
+      province
     }
     boutique_id {
       id
@@ -16,8 +19,8 @@ query GetOrders {
     }
     total_price
     status
-    created_at
-    updated_at
+    date_created
+    date_updated
   }
 }
 
@@ -25,10 +28,13 @@ query GetOrders {
 query GetOrderById($id: ID!) {
   orders_by_id(id: $id) {
     id
-    user_id {
+    wechat_user_id {
       id
-      name
-      email
+      nickname
+      openid
+      headimgurl
+      city
+      province
     }
     boutique_id {
       id
@@ -37,8 +43,8 @@ query GetOrderById($id: ID!) {
     }
     total_price
     status
-    created_at
-    updated_at
+    date_created
+    date_updated
   }
 }
 
@@ -63,10 +69,9 @@ query GetOrderItems($orderId: GraphQLStringOrFloat!) {
 mutation CreateOrder($data: create_orders_input!) {
   create_orders_item(data: $data) {
     id
-    user_id {
+    wechat_user_id {
       id
-      name
-      email
+      nickname
     }
     boutique_id {
       id
@@ -75,8 +80,8 @@ mutation CreateOrder($data: create_orders_input!) {
     }
     total_price
     status
-    created_at
-    updated_at
+    date_created
+    date_updated
   }
 }
 
@@ -84,10 +89,9 @@ mutation CreateOrder($data: create_orders_input!) {
 mutation UpdateOrder($id: ID!, $data: update_orders_input!) {
   update_orders_item(id: $id, data: $data) {
     id
-    user_id {
+    wechat_user_id {
       id
-      name
-      email
+      nickname
     }
     boutique_id {
       id
@@ -96,8 +100,8 @@ mutation UpdateOrder($id: ID!, $data: update_orders_input!) {
     }
     total_price
     status
-    created_at
-    updated_at
+    date_created
+    date_updated
   }
 }
 
@@ -113,6 +117,6 @@ mutation UpdateOrderStatus($id: ID!, $status: String!) {
   update_orders_item(id: $id, data: { status: $status }) {
     id
     status
-    updated_at
+    date_updated
   }
 }

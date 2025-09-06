@@ -87,8 +87,8 @@ function OrdersContent() {
     const searchLower = searchText.toLowerCase();
     return (
       order.id.toLowerCase().includes(searchLower) ||
-      order.user_id?.name?.toLowerCase().includes(searchLower) ||
-      order.user_id?.email?.toLowerCase().includes(searchLower) ||
+      order.wechat_user_id?.nickname?.toLowerCase().includes(searchLower) ||
+      order.wechat_user_id?.id?.toString().includes(searchLower) ||
       order.status?.toLowerCase().includes(searchLower) ||
       order.boutique_id?.name?.toLowerCase().includes(searchLower) ||
       order.boutique_id?.address?.toLowerCase().includes(searchLower)
@@ -165,14 +165,17 @@ function OrdersContent() {
       ),
     },
     {
-      title: '用户',
-      key: 'user',
+      title: '微信用户',
+      key: 'wechat_user',
       width: 200,
       render: (record: Order) => (
         <div>
-          <div><UserOutlined /> {record.user_id?.name || '未知用户'}</div>
+          <div><UserOutlined /> {record.wechat_user_id?.nickname || `用户ID: ${record.wechat_user_id?.id || '未知'}`}</div>
           <div style={{ fontSize: '12px', color: '#666' }}>
-            {record.user_id?.email}
+            {record.wechat_user_id?.city && record.wechat_user_id?.province 
+              ? `${record.wechat_user_id.province} ${record.wechat_user_id.city}`
+              : '微信端用户'
+            }
           </div>
         </div>
       ),
@@ -219,8 +222,8 @@ function OrdersContent() {
     },
     {
       title: '创建时间',
-      dataIndex: 'created_at',
-      key: 'created_at',
+      dataIndex: 'date_created',
+      key: 'date_created',
       width: 150,
       render: (date: string) => (
         <div>
@@ -350,11 +353,11 @@ function OrdersContent() {
                   {selectedOrder.id}
                 </Text>
               </Descriptions.Item>
-              <Descriptions.Item label="用户姓名">
-                {selectedOrder.user_id?.name || '未知用户'}
+              <Descriptions.Item label="微信用户昵称">
+                {selectedOrder.wechat_user_id?.nickname || '未设置昵称'}
               </Descriptions.Item>
-              <Descriptions.Item label="用户邮箱">
-                {selectedOrder.user_id?.email}
+              <Descriptions.Item label="微信用户ID">
+                {selectedOrder.wechat_user_id?.id || '未知用户'}
               </Descriptions.Item>
               <Descriptions.Item label="总金额">
                 <Text strong style={{ color: '#f50' }}>
@@ -367,10 +370,10 @@ function OrdersContent() {
                 </Tag>
               </Descriptions.Item>
               <Descriptions.Item label="创建时间">
-                {selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleString() : ''}
+                {selectedOrder.date_created ? new Date(selectedOrder.date_created).toLocaleString() : ''}
               </Descriptions.Item>
               <Descriptions.Item label="更新时间">
-                {selectedOrder.updated_at ? new Date(selectedOrder.updated_at).toLocaleString() : ''}
+                {selectedOrder.date_updated ? new Date(selectedOrder.date_updated).toLocaleString() : ''}
               </Descriptions.Item>
             </Descriptions>
 

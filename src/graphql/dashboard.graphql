@@ -1,6 +1,6 @@
 query GetDashboardData($today: String) {
   # 直接查询各个表的记录数 - 使用较小的限制以验证数据存在
-  users(limit: 1000) {
+  wechat_users(limit: 1000) {
     id
   }
   products(limit: 1000) {
@@ -17,7 +17,7 @@ query GetDashboardData($today: String) {
   }
   
   # 使用聚合查询获取总数
-  users_aggregated {
+  wechat_users_aggregated {
     countAll
   }
   products_aggregated {
@@ -35,7 +35,7 @@ query GetDashboardData($today: String) {
   
   # 今日订单
   today_orders: orders(filter: { 
-    created_at: { _gte: $today } 
+    date_created: { _gte: $today } 
   }) {
     id
     status
@@ -43,15 +43,14 @@ query GetDashboardData($today: String) {
 }
 
 query GetRecentOrders($limit: Int = 5) {
-  orders(limit: $limit, sort: ["-created_at"]) {
+  orders(limit: $limit, sort: ["-date_created"]) {
     id
-    user_id {
+    wechat_user_id {
       id
-      name
-      email
+      nickname
     }
     total_price
     status
-    created_at
+    date_created
   }
 }

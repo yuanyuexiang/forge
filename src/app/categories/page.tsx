@@ -196,7 +196,7 @@ function CategoriesContent() {
       dataIndex: 'created_at',
       key: 'created_at',
       render: (date: string) => new Date(date).toLocaleDateString(),
-      sorter: (a: Category, b: Category) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime(),
+      sorter: (a: Category, b: Category) => new Date(a.date_created).getTime() - new Date(b.date_created).getTime(),
     },
     {
       title: '操作',

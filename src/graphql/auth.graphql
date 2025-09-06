@@ -1,26 +1,44 @@
-query LoginUser($email: String!, $password: String!) {
-  users(filter: { email: { _eq: $email }, password: { _eq: $password } }) {
+query LoginUser($openid: String!) {
+  wechat_users(filter: { openid: { _eq: $openid } }) {
     id
-    name
-    email
+    nickname
+    openid
+    unionid
+    headimgurl
   }
 }
 
 query GetUserById($id: ID!) {
-  users_by_id(id: $id) {
+  wechat_users_by_id(id: $id) {
     id
-    name
-    email
+    nickname
+    openid
+    unionid
+    headimgurl
+    city
+    country
+    province
+    language
+    sex
+    is_active
     created_at
     updated_at
   }
 }
 
 query GetAllUsers {
-  users {
+  wechat_users {
     id
-    name
-    email
+    nickname
+    openid
+    unionid
+    headimgurl
+    city
+    country
+    province
+    language
+    sex
+    is_active
     created_at
     updated_at
   }

@@ -34,7 +34,6 @@ type boutiques {
   sort: Int
   stars: Int
   status: String
-  user(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
 }
@@ -63,7 +62,6 @@ type boutiques_aggregated_count {
   sort: Int
   stars: Int
   status: Int
-  user: Int
   user_created: Int
   user_updated: Int
 }
@@ -88,7 +86,6 @@ input boutiques_filter {
   sort: number_filter_operators
   stars: number_filter_operators
   status: string_filter_operators
-  user: directus_users_filter
   user_created: directus_users_filter
   user_updated: directus_users_filter
   _and: [boutiques_filter]
@@ -103,13 +100,16 @@ type boutiques_mutated {
 
 type categories {
   boutique_id(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
-  created_at: Date
-  created_at_func: datetime_functions
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
   description: String
   id: ID!
   name: String!
-  updated_at: Date
-  updated_at_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
 }
 
 type categories_aggregated {
@@ -127,11 +127,13 @@ type categories_aggregated {
 
 type categories_aggregated_count {
   boutique_id: Int
-  created_at: Int
+  date_created: Int
+  date_updated: Int
   description: Int
   id: Int
   name: Int
-  updated_at: Int
+  user_created: Int
+  user_updated: Int
 }
 
 type categories_aggregated_fields {
@@ -141,15 +143,18 @@ type categories_aggregated_fields {
 
 input categories_filter {
   boutique_id: boutiques_filter
-  created_at: date_filter_operators
-  created_at_func: datetime_function_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
   description: string_filter_operators
   id: number_filter_operators
   name: string_filter_operators
-  updated_at: date_filter_operators
-  updated_at_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  user_updated: directus_users_filter
   _and: [categories_filter]
   _or: [categories_filter]
+  boutique: boutiques_filter
 }
 
 type categories_mutated {
@@ -177,18 +182,20 @@ input create_boutiques_input {
   sort: Int
   stars: Int
   status: String
-  user: create_directus_users_input
   user_created: create_directus_users_input
   user_updated: create_directus_users_input
 }
 
 input create_categories_input {
   boutique_id: create_boutiques_input
-  created_at: Date
+  date_created: Date
+  date_updated: Date
   description: String
   id: ID
   name: String!
-  updated_at: Date
+  user_created: create_directus_users_input
+  user_updated: create_directus_users_input
+  boutique: create_boutiques_input
 }
 
 input create_directus_access_input {
@@ -313,21 +320,15 @@ input create_order_items_input {
 
 input create_orders_input {
   boutique_id: create_boutiques_input
-  created_at: Date
+  date_created: Date
+  date_updated: Date
   id: ID
   status: String
   total_price: Float
-  updated_at: Date
-  user_id: create_users_input
-}
-
-input create_payments_input {
-  amount: Float
-  id: ID
-  order_id: create_orders_input
-  paid_at: Date
-  payment_method: String
-  status: String
+  user_created: create_directus_users_input
+  user_updated: create_directus_users_input
+  wechat_user_id: create_wechat_users_input
+  boutique: create_boutiques_input
 }
 
 input create_products_input {
@@ -336,6 +337,8 @@ input create_products_input {
   brand: String
   category_id: create_categories_input
   created_at: Date
+  date_created: Date
+  date_updated: Date
   description: String
   id: ID
   images: JSON
@@ -352,16 +355,10 @@ input create_products_input {
   total_reviews: Int
   total_sales_volume: Int
   updated_at: Date
+  user_created: create_directus_users_input
+  user_updated: create_directus_users_input
   video_url: String
-}
-
-input create_users_input {
-  created_at: Date
-  email: String!
-  id: ID
-  name: String!
-  password: String!
-  updated_at: Date
+  boutique: create_boutiques_input
 }
 
 input create_wechat_users_input {
@@ -384,6 +381,7 @@ input create_wechat_users_input {
   sex: Int
   unionid: String
   updated_at: Date
+  boutique: create_boutiques_input
 }
 
 """ISO8601 Date values"""
@@ -1437,12 +1435,8 @@ type Mutation {
   create_order_items_item(data: create_order_items_input!): order_items
   create_orders_items(filter: orders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_orders_input!]): [orders!]!
   create_orders_item(data: create_orders_input!): orders
-  create_payments_items(filter: payments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_payments_input!]): [payments!]!
-  create_payments_item(data: create_payments_input!): payments
   create_products_items(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_products_input!]): [products!]!
   create_products_item(data: create_products_input!): products
-  create_users_items(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_users_input!]): [users!]!
-  create_users_item(data: create_users_input!): users
   create_wechat_users_items(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [create_wechat_users_input!]): [wechat_users!]!
   create_wechat_users_item(data: create_wechat_users_input!): wechat_users
   update_boutiques_items(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_boutiques_input!): [boutiques!]!
@@ -1457,15 +1451,9 @@ type Mutation {
   update_orders_items(filter: orders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_orders_input!): [orders!]!
   update_orders_batch(filter: orders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_orders_input!]): [orders!]!
   update_orders_item(id: ID!, data: update_orders_input!): orders
-  update_payments_items(filter: payments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_payments_input!): [payments!]!
-  update_payments_batch(filter: payments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_payments_input!]): [payments!]!
-  update_payments_item(id: ID!, data: update_payments_input!): payments
   update_products_items(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_products_input!): [products!]!
   update_products_batch(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_products_input!]): [products!]!
   update_products_item(id: ID!, data: update_products_input!): products
-  update_users_items(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_users_input!): [users!]!
-  update_users_batch(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_users_input!]): [users!]!
-  update_users_item(id: ID!, data: update_users_input!): users
   update_wechat_users_items(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, ids: [ID]!, data: update_wechat_users_input!): [wechat_users!]!
   update_wechat_users_batch(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String, data: [update_wechat_users_input!]): [wechat_users!]!
   update_wechat_users_item(id: ID!, data: update_wechat_users_input!): wechat_users
@@ -1477,12 +1465,8 @@ type Mutation {
   delete_order_items_item(id: ID!): delete_one
   delete_orders_items(ids: [ID]!): delete_many
   delete_orders_item(id: ID!): delete_one
-  delete_payments_items(ids: [ID]!): delete_many
-  delete_payments_item(id: ID!): delete_one
   delete_products_items(ids: [ID]!): delete_many
   delete_products_item(id: ID!): delete_one
-  delete_users_items(ids: [ID]!): delete_many
-  delete_users_item(id: ID!): delete_one
   delete_wechat_users_items(ids: [ID]!): delete_many
   delete_wechat_users_item(id: ID!): delete_one
 }
@@ -1557,14 +1541,17 @@ type order_items_mutated {
 
 type orders {
   boutique_id(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
-  created_at: Date
-  created_at_func: datetime_functions
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
   id: ID!
   status: String
   total_price: Float
-  updated_at: Date
-  updated_at_func: datetime_functions
-  user_id(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): users
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  wechat_user_id(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): wechat_users
+  boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
 }
 
 type orders_aggregated {
@@ -1582,95 +1569,44 @@ type orders_aggregated {
 
 type orders_aggregated_count {
   boutique_id: Int
-  created_at: Int
+  date_created: Int
+  date_updated: Int
   id: Int
   status: Int
   total_price: Int
-  updated_at: Int
-  user_id: Int
+  user_created: Int
+  user_updated: Int
+  wechat_user_id: Int
 }
 
 type orders_aggregated_fields {
   boutique_id: Float
   id: Float
   total_price: Float
-  user_id: Float
+  wechat_user_id: Float
 }
 
 input orders_filter {
   boutique_id: boutiques_filter
-  created_at: date_filter_operators
-  created_at_func: datetime_function_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
   id: number_filter_operators
   status: string_filter_operators
   total_price: number_filter_operators
-  updated_at: date_filter_operators
-  updated_at_func: datetime_function_filter_operators
-  user_id: users_filter
+  user_created: directus_users_filter
+  user_updated: directus_users_filter
+  wechat_user_id: wechat_users_filter
   _and: [orders_filter]
   _or: [orders_filter]
+  boutique: boutiques_filter
 }
 
 type orders_mutated {
   key: ID!
   event: EventEnum
   data: orders
-}
-
-type payments {
-  amount: Float
-  id: ID!
-  order_id(filter: orders_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): orders
-  paid_at: Date
-  paid_at_func: datetime_functions
-  payment_method: String
-  status: String
-}
-
-type payments_aggregated {
-  group: JSON
-  countAll: Int
-  count: payments_aggregated_count
-  countDistinct: payments_aggregated_count
-  avg: payments_aggregated_fields
-  sum: payments_aggregated_fields
-  avgDistinct: payments_aggregated_fields
-  sumDistinct: payments_aggregated_fields
-  min: payments_aggregated_fields
-  max: payments_aggregated_fields
-}
-
-type payments_aggregated_count {
-  amount: Int
-  id: Int
-  order_id: Int
-  paid_at: Int
-  payment_method: Int
-  status: Int
-}
-
-type payments_aggregated_fields {
-  amount: Float
-  id: Float
-  order_id: Float
-}
-
-input payments_filter {
-  amount: number_filter_operators
-  id: number_filter_operators
-  order_id: orders_filter
-  paid_at: date_filter_operators
-  paid_at_func: datetime_function_filter_operators
-  payment_method: string_filter_operators
-  status: string_filter_operators
-  _and: [payments_filter]
-  _or: [payments_filter]
-}
-
-type payments_mutated {
-  key: ID!
-  event: EventEnum
-  data: payments
 }
 
 type products {
@@ -1680,6 +1616,10 @@ type products {
   category_id(filter: categories_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): categories
   created_at: Date
   created_at_func: datetime_functions
+  date_created: Date
+  date_created_func: datetime_functions
+  date_updated: Date
+  date_updated_func: datetime_functions
   description: String
   id: ID!
   images: JSON
@@ -1698,7 +1638,10 @@ type products {
   total_sales_volume: Int
   updated_at: Date
   updated_at_func: datetime_functions
+  user_created(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
+  user_updated(filter: directus_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): directus_users
   video_url: String
+  boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
 }
 
 type products_aggregated {
@@ -1720,6 +1663,8 @@ type products_aggregated_count {
   brand: Int
   category_id: Int
   created_at: Int
+  date_created: Int
+  date_updated: Int
   description: Int
   id: Int
   images: Int
@@ -1736,6 +1681,8 @@ type products_aggregated_count {
   total_reviews: Int
   total_sales_volume: Int
   updated_at: Int
+  user_created: Int
+  user_updated: Int
   video_url: Int
 }
 
@@ -1759,6 +1706,10 @@ input products_filter {
   category_id: categories_filter
   created_at: date_filter_operators
   created_at_func: datetime_function_filter_operators
+  date_created: date_filter_operators
+  date_created_func: datetime_function_filter_operators
+  date_updated: date_filter_operators
+  date_updated_func: datetime_function_filter_operators
   description: string_filter_operators
   id: number_filter_operators
   images: string_filter_operators
@@ -1777,9 +1728,12 @@ input products_filter {
   total_sales_volume: number_filter_operators
   updated_at: date_filter_operators
   updated_at_func: datetime_function_filter_operators
+  user_created: directus_users_filter
+  user_updated: directus_users_filter
   video_url: string_filter_operators
   _and: [products_filter]
   _or: [products_filter]
+  boutique: boutiques_filter
 }
 
 type products_mutated {
@@ -1805,18 +1759,10 @@ type Query {
   orders_by_id(id: ID!, version: String): orders
   orders_aggregated(groupBy: [String], filter: orders_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [orders_aggregated!]!
   orders_by_version(version: String!, id: ID!): version_orders
-  payments(filter: payments_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [payments!]!
-  payments_by_id(id: ID!, version: String): payments
-  payments_aggregated(groupBy: [String], filter: payments_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [payments_aggregated!]!
-  payments_by_version(version: String!, id: ID!): version_payments
   products(filter: products_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [products!]!
   products_by_id(id: ID!, version: String): products
   products_aggregated(groupBy: [String], filter: products_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [products_aggregated!]!
   products_by_version(version: String!, id: ID!): version_products
-  users(filter: users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [users!]!
-  users_by_id(id: ID!, version: String): users
-  users_aggregated(groupBy: [String], filter: users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [users_aggregated!]!
-  users_by_version(version: String!, id: ID!): version_users
   wechat_users(filter: wechat_users_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): [wechat_users!]!
   wechat_users_by_id(id: ID!, version: String): wechat_users
   wechat_users_aggregated(groupBy: [String], filter: wechat_users_filter, limit: Int, offset: Int, page: Int, search: String, sort: [String]): [wechat_users_aggregated!]!
@@ -1871,9 +1817,7 @@ type Subscription {
   directus_webhooks_mutated(event: EventEnum): directus_webhooks_mutated
   order_items_mutated(event: EventEnum): order_items_mutated
   orders_mutated(event: EventEnum): orders_mutated
-  payments_mutated(event: EventEnum): payments_mutated
   products_mutated(event: EventEnum): products_mutated
-  users_mutated(event: EventEnum): users_mutated
   wechat_users_mutated(event: EventEnum): wechat_users_mutated
 }
 
@@ -1888,18 +1832,20 @@ input update_boutiques_input {
   sort: Int
   stars: Int
   status: String
-  user: update_directus_users_input
   user_created: update_directus_users_input
   user_updated: update_directus_users_input
 }
 
 input update_categories_input {
   boutique_id: update_boutiques_input
-  created_at: Date
+  date_created: Date
+  date_updated: Date
   description: String
   id: ID
   name: String
-  updated_at: Date
+  user_created: update_directus_users_input
+  user_updated: update_directus_users_input
+  boutique: update_boutiques_input
 }
 
 input update_directus_access_input {
@@ -2024,21 +1970,15 @@ input update_order_items_input {
 
 input update_orders_input {
   boutique_id: update_boutiques_input
-  created_at: Date
+  date_created: Date
+  date_updated: Date
   id: ID
   status: String
   total_price: Float
-  updated_at: Date
-  user_id: update_users_input
-}
-
-input update_payments_input {
-  amount: Float
-  id: ID
-  order_id: update_orders_input
-  paid_at: Date
-  payment_method: String
-  status: String
+  user_created: update_directus_users_input
+  user_updated: update_directus_users_input
+  wechat_user_id: update_wechat_users_input
+  boutique: update_boutiques_input
 }
 
 input update_products_input {
@@ -2047,6 +1987,8 @@ input update_products_input {
   brand: String
   category_id: update_categories_input
   created_at: Date
+  date_created: Date
+  date_updated: Date
   description: String
   id: ID
   images: JSON
@@ -2063,16 +2005,10 @@ input update_products_input {
   total_reviews: Int
   total_sales_volume: Int
   updated_at: Date
+  user_created: update_directus_users_input
+  user_updated: update_directus_users_input
   video_url: String
-}
-
-input update_users_input {
-  created_at: Date
-  email: String
-  id: ID
-  name: String
-  password: String
-  updated_at: Date
+  boutique: update_boutiques_input
 }
 
 input update_wechat_users_input {
@@ -2095,62 +2031,7 @@ input update_wechat_users_input {
   sex: Int
   unionid: String
   updated_at: Date
-}
-
-type users {
-  created_at: Date
-  created_at_func: datetime_functions
-  email: String!
-  id: ID!
-  name: String!
-  password: String!
-  updated_at: Date
-  updated_at_func: datetime_functions
-}
-
-type users_aggregated {
-  group: JSON
-  countAll: Int
-  count: users_aggregated_count
-  countDistinct: users_aggregated_count
-  avg: users_aggregated_fields
-  sum: users_aggregated_fields
-  avgDistinct: users_aggregated_fields
-  sumDistinct: users_aggregated_fields
-  min: users_aggregated_fields
-  max: users_aggregated_fields
-}
-
-type users_aggregated_count {
-  created_at: Int
-  email: Int
-  id: Int
-  name: Int
-  password: Int
-  updated_at: Int
-}
-
-type users_aggregated_fields {
-  id: Float
-}
-
-input users_filter {
-  created_at: date_filter_operators
-  created_at_func: datetime_function_filter_operators
-  email: string_filter_operators
-  id: number_filter_operators
-  name: string_filter_operators
-  password: string_filter_operators
-  updated_at: date_filter_operators
-  updated_at_func: datetime_function_filter_operators
-  _and: [users_filter]
-  _or: [users_filter]
-}
-
-type users_mutated {
-  key: ID!
-  event: EventEnum
-  data: users
+  boutique: update_boutiques_input
 }
 
 type version_boutiques {
@@ -2164,18 +2045,20 @@ type version_boutiques {
   sort: Int
   stars: Int
   status: String
-  user: JSON
   user_created: JSON
   user_updated: JSON
 }
 
 type version_categories {
   boutique_id: JSON
-  created_at: Date
+  date_created: Date
+  date_updated: Date
   description: String
   id: ID
   name: String
-  updated_at: Date
+  user_created: JSON
+  user_updated: JSON
+  boutique: JSON
 }
 
 type version_order_items {
@@ -2188,21 +2071,15 @@ type version_order_items {
 
 type version_orders {
   boutique_id: JSON
-  created_at: Date
+  date_created: Date
+  date_updated: Date
   id: ID
   status: String
   total_price: Float
-  updated_at: Date
-  user_id: JSON
-}
-
-type version_payments {
-  amount: Float
-  id: ID
-  order_id: JSON
-  paid_at: Date
-  payment_method: String
-  status: String
+  user_created: JSON
+  user_updated: JSON
+  wechat_user_id: JSON
+  boutique: JSON
 }
 
 type version_products {
@@ -2211,6 +2088,8 @@ type version_products {
   brand: String
   category_id: JSON
   created_at: Date
+  date_created: Date
+  date_updated: Date
   description: String
   id: ID
   images: JSON
@@ -2227,16 +2106,10 @@ type version_products {
   total_reviews: Int
   total_sales_volume: Int
   updated_at: Date
+  user_created: JSON
+  user_updated: JSON
   video_url: String
-}
-
-type version_users {
-  created_at: Date
-  email: String
-  id: ID
-  name: String
-  password: String
-  updated_at: Date
+  boutique: JSON
 }
 
 type version_wechat_users {
@@ -2259,6 +2132,7 @@ type version_wechat_users {
   sex: Int
   unionid: String
   updated_at: Date
+  boutique: JSON
 }
 
 type wechat_users {
@@ -2285,6 +2159,7 @@ type wechat_users {
   unionid: String
   updated_at: Date
   updated_at_func: datetime_functions
+  boutique(filter: boutiques_filter, sort: [String], limit: Int, offset: Int, page: Int, search: String): boutiques
 }
 
 type wechat_users_aggregated {
@@ -2354,6 +2229,7 @@ input wechat_users_filter {
   updated_at_func: datetime_function_filter_operators
   _and: [wechat_users_filter]
   _or: [wechat_users_filter]
+  boutique: boutiques_filter
 }
 
 type wechat_users_mutated {

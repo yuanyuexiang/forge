@@ -11,8 +11,8 @@ query GetCategories {
       name
       address
     }
-    created_at
-    updated_at
+    date_created
+    date_updated
   }
 }
 
@@ -27,8 +27,8 @@ query GetCategoryById($id: ID!) {
       name
       address
     }
-    created_at
-    updated_at
+    date_created
+    date_updated
   }
 }
 
@@ -43,8 +43,8 @@ mutation CreateCategory($data: create_categories_input!) {
       name
       address
     }
-    created_at
-    updated_at
+    date_created
+    date_updated
   }
 }
 
@@ -59,8 +59,8 @@ mutation UpdateCategory($id: ID!, $data: update_categories_input!) {
       name
       address
     }
-    created_at
-    updated_at
+    date_created
+    date_updated
   }
 }
 

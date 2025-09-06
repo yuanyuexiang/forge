@@ -47,7 +47,6 @@ import { useAuth } from '@providers/AuthProvider';
 
 const { Title, Text, Paragraph } = Typography;
 const { TextArea } = Input;
-const { TabPane } = Tabs;
 
 // 根据Directus users_me接口重新定义用户类型
 interface DirectusUser {
@@ -269,6 +268,253 @@ function ProfileContent() {
     return null;
   };
 
+  // Tabs配置
+  const tabItems = [
+    {
+      key: 'profile',
+      label: (
+        <span>
+          <UserOutlined />
+          基本信息
+        </span>
+      ),
+      children: (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <Title level={4}>个人信息</Title>
+            <Button 
+              type={editing ? 'default' : 'primary'}
+              icon={editing ? <SaveOutlined /> : <EditOutlined />}
+              onClick={() => {
+                if (editing) {
+                  form.submit();
+                } else {
+                  setEditing(true);
+                }
+              }}
+              loading={loading}
+            >
+              {editing ? '保存' : '编辑'}
+            </Button>
+          </div>
+
+          <Form
+            form={form}
+            layout="vertical"
+            onFinish={handleSave}
+            disabled={!editing}
+          >
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="名"
+                  name="first_name"
+                  rules={[{ required: true, message: '请输入名' }]}
+                >
+                  <Input placeholder="请输入名" />
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="姓"
+                  name="last_name"
+                  rules={[{ required: true, message: '请输入姓' }]}
+                >
+                  <Input placeholder="请输入姓" />
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Form.Item
+              label="邮箱"
+              name="email"
+              rules={[
+                { required: true, message: '请输入邮箱' },
+                { type: 'email', message: '请输入有效的邮箱地址' }
+              ]}
+            >
+              <Input placeholder="请输入邮箱" />
+            </Form.Item>
+
+            <Form.Item
+              label="职位"
+              name="title"
+            >
+              <Input placeholder="请输入职位" />
+            </Form.Item>
+
+            <Form.Item
+              label="位置"
+              name="location"
+            >
+              <Input placeholder="请输入位置" />
+            </Form.Item>
+
+            <Form.Item
+              label="个人描述"
+              name="description"
+            >
+              <TextArea 
+                rows={4} 
+                placeholder="介绍一下自己..." 
+                maxLength={500}
+                showCount
+              />
+            </Form.Item>
+          </Form>
+        </div>
+      ),
+    },
+    {
+      key: 'preferences',
+      label: (
+        <span>
+          <SettingOutlined />
+          偏好设置
+        </span>
+      ),
+      children: (
+        <div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+            <Title level={4}>系统偏好</Title>
+            <Button 
+              type="primary"
+              icon={<SaveOutlined />}
+              onClick={() => preferencesForm.submit()}
+              loading={loading}
+            >
+              保存设置
+            </Button>
+          </div>
+
+          <Form
+            form={preferencesForm}
+            layout="vertical"
+            onFinish={handlePreferencesSave}
+          >
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="界面语言"
+                  name="language"
+                >
+                  <Select>
+                    <Select.Option value="zh-CN">简体中文</Select.Option>
+                    <Select.Option value="en-US">English</Select.Option>
+                    <Select.Option value="ja-JP">日本語</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="主题模式"
+                  name="appearance"
+                >
+                  <Select>
+                    <Select.Option value="auto">自动</Select.Option>
+                    <Select.Option value="light">浅色</Select.Option>
+                    <Select.Option value="dark">深色</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Row gutter={16}>
+              <Col span={12}>
+                <Form.Item
+                  label="浅色主题"
+                  name="theme_light"
+                >
+                  <Select>
+                    <Select.Option value="default">默认</Select.Option>
+                    <Select.Option value="blue">蓝色</Select.Option>
+                    <Select.Option value="green">绿色</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+              <Col span={12}>
+                <Form.Item
+                  label="深色主题"
+                  name="theme_dark"
+                >
+                  <Select>
+                    <Select.Option value="default">默认</Select.Option>
+                    <Select.Option value="blue">蓝色</Select.Option>
+                    <Select.Option value="green">绿色</Select.Option>
+                  </Select>
+                </Form.Item>
+              </Col>
+            </Row>
+
+            <Form.Item
+              label="文本方向"
+              name="text_direction"
+            >
+              <Select>
+                <Select.Option value="ltr">从左到右 (LTR)</Select.Option>
+                <Select.Option value="rtl">从右到左 (RTL)</Select.Option>
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              label="邮件通知"
+              name="email_notifications"
+              valuePropName="checked"
+            >
+              <Switch 
+                checkedChildren="开启" 
+                unCheckedChildren="关闭"
+              />
+            </Form.Item>
+          </Form>
+        </div>
+      ),
+    },
+    {
+      key: 'security',
+      label: (
+        <span>
+          <SafetyOutlined />
+          安全设置
+        </span>
+      ),
+      children: (
+        <div>
+          <Title level={4}>安全设置</Title>
+          
+          <Card size="small" style={{ marginTop: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <Title level={5} style={{ marginBottom: '4px' }}>
+                  <LockOutlined /> 修改密码
+                </Title>
+                <Text type="secondary">定期更换密码以保护账户安全</Text>
+              </div>
+              <Button 
+                type="primary"
+                onClick={() => setPasswordModalVisible(true)}
+              >
+                修改密码
+              </Button>
+            </div>
+          </Card>
+
+          <Card size="small" style={{ marginTop: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <Title level={5} style={{ marginBottom: '4px' }}>
+                  <MobileOutlined /> 两步验证
+                </Title>
+                <Text type="secondary">使用手机应用生成验证码</Text>
+              </div>
+              <Button disabled>即将开放</Button>
+            </div>
+          </Card>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div style={{ padding: '24px', background: '#f5f5f5', minHeight: '100vh' }}>
       <Row gutter={[24, 24]}>
@@ -352,223 +598,11 @@ function ProfileContent() {
         {/* 详细信息和设置 */}
         <Col xs={24} lg={16}>
           <Card>
-            <Tabs activeKey={activeTab} onChange={setActiveTab}>
-              {/* 基本信息标签页 */}
-              <TabPane tab={<span><UserOutlined />基本信息</span>} key="profile">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                  <Title level={4}>个人信息</Title>
-                  <Button 
-                    type={editing ? 'default' : 'primary'}
-                    icon={editing ? <SaveOutlined /> : <EditOutlined />}
-                    onClick={() => {
-                      if (editing) {
-                        form.submit();
-                      } else {
-                        setEditing(true);
-                      }
-                    }}
-                    loading={loading}
-                  >
-                    {editing ? '保存' : '编辑'}
-                  </Button>
-                </div>
-
-                <Form
-                  form={form}
-                  layout="vertical"
-                  onFinish={handleSave}
-                  disabled={!editing}
-                >
-                  <Row gutter={16}>
-                    <Col span={12}>
-                      <Form.Item
-                        label="名"
-                        name="first_name"
-                        rules={[{ required: true, message: '请输入名' }]}
-                      >
-                        <Input placeholder="请输入名" />
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        label="姓"
-                        name="last_name"
-                        rules={[{ required: true, message: '请输入姓' }]}
-                      >
-                        <Input placeholder="请输入姓" />
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Form.Item
-                    label="邮箱"
-                    name="email"
-                    rules={[
-                      { required: true, message: '请输入邮箱' },
-                      { type: 'email', message: '请输入有效的邮箱地址' }
-                    ]}
-                  >
-                    <Input placeholder="请输入邮箱" />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="职位"
-                    name="title"
-                  >
-                    <Input placeholder="请输入职位" />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="位置"
-                    name="location"
-                  >
-                    <Input placeholder="请输入位置" />
-                  </Form.Item>
-
-                  <Form.Item
-                    label="个人描述"
-                    name="description"
-                  >
-                    <TextArea 
-                      rows={4} 
-                      placeholder="介绍一下自己..." 
-                      maxLength={500}
-                      showCount
-                    />
-                  </Form.Item>
-                </Form>
-              </TabPane>
-
-              {/* 偏好设置标签页 */}
-              <TabPane tab={<span><SettingOutlined />偏好设置</span>} key="preferences">
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-                  <Title level={4}>系统偏好</Title>
-                  <Button 
-                    type="primary"
-                    icon={<SaveOutlined />}
-                    onClick={() => preferencesForm.submit()}
-                    loading={loading}
-                  >
-                    保存设置
-                  </Button>
-                </div>
-
-                <Form
-                  form={preferencesForm}
-                  layout="vertical"
-                  onFinish={handlePreferencesSave}
-                >
-                  <Row gutter={16}>
-                    <Col span={12}>
-                      <Form.Item
-                        label="界面语言"
-                        name="language"
-                      >
-                        <Select>
-                          <Select.Option value="zh-CN">简体中文</Select.Option>
-                          <Select.Option value="en-US">English</Select.Option>
-                          <Select.Option value="ja-JP">日本語</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        label="主题模式"
-                        name="appearance"
-                      >
-                        <Select>
-                          <Select.Option value="auto">自动</Select.Option>
-                          <Select.Option value="light">浅色</Select.Option>
-                          <Select.Option value="dark">深色</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Row gutter={16}>
-                    <Col span={12}>
-                      <Form.Item
-                        label="浅色主题"
-                        name="theme_light"
-                      >
-                        <Select>
-                          <Select.Option value="default">默认</Select.Option>
-                          <Select.Option value="blue">蓝色</Select.Option>
-                          <Select.Option value="green">绿色</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                    <Col span={12}>
-                      <Form.Item
-                        label="深色主题"
-                        name="theme_dark"
-                      >
-                        <Select>
-                          <Select.Option value="default">默认</Select.Option>
-                          <Select.Option value="blue">蓝色</Select.Option>
-                          <Select.Option value="green">绿色</Select.Option>
-                        </Select>
-                      </Form.Item>
-                    </Col>
-                  </Row>
-
-                  <Form.Item
-                    label="文本方向"
-                    name="text_direction"
-                  >
-                    <Select>
-                      <Select.Option value="ltr">从左到右 (LTR)</Select.Option>
-                      <Select.Option value="rtl">从右到左 (RTL)</Select.Option>
-                    </Select>
-                  </Form.Item>
-
-                  <Form.Item
-                    label="邮件通知"
-                    name="email_notifications"
-                    valuePropName="checked"
-                  >
-                    <Switch 
-                      checkedChildren="开启" 
-                      unCheckedChildren="关闭"
-                    />
-                  </Form.Item>
-                </Form>
-              </TabPane>
-
-              {/* 安全设置标签页 */}
-              <TabPane tab={<span><SafetyOutlined />安全设置</span>} key="security">
-                <Title level={4}>安全设置</Title>
-                
-                <Card size="small" style={{ marginTop: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <Title level={5} style={{ marginBottom: '4px' }}>
-                        <LockOutlined /> 修改密码
-                      </Title>
-                      <Text type="secondary">定期更换密码以保护账户安全</Text>
-                    </div>
-                    <Button 
-                      type="primary"
-                      onClick={() => setPasswordModalVisible(true)}
-                    >
-                      修改密码
-                    </Button>
-                  </div>
-                </Card>
-
-                <Card size="small" style={{ marginTop: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <div>
-                      <Title level={5} style={{ marginBottom: '4px' }}>
-                        <MobileOutlined /> 两步验证
-                      </Title>
-                      <Text type="secondary">使用手机应用生成验证码</Text>
-                    </div>
-                    <Button disabled>即将开放</Button>
-                  </div>
-                </Card>
-              </TabPane>
-            </Tabs>
+            <Tabs 
+              activeKey={activeTab} 
+              onChange={setActiveTab}
+              items={tabItems}
+            />
           </Card>
         </Col>
       </Row>
