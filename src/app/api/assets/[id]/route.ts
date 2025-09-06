@@ -21,7 +21,17 @@ export async function GET(
     const directusUrl = process.env.NEXT_PUBLIC_DIRECTUS_URL || APP_CONFIG.API.DIRECTUS.DEFAULT_URL;
     const assetUrl = `${directusUrl}${APP_CONFIG.API.DIRECTUS.ASSETS_ENDPOINT}/${id}`;
     
-    console.log('Fetching from Directus:', assetUrl);
+    // 构建完整的URL，包含所有查询参数
+    const directusAssetUrl = new URL(assetUrl);
+    
+    // 转发所有查询参数（除了 token，它会被单独处理）
+    for (const [key, value] of url.searchParams.entries()) {
+      if (key !== 'token') {
+        directusAssetUrl.searchParams.set(key, value);
+      }
+    }
+    
+    console.log('Fetching from Directus:', directusAssetUrl.toString());
     
     // 获取认证 token - 优先从Authorization头，然后从查询参数，最后从cookie
     let token = request.headers.get('authorization')?.replace('Bearer ', '');
@@ -46,7 +56,7 @@ export async function GET(
     }
     
     // 转发到Directus获取文件
-    const directusResponse = await fetch(assetUrl, { headers });
+    const directusResponse = await fetch(directusAssetUrl.toString(), { headers });
 
     console.log('Directus asset response status:', directusResponse.status);
 

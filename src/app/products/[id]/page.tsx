@@ -119,8 +119,19 @@ function ProductEditContent() {
   const categories = categoriesData?.categories || [];
   const boutiques = boutiquesData?.boutiques || [];
 
-  // 生成带认证的图片URL - 使用统一配置
+  // 生成带认证的图片URL - 使用统一配置，为编辑页面优化尺寸
   const getImageUrl = useCallback((imageId: string): string => {
+    return FILE_CONFIG.getAssetUrl(imageId, undefined, {
+      width: 200,
+      height: 200,
+      quality: 85,
+      fit: 'cover',
+      format: 'webp'
+    });
+  }, []);
+
+  // 生成原图URL用于预览
+  const getOriginalImageUrl = useCallback((imageId: string): string => {
     return FILE_CONFIG.getAssetUrl(imageId);
   }, []);
 
@@ -157,7 +168,11 @@ function ProductEditContent() {
           uid: foundProduct.main_image,
           name: '主图',
           status: 'done',
-          url: getImageUrl(foundProduct.main_image)
+          url: getImageUrl(foundProduct.main_image),
+          thumbUrl: getImageUrl(foundProduct.main_image),
+          preview: {
+            src: getOriginalImageUrl(foundProduct.main_image)
+          }
         }]);
       }
 
@@ -167,7 +182,11 @@ function ProductEditContent() {
           uid: imageId,
           name: `图片${index + 1}`,
           status: 'done',
-          url: getImageUrl(imageId)
+          url: getImageUrl(imageId),
+          thumbUrl: getImageUrl(imageId),
+          preview: {
+            src: getOriginalImageUrl(imageId)
+          }
         }));
         setImageList(imagesList);
       }
@@ -214,7 +233,11 @@ function ProductEditContent() {
         uid: fileId,
         name: file.name,
         status: 'done',
-        url: getImageUrl(fileId)
+        url: getImageUrl(fileId),
+        thumbUrl: getImageUrl(fileId),
+        preview: {
+          src: getOriginalImageUrl(fileId)
+        }
       }]);
 
       message.success('主图上传成功');
@@ -225,7 +248,7 @@ function ProductEditContent() {
       setMainImageUploading(false);
     }
     return false;
-  }, [form, getImageUrl]);
+  }, [form, getImageUrl, getOriginalImageUrl]);
 
   // 商品图片上传处理
   const handleImagesUpload = useCallback(async (file: File) => {
@@ -261,7 +284,11 @@ function ProductEditContent() {
         uid: fileId,
         name: file.name,
         status: 'done',
-        url: getImageUrl(fileId)
+        url: getImageUrl(fileId),
+        thumbUrl: getImageUrl(fileId),
+        preview: {
+          src: getOriginalImageUrl(fileId)
+        }
       }];
       setImageList(newImageList);
 
@@ -277,7 +304,7 @@ function ProductEditContent() {
       setImagesUploading(false);
     }
     return false;
-  }, [form, getImageUrl, imageList]);
+  }, [form, getImageUrl, getOriginalImageUrl, imageList]);
 
   // 删除图片处理
   const handleRemoveImage = useCallback((file: any, isMainImage: boolean) => {
@@ -301,6 +328,12 @@ function ProductEditContent() {
   const handleImagesChange = useCallback(({ fileList }: any) => {
     setImageList(fileList);
   }, []);
+
+  // 预览处理 - 使用原图
+  const handlePreview = useCallback((file: any) => {
+    const originalUrl = file.preview?.src || getOriginalImageUrl(file.uid);
+    window.open(originalUrl, '_blank');
+  }, [getOriginalImageUrl]);
 
   // 保存商品
   const handleSave = async () => {
@@ -584,6 +617,7 @@ function ProductEditContent() {
                   beforeUpload={handleMainImageUpload}
                   onRemove={(file) => handleRemoveImage(file, true)}
                   onChange={handleMainImageChange}
+                  onPreview={handlePreview}
                   maxCount={1}
                   accept="image/*"
                   showUploadList={{
@@ -616,6 +650,7 @@ function ProductEditContent() {
                   beforeUpload={handleImagesUpload}
                   onRemove={(file) => handleRemoveImage(file, false)}
                   onChange={handleImagesChange}
+                  onPreview={handlePreview}
                   maxCount={10}
                   accept="image/*"
                   multiple

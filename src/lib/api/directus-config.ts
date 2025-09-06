@@ -71,7 +71,13 @@ export const FILE_CONFIG = {
   },
   
   // 获取带认证的资产 URL（智能选择代理或直连）
-  getAssetUrl: (fileId: string, authToken?: string) => {
+  getAssetUrl: (fileId: string, authToken?: string, options?: {
+    width?: number;
+    height?: number;
+    quality?: number;
+    fit?: 'cover' | 'contain' | 'fill' | 'inside' | 'outside';
+    format?: 'auto' | 'webp' | 'png' | 'jpg' | 'jpeg';
+  }) => {
     if (!fileId) return '';
     if (fileId.startsWith('http')) return fileId;
     
@@ -88,14 +94,33 @@ export const FILE_CONFIG = {
     // 判断是否使用代理
     const useProxy = shouldUseProxy();
     
+    // 构建参数
+    const params = new URLSearchParams();
+    if (token) {
+      if (useProxy) {
+        params.set('token', token);
+      } else {
+        params.set('access_token', token);
+      }
+    }
+    
+    // 添加图片处理参数
+    if (options) {
+      if (options.width) params.set('width', options.width.toString());
+      if (options.height) params.set('height', options.height.toString());
+      if (options.quality) params.set('quality', options.quality.toString());
+      if (options.fit) params.set('fit', options.fit);
+      if (options.format) params.set('format', options.format);
+    }
+    
     if (useProxy) {
       // 本地开发环境：使用代理
       const baseUrl = `${DIRECTUS_CONFIG.BASE_URL}/api/assets/${fileId}`;
-      return token ? `${baseUrl}?token=${encodeURIComponent(token)}` : baseUrl;
+      return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
     } else {
       // 云端部署环境：直接访问 Directus
       const baseUrl = `${getDirectusUrl()}/assets/${fileId}`;
-      return token ? `${baseUrl}?access_token=${encodeURIComponent(token)}` : baseUrl;
+      return params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
     }
   },
   

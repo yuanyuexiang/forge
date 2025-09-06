@@ -170,8 +170,15 @@ function ProductsContent() {
   );
 
   // 生成带认证的图片URL - 使用统一配置
+  // 生成带认证的图片URL - 使用统一配置，为列表页面优化尺寸
   const getImageUrl = useCallback((imageId: string): string => {
-    return FILE_CONFIG.getAssetUrl(imageId);
+    return FILE_CONFIG.getAssetUrl(imageId, undefined, {
+      width: 80,
+      height: 80,
+      quality: 80,
+      fit: 'cover',
+      format: 'webp'
+    });
   }, []);
 
   const columns = [

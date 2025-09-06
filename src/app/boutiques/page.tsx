@@ -159,9 +159,15 @@ function BoutiquesContent() {
     boutique.address?.toLowerCase().includes(searchText.toLowerCase())
   );
 
-  // 生成带认证的图片URL
+  // 生成带认证的图片URL - 为店铺列表页面优化尺寸
   const getImageUrl = useCallback((imageId: string): string => {
-    return FILE_CONFIG.getAssetUrl(imageId);
+    return FILE_CONFIG.getAssetUrl(imageId, undefined, {
+      width: 120,
+      height: 120,
+      quality: 80,
+      fit: 'cover',
+      format: 'webp'
+    });
   }, []);
 
   // 解析图片字段，处理 JSON 字符串或数组
