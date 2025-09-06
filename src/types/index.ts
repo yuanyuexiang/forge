@@ -49,14 +49,12 @@ export interface Order {
   user_id: User;
   total_price: number;
   status: OrderStatus;
-  payment_status?: PaymentStatus;
   created_at?: string;
   updated_at?: string;
   items?: OrderItem[];
 }
 
 export type OrderStatus = 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-export type PaymentStatus = 'pending' | 'processing' | 'completed' | 'failed' | 'refunded';
 
 export interface OrderItem {
   id: string;
@@ -64,18 +62,6 @@ export interface OrderItem {
   quantity: number;
   unit_price: number;
   total_price: number;
-}
-
-// 支付相关类型
-export interface Payment {
-  id: string;
-  order_id: Order;
-  amount: number;
-  status: PaymentStatus;
-  payment_method?: string;
-  transaction_id?: string;
-  created_at?: string;
-  updated_at?: string;
 }
 
 // API 响应类型

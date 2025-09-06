@@ -12,7 +12,6 @@ import {
   MenuUnfoldOutlined,
   SettingOutlined,
   TagOutlined,
-  CreditCardOutlined,
   DatabaseOutlined,
   ShopOutlined
 } from '@ant-design/icons';
@@ -55,7 +54,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname.startsWith('/orders')) return 'orders';
     if (pathname.startsWith('/users')) return 'users';
     if (pathname.startsWith('/categories')) return 'categories';
-    if (pathname.startsWith('/payments')) return 'payments';
     if (pathname.startsWith('/profile')) return 'profile';
     return 'dashboard';
   };
@@ -90,12 +88,6 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       icon: <ShoppingCartOutlined />,
       label: '订单管理',
       onClick: () => router.push('/orders'),
-    },
-    {
-      key: 'payments',
-      icon: <CreditCardOutlined />,
-      label: '支付管理',
-      onClick: () => router.push('/payments'),
     },
     {
       key: 'users',

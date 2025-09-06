@@ -8,7 +8,6 @@ import {
   UserOutlined, 
   ShoppingOutlined,
   DashboardOutlined,
-  DollarOutlined,
   FileTextOutlined,
   ClockCircleOutlined,
   CheckCircleOutlined,
@@ -75,9 +74,7 @@ function DashboardContent() {
     totalUsers: dashboardData?.users_aggregated?.[0]?.countAll || dashboardData?.users?.length || 0,
     totalCategories: dashboardData?.categories_aggregated?.[0]?.countAll || dashboardData?.categories?.length || 0,
     totalBoutiques: dashboardData?.boutiques_aggregated?.[0]?.countAll || dashboardData?.boutiques?.length || 0,
-    totalRevenue: dashboardData?.completed_orders?.reduce((sum: number, order: any) => sum + (order.total_price || 0), 0) || 0,
-    todayOrders: dashboardData?.today_orders?.length || 0,
-    todayRevenue: dashboardData?.today_orders?.filter((order: any) => order.status === 'completed').reduce((sum: number, order: any) => sum + (order.total_price || 0), 0) || 0
+    todayOrders: dashboardData?.today_orders?.length || 0
   };
 
   // 详细调试信息
@@ -308,13 +305,13 @@ function DashboardContent() {
         <div className="luxury-card p-6">
           <div className="flex items-center justify-between">
             <div>
-              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>今日销售额</p>
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>商品分类</p>
               <div style={{ fontSize: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
-                {isLoading ? <Spin size="small" /> : `¥${statsData.todayRevenue.toLocaleString()}`}
+                {isLoading ? <Spin size="small" /> : statsData.totalCategories.toLocaleString()}
               </div>
               <p style={{ fontSize: '13px', color: '#7C3AED', marginTop: '8px', fontWeight: 500 }}>
-                <span className="inline-block mr-1">📈</span>
-                今日订单: {statsData.todayOrders} 笔
+                <span className="inline-block mr-1">🏷️</span>
+                分类管理
               </p>
             </div>
             <div style={{ 
@@ -327,7 +324,7 @@ function DashboardContent() {
               justifyContent: 'center',
               boxShadow: '0 4px 12px rgba(88, 28, 135, 0.3)'
             }}>
-              <DollarOutlined style={{ fontSize: '24px', color: '#DDD6FE' }} />
+              <FileTextOutlined style={{ fontSize: '24px', color: '#DDD6FE' }} />
             </div>
           </div>
         </div>

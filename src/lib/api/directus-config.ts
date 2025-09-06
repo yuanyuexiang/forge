@@ -472,23 +472,6 @@ export const BUSINESS_QUERIES = {
     }
   `,
   
-  // 支付相关查询
-  GET_ORDER_PAYMENTS: `
-    query GetOrderPayments($orderId: Int!) {
-      payments(filter: { order_id: { id: { _eq: $orderId } } }) {
-        id
-        amount
-        payment_method
-        status
-        paid_at
-        order_id {
-          id
-          total_price
-        }
-      }
-    }
-  `,
-  
   // 用户相关查询
   GET_USERS: `
     query GetUsers($filter: users_filter, $limit: Int, $offset: Int) {

@@ -33,18 +33,11 @@ query GetDashboardData($today: String) {
     countAll
   }
   
-  # 已完成订单（用于计算总销售额）
-  completed_orders: orders(filter: { status: { _eq: "completed" } }) {
-    id
-    total_price
-  }
-  
   # 今日订单
   today_orders: orders(filter: { 
     created_at: { _gte: $today } 
   }) {
     id
-    total_price
     status
   }
 }
