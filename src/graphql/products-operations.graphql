@@ -1,7 +1,50 @@
 # 产品相关的GraphQL操作
 
-# 查询所有产品
-query GetProducts {
+# 查询所有产品（带权限过滤）
+query GetProducts($userId: ID) {
+  products(filter: { user_created: { id: { _eq: $userId } } }) {
+    id
+    name
+    subtitle
+    description
+    price
+    market_price
+    stock
+    barcode
+    brand
+    boutique_id {
+      id
+      name
+      address
+    }
+    category_id {
+      id
+      name
+    }
+    seller_id
+    main_image
+    images
+    video_url
+    is_on_sale
+    status
+    total_sales_volume
+    rating_avg
+    total_reviews
+    created_at
+    date_created
+    updated_at
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+
+# 查询所有产品（不带权限过滤，用于管理员）
+query GetAllProducts {
   products {
     id
     name
@@ -34,6 +77,12 @@ query GetProducts {
     date_created
     updated_at
     date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
   }
 }
 

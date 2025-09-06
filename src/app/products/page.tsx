@@ -29,6 +29,7 @@ import {
   GetProductsQuery
 } from '@generated/graphql';
 import { FILE_CONFIG } from '@lib/api';
+import { TokenManager } from '@lib/auth';
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -81,8 +82,19 @@ function ProductsContent() {
   const [pageSize, setPageSize] = useState(10);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // 获取当前用户 ID
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const currentUserId = TokenManager.getCurrentUserId();
+    setUserId(currentUserId);
+  }, []);
+
   // 查询产品列表
-  const { data: productsData, loading, error, refetch } = useGetProductsQuery();
+  const { data: productsData, loading, error, refetch } = useGetProductsQuery({
+    variables: userId ? { userId } : undefined,
+    skip: !userId // 如果没有用户 ID 就跳过查询
+  });
   
   // 从 URL 参数恢复状态
   useEffect(() => {

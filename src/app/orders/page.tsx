@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Table, 
   Card, 
@@ -33,6 +33,7 @@ import {
   GetOrdersQuery
 } from '../../generated/graphql';
 import { ProtectedRoute, AdminLayout } from '@components';
+import { TokenManager } from '@lib/auth';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -49,8 +50,19 @@ function OrdersContent() {
   const [newStatus, setNewStatus] = useState<string>('');
   const [searchText, setSearchText] = useState('');
 
+  // 获取当前用户 ID
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const currentUserId = TokenManager.getCurrentUserId();
+    setUserId(currentUserId);
+  }, []);
+
   // 查询订单列表
-  const { data: ordersData, loading, error, refetch } = useGetOrdersQuery();
+  const { data: ordersData, loading, error, refetch } = useGetOrdersQuery({
+    variables: userId ? { userId } : undefined,
+    skip: !userId // 如果没有用户 ID 就跳过查询
+  });
   
   // 查询订单项（当选择了订单时）
   const { data: orderItemsData } = useGetOrderItemsQuery({

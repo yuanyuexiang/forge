@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Table, 
   Button, 
@@ -26,6 +26,7 @@ import {
   useGetBoutiquesQuery,
   GetCategoriesQuery
 } from '../../generated/graphql';
+import { TokenManager } from '@lib/auth';
 
 const { Search } = Input;
 
@@ -38,11 +39,25 @@ function CategoriesContent() {
   const [searchText, setSearchText] = useState('');
   const [form] = Form.useForm();
 
+  // 获取当前用户 ID
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const currentUserId = TokenManager.getCurrentUserId();
+    setUserId(currentUserId);
+  }, []);
+
   // 查询分类列表
-  const { data, loading, error, refetch } = useGetCategoriesQuery();
+  const { data, loading, error, refetch } = useGetCategoriesQuery({
+    variables: userId ? { userId } : undefined,
+    skip: !userId
+  });
   
   // 查询店铺列表
-  const { data: boutiquesData, loading: boutiquesLoading } = useGetBoutiquesQuery();
+  const { data: boutiquesData, loading: boutiquesLoading } = useGetBoutiquesQuery({
+    variables: userId ? { userId } : undefined,
+    skip: !userId
+  });
   
   // 创建分类
   const [createCategory] = useCreateCategoryMutation({

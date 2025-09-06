@@ -1,7 +1,29 @@
 # 店铺相关的GraphQL操作
 
-# 查询所有店铺
-query GetBoutiques {
+# 查询所有店铺（带权限过滤）
+query GetBoutiques($userId: ID) {
+  boutiques(filter: { user_created: { id: { _eq: $userId } } }) {
+    id
+    name
+    address
+    main_image
+    images
+    stars
+    status
+    sort
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+
+# 查询所有店铺（不带权限过滤，用于管理员）
+query GetAllBoutiques {
   boutiques {
     id
     name
@@ -13,6 +35,12 @@ query GetBoutiques {
     sort
     date_created
     date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
   }
 }
 

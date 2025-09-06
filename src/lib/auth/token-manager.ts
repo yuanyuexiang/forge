@@ -181,4 +181,21 @@ export class TokenManager {
     const currentTime = Math.floor(Date.now() / 1000);
     return tokenPayload.exp < currentTime;
   }
+
+  // 获取当前用户ID
+  static getCurrentUserId(): string | null {
+    const token = this.getCurrentToken();
+    if (!token) return null;
+
+    const payload = this.decodeToken(token);
+    return payload?.id || null;
+  }
+
+  // 获取当前用户信息
+  static getCurrentUser(): any {
+    const token = this.getCurrentToken();
+    if (!token) return null;
+
+    return this.decodeToken(token);
+  }
 }

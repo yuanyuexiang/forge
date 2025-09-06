@@ -1,7 +1,37 @@
 # 订单相关的GraphQL操作
 
-# 查询所有订单
-query GetOrders {
+# 查询所有订单（带权限过滤）
+query GetOrders($userId: ID) {
+  orders(filter: { user_created: { id: { _eq: $userId } } }) {
+    id
+    wechat_user_id {
+      id
+      nickname
+      openid
+      headimgurl
+      city
+      province
+    }
+    boutique_id {
+      id
+      name
+      address
+    }
+    total_price
+    status
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+
+# 查询所有订单（管理员用，无权限过滤）
+query GetAllOrders {
   orders {
     id
     wechat_user_id {
@@ -21,6 +51,12 @@ query GetOrders {
     status
     date_created
     date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
   }
 }
 

@@ -1,7 +1,29 @@
 # 分类相关的GraphQL操作
 
-# 查询所有分类
-query GetCategories {
+# 查询所有分类（带权限过滤）
+query GetCategories($userId: ID) {
+  categories(filter: { user_created: { id: { _eq: $userId } } }) {
+    id
+    name
+    description
+    boutique_id {
+      id
+      name
+      address
+    }
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+
+# 查询所有分类（不带权限过滤，用于管理员）
+query GetAllCategories {
   categories {
     id
     name
@@ -13,6 +35,12 @@ query GetCategories {
     }
     date_created
     date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
   }
 }
 

@@ -66,14 +66,31 @@ function ProductEditContent() {
 
   const isEditMode = params.id !== 'new';
 
+  // 获取当前用户 ID
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const currentUserId = TokenManager.getCurrentUserId();
+    setUserId(currentUserId);
+  }, []);
+
   // 查询商品列表
-  const { data: productsData, refetch } = useGetProductsQuery();
+  const { data: productsData, refetch } = useGetProductsQuery({
+    variables: userId ? { userId } : undefined,
+    skip: !userId
+  });
   
   // 查询分类列表
-  const { data: categoriesData } = useGetCategoriesQuery();
+  const { data: categoriesData } = useGetCategoriesQuery({
+    variables: userId ? { userId } : undefined,
+    skip: !userId
+  });
   
   // 查询店铺列表
-  const { data: boutiquesData } = useGetBoutiquesQuery();
+  const { data: boutiquesData } = useGetBoutiquesQuery({
+    variables: userId ? { userId } : undefined,
+    skip: !userId
+  });
   
   // 创建商品
   const [createProduct] = useCreateProductMutation({
