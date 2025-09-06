@@ -88,7 +88,6 @@ function DashboardContent() {
   console.log('Orders aggregated:', dashboardData?.orders_aggregated);
   console.log('Categories aggregated:', dashboardData?.categories_aggregated);
   console.log('Boutiques aggregated:', dashboardData?.boutiques_aggregated);
-  console.log('Completed orders:', dashboardData?.completed_orders);
   console.log('Today orders:', dashboardData?.today_orders);
   console.log('Final stats data:', statsData);
   console.log('=== End Debug Info ===');
@@ -193,7 +192,7 @@ function DashboardContent() {
       )}
       
       {/* 统计卡片区域 */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6 mb-8">
         <div className="luxury-card p-6">
           <div className="flex items-center justify-between">
             <div>
@@ -339,21 +338,21 @@ function DashboardContent() {
               type="primary" 
               icon={<ShoppingOutlined />}
               className="h-12"
-              onClick={() => window.location.href = '/products'}
+              onClick={() => router.push('/products')}
             >
               管理商品
             </Button>
             <Button 
               icon={<ShoppingCartOutlined />}
               className="h-12"
-              onClick={() => window.location.href = '/orders'}
+              onClick={() => router.push('/orders')}
             >
               查看订单
             </Button>
             <Button 
               icon={<UserOutlined />}
               className="h-12"
-              onClick={() => window.location.href = '/users'}
+              onClick={() => router.push('/users')}
             >
               用户管理
             </Button>
@@ -391,7 +390,7 @@ function DashboardContent() {
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">最近订单</h3>
-            <Button type="link" onClick={() => window.location.href = '/orders'}>
+            <Button type="link" onClick={() => router.push('/orders')}>
               查看全部
             </Button>
           </div>
@@ -431,7 +430,7 @@ function DashboardContent() {
         <div className="bg-white p-6 rounded-lg shadow-sm border">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold">热销商品</h3>
-            <Button type="link" onClick={() => window.location.href = '/products'}>
+            <Button type="link" onClick={() => router.push('/products')}>
               查看全部
             </Button>
           </div>
