@@ -352,9 +352,9 @@ function DashboardContent() {
             <Button 
               icon={<UserOutlined />}
               className="h-12"
-              onClick={() => router.push('/users')}
+              onClick={() => router.push('/customers')}
             >
-              用户管理
+              客户管理
             </Button>
           </div>
         </div>
@@ -404,7 +404,7 @@ function DashboardContent() {
                 <div key={order.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
                   <div>
                     <div className="font-medium">#{order.id.substring(0, 8)}</div>
-                    <div className="text-sm text-gray-500">{order.wechat_user_id?.name || '未知用户'}</div>
+                    <div className="text-sm text-gray-500">{order.wechat_user_id?.nickname || '未知用户'}</div>
                   </div>
                   <div className="text-right">
                     <div className="font-medium">¥{order.total_price?.toFixed(2)}</div>
