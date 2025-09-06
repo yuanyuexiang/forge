@@ -145,7 +145,9 @@ function CategoriesContent() {
   // 过滤分类
   const filteredCategories = categories.filter((category: Category) =>
     category.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    (category.description && category.description.toLowerCase().includes(searchText.toLowerCase()))
+    (category.description && category.description.toLowerCase().includes(searchText.toLowerCase())) ||
+    (category.boutique_id?.name && category.boutique_id.name.toLowerCase().includes(searchText.toLowerCase())) ||
+    (category.boutique_id?.address && category.boutique_id.address.toLowerCase().includes(searchText.toLowerCase()))
   );
 
   const columns = [
@@ -160,8 +162,34 @@ function CategoriesContent() {
       title: '描述',
       dataIndex: 'description',
       key: 'description',
-      width: 500,
+      width: 300,
       render: (description: string) => description || '暂无描述',
+    },
+    {
+      title: '所属店铺',
+      dataIndex: ['boutique_id', 'name'],
+      key: 'boutique_name',
+      width: 200,
+      render: (boutiqueName: string, record: Category) => {
+        if (record.boutique_id) {
+          return (
+            <div>
+              <div style={{ fontWeight: 500 }}>{boutiqueName}</div>
+              {record.boutique_id.address && (
+                <div style={{ fontSize: '12px', color: '#666' }}>
+                  {record.boutique_id.address}
+                </div>
+              )}
+            </div>
+          );
+        }
+        return '未分配店铺';
+      },
+      sorter: (a: Category, b: Category) => {
+        const aName = a.boutique_id?.name || '';
+        const bName = b.boutique_id?.name || '';
+        return aName.localeCompare(bName);
+      },
     },
     {
       title: '创建时间',

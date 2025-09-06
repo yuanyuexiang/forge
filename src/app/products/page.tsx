@@ -162,7 +162,11 @@ function ProductsContent() {
   // 过滤商品
   const filteredProducts = products.filter((product: Product) =>
     product.name.toLowerCase().includes(searchText.toLowerCase()) ||
-    (product.category_id?.name && product.category_id.name.toLowerCase().includes(searchText.toLowerCase()))
+    (product.category_id?.name && product.category_id.name.toLowerCase().includes(searchText.toLowerCase())) ||
+    (product.boutique_id?.name && product.boutique_id.name.toLowerCase().includes(searchText.toLowerCase())) ||
+    (product.boutique_id?.address && product.boutique_id.address.toLowerCase().includes(searchText.toLowerCase())) ||
+    (product.brand && product.brand.toLowerCase().includes(searchText.toLowerCase())) ||
+    (product.subtitle && product.subtitle.toLowerCase().includes(searchText.toLowerCase()))
   );
 
   // 生成带认证的图片URL - 使用统一配置
@@ -231,6 +235,32 @@ function ProductsContent() {
       key: 'category',
       width: 120,
       render: (categoryName: string) => categoryName || '未分类',
+    },
+    {
+      title: '所属店铺',
+      dataIndex: ['boutique_id', 'name'],
+      key: 'boutique_name',
+      width: 150,
+      render: (boutiqueName: string, record: Product) => {
+        if (record.boutique_id) {
+          return (
+            <div>
+              <div style={{ fontWeight: 500 }}>{boutiqueName}</div>
+              {record.boutique_id.address && (
+                <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>
+                  {record.boutique_id.address}
+                </div>
+              )}
+            </div>
+          );
+        }
+        return '未分配店铺';
+      },
+      sorter: (a: Product, b: Product) => {
+        const aName = a.boutique_id?.name || '';
+        const bName = b.boutique_id?.name || '';
+        return aName.localeCompare(bName);
+      },
     },
     {
       title: '价格',

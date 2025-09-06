@@ -89,7 +89,9 @@ function OrdersContent() {
       order.id.toLowerCase().includes(searchLower) ||
       order.user_id?.name?.toLowerCase().includes(searchLower) ||
       order.user_id?.email?.toLowerCase().includes(searchLower) ||
-      order.status?.toLowerCase().includes(searchLower)
+      order.status?.toLowerCase().includes(searchLower) ||
+      order.boutique_id?.name?.toLowerCase().includes(searchLower) ||
+      order.boutique_id?.address?.toLowerCase().includes(searchLower)
     );
   });
 
@@ -174,6 +176,26 @@ function OrdersContent() {
           </div>
         </div>
       ),
+    },
+    {
+      title: '所属店铺',
+      key: 'boutique',
+      width: 180,
+      render: (record: Order) => {
+        if (record.boutique_id) {
+          return (
+            <div>
+              <div style={{ fontWeight: 500 }}>{record.boutique_id.name}</div>
+              {record.boutique_id.address && (
+                <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
+                  {record.boutique_id.address}
+                </div>
+              )}
+            </div>
+          );
+        }
+        return <Tag>未分配店铺</Tag>;
+      },
     },
     {
       title: '总金额',

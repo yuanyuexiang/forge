@@ -6,6 +6,11 @@ query GetCategories {
     id
     name
     description
+    boutique_id {
+      id
+      name
+      address
+    }
     created_at
     updated_at
   }
@@ -17,6 +22,11 @@ query GetCategoryById($id: ID!) {
     id
     name
     description
+    boutique_id {
+      id
+      name
+      address
+    }
     created_at
     updated_at
   }
@@ -28,6 +38,11 @@ mutation CreateCategory($data: create_categories_input!) {
     id
     name
     description
+    boutique_id {
+      id
+      name
+      address
+    }
     created_at
     updated_at
   }
@@ -39,6 +54,11 @@ mutation UpdateCategory($id: ID!, $data: update_categories_input!) {
     id
     name
     description
+    boutique_id {
+      id
+      name
+      address
+    }
     created_at
     updated_at
   }

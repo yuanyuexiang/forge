@@ -9,6 +9,11 @@ query GetOrders {
       name
       email
     }
+    boutique_id {
+      id
+      name
+      address
+    }
     total_price
     status
     created_at
@@ -24,6 +29,11 @@ query GetOrderById($id: ID!) {
       id
       name
       email
+    }
+    boutique_id {
+      id
+      name
+      address
     }
     total_price
     status
@@ -58,6 +68,11 @@ mutation CreateOrder($data: create_orders_input!) {
       name
       email
     }
+    boutique_id {
+      id
+      name
+      address
+    }
     total_price
     status
     created_at
@@ -73,6 +88,11 @@ mutation UpdateOrder($id: ID!, $data: update_orders_input!) {
       id
       name
       email
+    }
+    boutique_id {
+      id
+      name
+      address
     }
     total_price
     status
