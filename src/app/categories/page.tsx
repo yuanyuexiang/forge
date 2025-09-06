@@ -7,6 +7,7 @@ import {
   Modal, 
   Form, 
   Input, 
+  Select,
   Space, 
   message, 
   Popconfirm 
@@ -22,6 +23,7 @@ import {
   useCreateCategoryMutation,
   useUpdateCategoryMutation,
   useDeleteCategoryMutation,
+  useGetBoutiquesQuery,
   GetCategoriesQuery
 } from '../../generated/graphql';
 
@@ -38,6 +40,9 @@ function CategoriesContent() {
 
   // 查询分类列表
   const { data, loading, error, refetch } = useGetCategoriesQuery();
+  
+  // 查询店铺列表
+  const { data: boutiquesData, loading: boutiquesLoading } = useGetBoutiquesQuery();
   
   // 创建分类
   const [createCategory] = useCreateCategoryMutation({
@@ -78,6 +83,7 @@ function CategoriesContent() {
   });
 
   const categories = data?.categories || [];
+  const boutiques = boutiquesData?.boutiques || [];
 
   // 处理错误
   if (error) {
@@ -91,7 +97,8 @@ function CategoriesContent() {
     if (category) {
       form.setFieldsValue({
         name: category.name,
-        description: category.description
+        description: category.description,
+        boutique_id: category.boutique_id?.id || null
       });
     } else {
       form.resetFields();
@@ -111,11 +118,16 @@ function CategoriesContent() {
       const values = await form.validateFields();
       
       if (editingCategory) {
-        // 更新分类
+        // 更新分类 - 需要将 boutique_id 包装为对象
+        const updateData = {
+          ...values,
+          boutique_id: values.boutique_id ? { id: values.boutique_id } : null
+        };
+        
         await updateCategory({
           variables: {
             id: editingCategory.id,
-            data: values
+            data: updateData
           }
         });
       } else {
@@ -193,9 +205,16 @@ function CategoriesContent() {
     },
     {
       title: '创建时间',
-      dataIndex: 'created_at',
-      key: 'created_at',
-      render: (date: string) => new Date(date).toLocaleDateString(),
+      dataIndex: 'date_created',
+      key: 'date_created',
+      render: (date: string) => {
+        if (!date) return '暂无数据';
+        try {
+          return new Date(date).toLocaleDateString('zh-CN');
+        } catch (error) {
+          return '日期格式错误';
+        }
+      },
       sorter: (a: Category, b: Category) => new Date(a.date_created).getTime() - new Date(b.date_created).getTime(),
     },
     {
@@ -292,6 +311,26 @@ function CategoriesContent() {
             name="description"
           >
             <Input.TextArea rows={3} placeholder="请输入分类描述" />
+          </Form.Item>
+
+          <Form.Item
+            label="所属店铺"
+            name="boutique_id"
+            rules={[{ required: true, message: '请选择所属店铺' }]}
+          >
+            <Select
+              placeholder="请选择店铺"
+              loading={boutiquesLoading}
+              allowClear
+              showSearch
+              filterOption={(input, option) =>
+                (option?.label ?? '').toLowerCase().includes(input.toLowerCase())
+              }
+              options={boutiques.map(boutique => ({
+                value: boutique.id,
+                label: `${boutique.name} - ${boutique.address || '暂无地址'}`
+              }))}
+            />
           </Form.Item>
         </Form>
       </Modal>

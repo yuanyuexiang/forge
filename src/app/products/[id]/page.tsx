@@ -34,6 +34,7 @@ import { AdminLayout } from '@components/layout';
 import { 
   useGetProductsQuery,
   useGetCategoriesQuery,
+  useGetBoutiquesQuery,
   useCreateProductMutation,
   useUpdateProductMutation,
   GetProductsQuery
@@ -70,6 +71,9 @@ function ProductEditContent() {
   
   // 查询分类列表
   const { data: categoriesData } = useGetCategoriesQuery();
+  
+  // 查询店铺列表
+  const { data: boutiquesData } = useGetBoutiquesQuery();
   
   // 创建商品
   const [createProduct] = useCreateProductMutation({
@@ -113,6 +117,7 @@ function ProductEditContent() {
 
   const products = productsData?.products || [];
   const categories = categoriesData?.categories || [];
+  const boutiques = boutiquesData?.boutiques || [];
 
   // 生成带认证的图片URL - 使用统一配置
   const getImageUrl = useCallback((imageId: string): string => {
@@ -138,6 +143,7 @@ function ProductEditContent() {
         stock: foundProduct.stock,
         barcode: foundProduct.barcode,
         category_id: foundProduct.category_id?.id,
+        boutique_id: foundProduct.boutique_id?.id,
         status: foundProduct.status,
         main_image: foundProduct.main_image,
         images: foundProduct.images,
@@ -315,6 +321,7 @@ function ProductEditContent() {
           stock: Number(values.stock),
           barcode: values.barcode || '',
           category_id: values.category_id ? { id: values.category_id } : null,
+          boutique_id: values.boutique_id ? { id: values.boutique_id } : null,
           status: values.status,
           main_image: values.main_image || '',
           images: values.images || [],
@@ -342,6 +349,18 @@ function ProductEditContent() {
           }
         }
 
+        let boutiqueData = null;
+        if (values.boutique_id) {
+          // 找到对应的店铺
+          const selectedBoutique = boutiques.find(boutique => boutique.id === values.boutique_id);
+          if (selectedBoutique) {
+            boutiqueData = {
+              id: selectedBoutique.id,
+              name: selectedBoutique.name
+            };
+          }
+        }
+
         const createData = {
           name: values.name,
           subtitle: values.subtitle || '',
@@ -352,6 +371,7 @@ function ProductEditContent() {
           stock: Number(values.stock),
           barcode: values.barcode || '',
           category_id: categoryData,
+          boutique_id: boutiqueData,
           status: values.status,
           main_image: values.main_image || '',
           images: values.images || [],
@@ -628,6 +648,31 @@ function ProductEditContent() {
                   {categories.map((category: any) => (
                     <Option key={category.id} value={category.id}>
                       {category.name}
+                    </Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label="所属店铺"
+                name="boutique_id"
+              >
+                <Select 
+                  placeholder="请选择店铺" 
+                  allowClear 
+                  size="large"
+                  showSearch
+                  filterOption={(input, option) => {
+                    const label = option?.label || option?.children;
+                    if (typeof label === 'string') {
+                      return label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+                    }
+                    return false;
+                  }}
+                >
+                  {boutiques.map((boutique: any) => (
+                    <Option key={boutique.id} value={boutique.id} label={boutique.name}>
+                      {boutique.name}
                     </Option>
                   ))}
                 </Select>
