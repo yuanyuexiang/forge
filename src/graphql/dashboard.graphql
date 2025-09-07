@@ -1,4 +1,50 @@
-query GetDashboardData($today: String) {
+query GetDashboardData($today: String, $userId: ID) {
+  # 查询各个表的记录数（带权限过滤）
+  customers(filter: { user_created: { id: { _eq: $userId } } }, limit: 1000) {
+    id
+  }
+  products(filter: { user_created: { id: { _eq: $userId } } }, limit: 1000) {
+    id
+  }
+  orders(filter: { user_created: { id: { _eq: $userId } } }, limit: 1000) {
+    id
+  }
+  categories(filter: { user_created: { id: { _eq: $userId } } }, limit: 1000) {
+    id
+  }
+  boutiques(filter: { user_created: { id: { _eq: $userId } } }, limit: 1000) {
+    id
+  }
+  
+  # 使用聚合查询获取总数（带权限过滤）
+  customers_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
+    countAll
+  }
+  products_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
+    countAll
+  }
+  orders_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
+    countAll
+  }
+  categories_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
+    countAll
+  }
+  boutiques_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
+    countAll
+  }
+  
+  # 今日订单（带权限过滤）
+  today_orders: orders(filter: { 
+    date_created: { _gte: $today },
+    user_created: { id: { _eq: $userId } }
+  }) {
+    id
+    status
+  }
+}
+
+# 管理员仪表盘数据（无权限过滤）
+query GetAllDashboardData($today: String) {
   # 直接查询各个表的记录数 - 使用较小的限制以验证数据存在
   customers(limit: 1000) {
     id
@@ -42,7 +88,21 @@ query GetDashboardData($today: String) {
   }
 }
 
-query GetRecentOrders($limit: Int = 5) {
+query GetRecentOrders($limit: Int = 5, $userId: ID) {
+  orders(filter: { user_created: { id: { _eq: $userId } } }, limit: $limit, sort: ["-date_created"]) {
+    id
+    customers_id {
+      id
+      nick_name
+    }
+    total_price
+    status
+    date_created
+  }
+}
+
+# 管理员最近订单（无权限过滤）
+query GetAllRecentOrders($limit: Int = 5) {
   orders(limit: $limit, sort: ["-date_created"]) {
     id
     customers_id {

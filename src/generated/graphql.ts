@@ -3748,10 +3748,17 @@ export type DeleteCategoryMutationVariables = Exact<{
 
 export type DeleteCategoryMutation = { __typename?: 'Mutation', delete_categories_item?: { __typename?: 'delete_one', id: string } | null };
 
-export type GetCustomersQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetCustomersQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['ID']['input']>;
+}>;
 
 
 export type GetCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+
+export type GetAllCustomersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetCustomerByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3784,17 +3791,33 @@ export type DeleteCustomerMutation = { __typename?: 'Mutation', delete_customers
 
 export type GetDashboardDataQueryVariables = Exact<{
   today?: InputMaybe<Scalars['String']['input']>;
+  userId?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
 export type GetDashboardDataQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string }>, products: Array<{ __typename?: 'products', id: string }>, orders: Array<{ __typename?: 'orders', id: string }>, categories: Array<{ __typename?: 'categories', id: string }>, boutiques: Array<{ __typename?: 'boutiques', id: string }>, customers_aggregated: Array<{ __typename?: 'customers_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }>, boutiques_aggregated: Array<{ __typename?: 'boutiques_aggregated', countAll?: number | null }>, today_orders: Array<{ __typename?: 'orders', id: string, status?: string | null }> };
 
+export type GetAllDashboardDataQueryVariables = Exact<{
+  today?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetAllDashboardDataQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string }>, products: Array<{ __typename?: 'products', id: string }>, orders: Array<{ __typename?: 'orders', id: string }>, categories: Array<{ __typename?: 'categories', id: string }>, boutiques: Array<{ __typename?: 'boutiques', id: string }>, customers_aggregated: Array<{ __typename?: 'customers_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }>, boutiques_aggregated: Array<{ __typename?: 'boutiques_aggregated', countAll?: number | null }>, today_orders: Array<{ __typename?: 'orders', id: string, status?: string | null }> };
+
 export type GetRecentOrdersQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
+  userId?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
 export type GetRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null } | null }> };
+
+export type GetAllRecentOrdersQueryVariables = Exact<{
+  limit?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type GetAllRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null } | null }> };
 
 export type GetOrdersQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['ID']['input']>;
@@ -4588,8 +4611,8 @@ export type DeleteCategoryMutationHookResult = ReturnType<typeof useDeleteCatego
 export type DeleteCategoryMutationResult = ApolloReactCommon.MutationResult<DeleteCategoryMutation>;
 export type DeleteCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
 export const GetCustomersDocument = gql`
-    query GetCustomers {
-  customers {
+    query GetCustomers($userId: ID) {
+  customers(filter: {user_created: {id: {_eq: $userId}}}) {
     id
     nick_name
     open_id
@@ -4628,6 +4651,7 @@ export const GetCustomersDocument = gql`
  * @example
  * const { data, loading, error } = useGetCustomersQuery({
  *   variables: {
+ *      userId: // value for 'userId'
  *   },
  * });
  */
@@ -4647,6 +4671,66 @@ export type GetCustomersQueryHookResult = ReturnType<typeof useGetCustomersQuery
 export type GetCustomersLazyQueryHookResult = ReturnType<typeof useGetCustomersLazyQuery>;
 export type GetCustomersSuspenseQueryHookResult = ReturnType<typeof useGetCustomersSuspenseQuery>;
 export type GetCustomersQueryResult = ApolloReactCommon.QueryResult<GetCustomersQuery, GetCustomersQueryVariables>;
+export const GetAllCustomersDocument = gql`
+    query GetAllCustomers {
+  customers {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    user_updated {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetAllCustomersQuery__
+ *
+ * To run a query within a React component, call `useGetAllCustomersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllCustomersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllCustomersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllCustomersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllCustomersQuery, GetAllCustomersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAllCustomersQuery, GetAllCustomersQueryVariables>(GetAllCustomersDocument, options);
+      }
+export function useGetAllCustomersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllCustomersQuery, GetAllCustomersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAllCustomersQuery, GetAllCustomersQueryVariables>(GetAllCustomersDocument, options);
+        }
+export function useGetAllCustomersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllCustomersQuery, GetAllCustomersQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAllCustomersQuery, GetAllCustomersQueryVariables>(GetAllCustomersDocument, options);
+        }
+export type GetAllCustomersQueryHookResult = ReturnType<typeof useGetAllCustomersQuery>;
+export type GetAllCustomersLazyQueryHookResult = ReturnType<typeof useGetAllCustomersLazyQuery>;
+export type GetAllCustomersSuspenseQueryHookResult = ReturnType<typeof useGetAllCustomersSuspenseQuery>;
+export type GetAllCustomersQueryResult = ApolloReactCommon.QueryResult<GetAllCustomersQuery, GetAllCustomersQueryVariables>;
 export const GetCustomerByIdDocument = gql`
     query GetCustomerById($id: ID!) {
   customers_by_id(id: $id) {
@@ -4827,7 +4911,81 @@ export type DeleteCustomerMutationHookResult = ReturnType<typeof useDeleteCustom
 export type DeleteCustomerMutationResult = ApolloReactCommon.MutationResult<DeleteCustomerMutation>;
 export type DeleteCustomerMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteCustomerMutation, DeleteCustomerMutationVariables>;
 export const GetDashboardDataDocument = gql`
-    query GetDashboardData($today: String) {
+    query GetDashboardData($today: String, $userId: ID) {
+  customers(filter: {user_created: {id: {_eq: $userId}}}, limit: 1000) {
+    id
+  }
+  products(filter: {user_created: {id: {_eq: $userId}}}, limit: 1000) {
+    id
+  }
+  orders(filter: {user_created: {id: {_eq: $userId}}}, limit: 1000) {
+    id
+  }
+  categories(filter: {user_created: {id: {_eq: $userId}}}, limit: 1000) {
+    id
+  }
+  boutiques(filter: {user_created: {id: {_eq: $userId}}}, limit: 1000) {
+    id
+  }
+  customers_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
+    countAll
+  }
+  products_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
+    countAll
+  }
+  orders_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
+    countAll
+  }
+  categories_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
+    countAll
+  }
+  boutiques_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
+    countAll
+  }
+  today_orders: orders(
+    filter: {date_created: {_gte: $today}, user_created: {id: {_eq: $userId}}}
+  ) {
+    id
+    status
+  }
+}
+    `;
+
+/**
+ * __useGetDashboardDataQuery__
+ *
+ * To run a query within a React component, call `useGetDashboardDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetDashboardDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetDashboardDataQuery({
+ *   variables: {
+ *      today: // value for 'today'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetDashboardDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetDashboardDataQuery, GetDashboardDataQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetDashboardDataQuery, GetDashboardDataQueryVariables>(GetDashboardDataDocument, options);
+      }
+export function useGetDashboardDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetDashboardDataQuery, GetDashboardDataQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetDashboardDataQuery, GetDashboardDataQueryVariables>(GetDashboardDataDocument, options);
+        }
+export function useGetDashboardDataSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetDashboardDataQuery, GetDashboardDataQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetDashboardDataQuery, GetDashboardDataQueryVariables>(GetDashboardDataDocument, options);
+        }
+export type GetDashboardDataQueryHookResult = ReturnType<typeof useGetDashboardDataQuery>;
+export type GetDashboardDataLazyQueryHookResult = ReturnType<typeof useGetDashboardDataLazyQuery>;
+export type GetDashboardDataSuspenseQueryHookResult = ReturnType<typeof useGetDashboardDataSuspenseQuery>;
+export type GetDashboardDataQueryResult = ApolloReactCommon.QueryResult<GetDashboardDataQuery, GetDashboardDataQueryVariables>;
+export const GetAllDashboardDataDocument = gql`
+    query GetAllDashboardData($today: String) {
   customers(limit: 1000) {
     id
   }
@@ -4866,40 +5024,44 @@ export const GetDashboardDataDocument = gql`
     `;
 
 /**
- * __useGetDashboardDataQuery__
+ * __useGetAllDashboardDataQuery__
  *
- * To run a query within a React component, call `useGetDashboardDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetDashboardDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useGetAllDashboardDataQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllDashboardDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetDashboardDataQuery({
+ * const { data, loading, error } = useGetAllDashboardDataQuery({
  *   variables: {
  *      today: // value for 'today'
  *   },
  * });
  */
-export function useGetDashboardDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetDashboardDataQuery, GetDashboardDataQueryVariables>) {
+export function useGetAllDashboardDataQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllDashboardDataQuery, GetAllDashboardDataQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetDashboardDataQuery, GetDashboardDataQueryVariables>(GetDashboardDataDocument, options);
+        return ApolloReactHooks.useQuery<GetAllDashboardDataQuery, GetAllDashboardDataQueryVariables>(GetAllDashboardDataDocument, options);
       }
-export function useGetDashboardDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetDashboardDataQuery, GetDashboardDataQueryVariables>) {
+export function useGetAllDashboardDataLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllDashboardDataQuery, GetAllDashboardDataQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetDashboardDataQuery, GetDashboardDataQueryVariables>(GetDashboardDataDocument, options);
+          return ApolloReactHooks.useLazyQuery<GetAllDashboardDataQuery, GetAllDashboardDataQueryVariables>(GetAllDashboardDataDocument, options);
         }
-export function useGetDashboardDataSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetDashboardDataQuery, GetDashboardDataQueryVariables>) {
+export function useGetAllDashboardDataSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllDashboardDataQuery, GetAllDashboardDataQueryVariables>) {
           const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetDashboardDataQuery, GetDashboardDataQueryVariables>(GetDashboardDataDocument, options);
+          return ApolloReactHooks.useSuspenseQuery<GetAllDashboardDataQuery, GetAllDashboardDataQueryVariables>(GetAllDashboardDataDocument, options);
         }
-export type GetDashboardDataQueryHookResult = ReturnType<typeof useGetDashboardDataQuery>;
-export type GetDashboardDataLazyQueryHookResult = ReturnType<typeof useGetDashboardDataLazyQuery>;
-export type GetDashboardDataSuspenseQueryHookResult = ReturnType<typeof useGetDashboardDataSuspenseQuery>;
-export type GetDashboardDataQueryResult = ApolloReactCommon.QueryResult<GetDashboardDataQuery, GetDashboardDataQueryVariables>;
+export type GetAllDashboardDataQueryHookResult = ReturnType<typeof useGetAllDashboardDataQuery>;
+export type GetAllDashboardDataLazyQueryHookResult = ReturnType<typeof useGetAllDashboardDataLazyQuery>;
+export type GetAllDashboardDataSuspenseQueryHookResult = ReturnType<typeof useGetAllDashboardDataSuspenseQuery>;
+export type GetAllDashboardDataQueryResult = ApolloReactCommon.QueryResult<GetAllDashboardDataQuery, GetAllDashboardDataQueryVariables>;
 export const GetRecentOrdersDocument = gql`
-    query GetRecentOrders($limit: Int = 5) {
-  orders(limit: $limit, sort: ["-date_created"]) {
+    query GetRecentOrders($limit: Int = 5, $userId: ID) {
+  orders(
+    filter: {user_created: {id: {_eq: $userId}}}
+    limit: $limit
+    sort: ["-date_created"]
+  ) {
     id
     customers_id {
       id
@@ -4925,6 +5087,7 @@ export const GetRecentOrdersDocument = gql`
  * const { data, loading, error } = useGetRecentOrdersQuery({
  *   variables: {
  *      limit: // value for 'limit'
+ *      userId: // value for 'userId'
  *   },
  * });
  */
@@ -4944,6 +5107,53 @@ export type GetRecentOrdersQueryHookResult = ReturnType<typeof useGetRecentOrder
 export type GetRecentOrdersLazyQueryHookResult = ReturnType<typeof useGetRecentOrdersLazyQuery>;
 export type GetRecentOrdersSuspenseQueryHookResult = ReturnType<typeof useGetRecentOrdersSuspenseQuery>;
 export type GetRecentOrdersQueryResult = ApolloReactCommon.QueryResult<GetRecentOrdersQuery, GetRecentOrdersQueryVariables>;
+export const GetAllRecentOrdersDocument = gql`
+    query GetAllRecentOrders($limit: Int = 5) {
+  orders(limit: $limit, sort: ["-date_created"]) {
+    id
+    customers_id {
+      id
+      nick_name
+    }
+    total_price
+    status
+    date_created
+  }
+}
+    `;
+
+/**
+ * __useGetAllRecentOrdersQuery__
+ *
+ * To run a query within a React component, call `useGetAllRecentOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllRecentOrdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllRecentOrdersQuery({
+ *   variables: {
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useGetAllRecentOrdersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllRecentOrdersQuery, GetAllRecentOrdersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAllRecentOrdersQuery, GetAllRecentOrdersQueryVariables>(GetAllRecentOrdersDocument, options);
+      }
+export function useGetAllRecentOrdersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllRecentOrdersQuery, GetAllRecentOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAllRecentOrdersQuery, GetAllRecentOrdersQueryVariables>(GetAllRecentOrdersDocument, options);
+        }
+export function useGetAllRecentOrdersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllRecentOrdersQuery, GetAllRecentOrdersQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAllRecentOrdersQuery, GetAllRecentOrdersQueryVariables>(GetAllRecentOrdersDocument, options);
+        }
+export type GetAllRecentOrdersQueryHookResult = ReturnType<typeof useGetAllRecentOrdersQuery>;
+export type GetAllRecentOrdersLazyQueryHookResult = ReturnType<typeof useGetAllRecentOrdersLazyQuery>;
+export type GetAllRecentOrdersSuspenseQueryHookResult = ReturnType<typeof useGetAllRecentOrdersSuspenseQuery>;
+export type GetAllRecentOrdersQueryResult = ApolloReactCommon.QueryResult<GetAllRecentOrdersQuery, GetAllRecentOrdersQueryVariables>;
 export const GetOrdersDocument = gql`
     query GetOrders($userId: ID) {
   orders(filter: {user_created: {id: {_eq: $userId}}}) {

@@ -1,7 +1,35 @@
 # 客户相关的GraphQL操作
 
-# 查询所有客户
-query GetCustomers {
+# 查询所有客户（带权限过滤）
+query GetCustomers($userId: ID) {
+  customers(filter: { user_created: { id: { _eq: $userId } } }) {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    user_updated {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+
+# 查询所有客户（管理员用，无权限过滤）
+query GetAllCustomers {
   customers {
     id
     nick_name

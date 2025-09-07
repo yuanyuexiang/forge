@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography, Spin, Button, Alert } from 'antd';
 import { useRouter } from 'next/navigation';
 import { 
@@ -19,6 +19,7 @@ import {
   useGetDashboardDataQuery,
   useGetRecentOrdersQuery
 } from '../../generated/graphql';
+import { TokenManager } from '@lib/auth';
 
 const { Title } = Typography;
 
@@ -59,11 +60,23 @@ function DashboardContent() {
   // 获取今日日期（格式：YYYY-MM-DD）
   const today = new Date().toISOString().split('T')[0];
   
-  // 使用 GraphQL hooks 获取仪表板数据
+  // 获取当前用户 ID
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const currentUserId = TokenManager.getCurrentUserId();
+    setUserId(currentUserId);
+  }, []);
+  
+  // 使用带权限过滤的 GraphQL hooks 获取仪表板数据
   const { data: dashboardData, loading: dashboardLoading, error: dashboardError } = useGetDashboardDataQuery({
-    variables: { today }
+    variables: userId ? { today, userId } : undefined,
+    skip: !userId
   });
-  const { data: ordersData, loading: ordersLoading } = useGetRecentOrdersQuery({ variables: { limit: 3 } });
+  const { data: ordersData, loading: ordersLoading } = useGetRecentOrdersQuery({ 
+    variables: userId ? { limit: 3, userId } : undefined,
+    skip: !userId
+  });
 
   const loading = dashboardLoading || ordersLoading;
 

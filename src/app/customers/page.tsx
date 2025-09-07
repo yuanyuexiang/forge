@@ -31,6 +31,7 @@ import {
   GetCustomersQuery
 } from '../../generated/graphql';
 import { ProtectedRoute, AdminLayout } from '@components';
+import { TokenManager } from '@lib/auth';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -39,12 +40,24 @@ const { Search } = Input;
 type Customer = GetCustomersQuery['customers'][0];
 
 function CustomersContent() {
-  // 使用 GraphQL hooks 获取客户数据
-  const { data, loading, error, refetch } = useGetCustomersQuery();
   const [selectedUser, setSelectedUser] = useState<Customer | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState<Customer[]>([]);
   const [searchText, setSearchText] = useState<string>('');
+
+  // 获取当前用户 ID
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const currentUserId = TokenManager.getCurrentUserId();
+    setUserId(currentUserId);
+  }, []);
+
+  // 使用带权限过滤的 GraphQL 查询
+  const { data, loading, error, refetch } = useGetCustomersQuery({
+    variables: userId ? { userId } : undefined,
+    skip: !userId
+  });
 
   // 使用useMemo来避免不必要的重新计算
   const users = useMemo(() => data?.customers || [], [data?.customers]);
