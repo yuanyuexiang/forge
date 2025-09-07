@@ -305,7 +305,7 @@ function BoutiqueEditContent() {
         name: values.name,
         address: values.address,
         stars: values.stars || 0,
-        status: values.status || 'draft',
+        status: values.status || 'open',
         sort: values.sort || 0,
         main_image: values.main_image || null,
         images: values.images && values.images.length > 0 ? values.images : null,
@@ -514,7 +514,7 @@ function BoutiqueEditContent() {
               <Form.Item
                 label="店铺状态"
                 name="status"
-                initialValue="draft"
+                initialValue="open"
                 rules={[{ required: true, message: '请选择店铺状态' }]}
               >
                 <Select placeholder="请选择店铺状态" size="large">

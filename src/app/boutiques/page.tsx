@@ -316,9 +316,8 @@ function BoutiquesContent() {
         );
       },
       filters: [
-        { text: '草稿', value: 'draft' },
-        { text: '已发布', value: 'published' },
-        { text: '已归档', value: 'archived' }
+        { text: '已开放', value: 'open' },
+        { text: '已关闭', value: 'closed' },
       ],
       onFilter: (value: any, record: Boutique) => record.status === value,
     },
