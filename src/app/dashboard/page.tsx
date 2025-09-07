@@ -162,39 +162,6 @@ function DashboardContent() {
         </p>
       </div>
       
-      {/* 数据状态指示器 */}
-      {!isLoading && !hasAnyData && (
-        <Alert
-          message="数据状态提醒"
-          description={
-            <div>
-              <p>当前显示的统计数据为 0，可能的原因：</p>
-              <ul style={{ marginLeft: '20px', marginTop: '8px' }}>
-                <li>后端数据库中暂无数据</li>
-                <li>GraphQL 查询未正确返回数据</li>
-                <li><strong>认证token已过期，需要重新登录</strong></li>
-              </ul>
-              <p style={{ marginTop: '8px', marginBottom: '12px' }}>请检查浏览器控制台的详细错误信息。</p>
-              <div>
-                <Button 
-                  type="primary" 
-                  onClick={() => router.push('/login')}
-                  style={{ marginRight: '8px' }}
-                >
-                  重新登录
-                </Button>
-                <Button onClick={() => window.location.reload()}>
-                  刷新页面
-                </Button>
-              </div>
-            </div>
-          }
-          type="warning"
-          showIcon
-          style={{ marginBottom: 24 }}
-        />
-      )}
-      
       {isLoading && (
         <Alert
           message="正在加载数据..."
