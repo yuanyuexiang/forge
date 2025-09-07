@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react';
-import { useRealtimeSubscription } from './useSubscription';
+import { useState, useEffect, useCallback } from 'react';
 import { 
   useProductSubscriptionSubscription,
   useOrderSubscriptionSubscription,
@@ -9,53 +8,80 @@ import {
   EventEnum
 } from '@generated/graphql';
 import { TokenManager } from '@lib/auth/token-manager';
-import { message } from 'antd';
+import { apiLogger } from '@lib/utils/logger';
 
-interface UseRealtimeUpdatesOptions {
+export interface UseRealtimeUpdatesOptions {
   enableProducts?: boolean;
   enableOrders?: boolean;
   enableCategories?: boolean;
   enableCustomers?: boolean;
   enableBoutiques?: boolean;
-  onProductUpdate?: (data: any) => void;
-  onOrderUpdate?: (data: any) => void;
-  onCategoryUpdate?: (data: any) => void;
-  onCustomerUpdate?: (data: any) => void;
-  onBoutiqueUpdate?: (data: any) => void;
 }
 
 /**
- * 统一的实时更新管理 Hook
- * 自动处理权限过滤和用户身份验证
+ * 真正的实时更新管理 Hook
+ * 连接到 Directus WebSocket Subscription
  */
 export function useRealtimeUpdates(options: UseRealtimeUpdatesOptions = {}) {
   const {
-    enableProducts = true,
-    enableOrders = true,
-    enableCategories = true,
-    enableCustomers = true,
-    enableBoutiques = true,
-    onProductUpdate,
-    onOrderUpdate,
-    onCategoryUpdate,
-    onCustomerUpdate,
-    onBoutiqueUpdate
+    enableProducts = false,
+    enableOrders = false,
+    enableCategories = false,
+    enableCustomers = false,
+    enableBoutiques = false
   } = options;
 
-  const [userId, setUserId] = useState<string | null>(null);
   const [connectionStatus, setConnectionStatus] = useState<'disconnected' | 'connecting' | 'connected'>('disconnected');
   const [lastProductUpdate, setLastProductUpdate] = useState<any>(null);
   const [lastOrderUpdate, setLastOrderUpdate] = useState<any>(null);
-  const [lastCategoryUpdate, setLastCategoryUpdate] = useState<any>(null);
   const [lastCustomerUpdate, setLastCustomerUpdate] = useState<any>(null);
+  const [lastCategoryUpdate, setLastCategoryUpdate] = useState<any>(null);
   const [lastBoutiqueUpdate, setLastBoutiqueUpdate] = useState<any>(null);
 
-  const [data, setData] = useState({
-    products: null,
-    orders: null,
-    categories: null,
-    customers: null,
-    boutiques: null
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const currentUserId = TokenManager.getCurrentUserId();
+    setUserId(currentUserId);
+    apiLogger.info('当前用户 ID:', currentUserId);
+  }, []);
+
+  // 过滤数据是否属于当前用户
+  const filterUserData = useCallback((data: any) => {
+    if (!userId || !data?.data?.user_created?.id) {
+      apiLogger.warn('无法过滤用户数据:', { userId, data });
+      return false;
+    }
+    const belongsToUser = data.data.user_created.id === userId;
+    apiLogger.info('数据用户过滤:', { belongsToUser, currentUserId: userId, dataUserId: data.data.user_created.id });
+    return belongsToUser;
+  }, [userId]);
+
+  // 产品订阅
+  const { data: productData, loading: productLoading, error: productError } = useProductSubscriptionSubscription({
+    variables: { event: EventEnum.Update },
+    skip: !enableProducts || !userId,
+    onSubscriptionData: ({ subscriptionData }) => {
+      apiLogger.info('收到产品订阅数据:', subscriptionData);
+      if (subscriptionData.data?.products_mutated) {
+        const mutationData = subscriptionData.data.products_mutated;
+        
+        if (filterUserData(mutationData)) {
+          setLastProductUpdate(mutationData);
+          apiLogger.info('产品数据已更新 - 当前用户:', mutationData);
+        } else {
+          apiLogger.info('产品数据更新 - 非当前用户，已忽略');
+        }
+      }
+    },
+    onSubscriptionComplete: () => {
+      apiLogger.info('产品订阅完成');
+      setConnectionStatus('disconnected');
+    },
+    onError: (error) => {
+      apiLogger.error('产品订阅错误:', error);
+      setConnectionStatus('disconnected');
+    }
   });
 
   const [userId, setUserId] = useState<string | null>(null);

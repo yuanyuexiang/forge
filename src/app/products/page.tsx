@@ -30,7 +30,7 @@ import {
 } from '@generated/graphql';
 import { FILE_CONFIG } from '@lib/api';
 import { TokenManager } from '@lib/auth';
-import { useProductUpdates } from '@/hooks/useRealtimeUpdates-simple';
+import { useProductUpdates } from '@/hooks/useHybridRealtimeUpdates';
 import RealtimeStatus from '@/components/RealtimeStatus';
 
 const { Search } = Input;
@@ -99,7 +99,7 @@ function ProductsContent() {
   });
 
   // 启用产品实时更新
-  const { connectionStatus, isConnected } = useProductUpdates();
+  const { connectionStatus, isConnected, updateMethod } = useProductUpdates();
   
   // 从 URL 参数恢复状态
   useEffect(() => {
