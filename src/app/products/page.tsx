@@ -30,8 +30,6 @@ import {
 } from '@generated/graphql';
 import { FILE_CONFIG } from '@lib/api';
 import { TokenManager } from '@lib/auth';
-import { useProductUpdates } from '@/hooks/useRealtimeUpdates-simple';
-import RealtimeStatus from '@/components/RealtimeStatus';
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -97,9 +95,6 @@ function ProductsContent() {
     variables: userId ? { userId } : undefined,
     skip: !userId // 如果没有用户 ID 就跳过查询
   });
-
-  // 启用产品实时更新
-  const { connectionStatus, isConnected } = useProductUpdates();
   
   // 从 URL 参数恢复状态
   useEffect(() => {
@@ -397,7 +392,6 @@ function ProductsContent() {
       <div className="mb-6 flex justify-between items-center">
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>商品管理</Title>
-          <RealtimeStatus connectionStatus={connectionStatus} showLabel />
         </div>
         <Button 
           type="primary" 

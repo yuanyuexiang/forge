@@ -34,9 +34,6 @@ export const DIRECTUS_CONFIG = {
   // 本地代理端点
   LOCAL_GRAPHQL_PROXY: '/api/graphql',
   
-  // WebSocket 端点
-  WEBSOCKET_URL: `${getDirectusUrl().replace('http', 'ws')}/graphql`,
-  
   // 文件上传端点
   FILE_UPLOAD_URL: `${getDirectusUrl()}/files`,
   
@@ -52,14 +49,6 @@ export const DIRECTUS_CONFIG = {
     // 本地开发：代理到 forge.matrix-net.tech
     // 云端部署：代理到本地的 Directus 实例
     return '/api/graphql';
-  },
-
-  // 获取 WebSocket 端点
-  getWebSocketEndpoint: () => {
-    const baseUrl = getDirectusUrl();
-    // 将 http/https 替换为 ws/wss
-    const wsUrl = baseUrl.replace(/^http/, 'ws');
-    return `${wsUrl}/graphql`;
   },
 };
 
