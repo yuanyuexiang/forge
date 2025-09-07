@@ -99,8 +99,8 @@ function OrdersContent() {
     const searchLower = searchText.toLowerCase();
     return (
       order.id.toLowerCase().includes(searchLower) ||
-      order.wechat_user_id?.nickname?.toLowerCase().includes(searchLower) ||
-      order.wechat_user_id?.id?.toString().includes(searchLower) ||
+      order.customers_id?.nick_name?.toLowerCase().includes(searchLower) ||
+      order.customers_id?.id?.toString().includes(searchLower) ||
       order.status?.toLowerCase().includes(searchLower) ||
       order.boutique_id?.name?.toLowerCase().includes(searchLower) ||
       order.boutique_id?.address?.toLowerCase().includes(searchLower)
@@ -177,17 +177,14 @@ function OrdersContent() {
       ),
     },
     {
-      title: '微信用户',
-      key: 'wechat_user',
+      title: '客户',
+      key: 'customer',
       width: 200,
       render: (record: Order) => (
         <div>
-          <div><UserOutlined /> {record.wechat_user_id?.nickname || `用户ID: ${record.wechat_user_id?.id || '未知'}`}</div>
+          <div><UserOutlined /> {record.customers_id?.nick_name || `用户ID: ${record.customers_id?.id || '未知'}`}</div>
           <div style={{ fontSize: '12px', color: '#666' }}>
-            {record.wechat_user_id?.city && record.wechat_user_id?.province 
-              ? `${record.wechat_user_id.province} ${record.wechat_user_id.city}`
-              : '微信端用户'
-            }
+            客户
           </div>
         </div>
       ),
@@ -365,11 +362,11 @@ function OrdersContent() {
                   {selectedOrder.id}
                 </Text>
               </Descriptions.Item>
-              <Descriptions.Item label="微信用户昵称">
-                {selectedOrder.wechat_user_id?.nickname || '未设置昵称'}
+              <Descriptions.Item label="客户昵称">
+                {selectedOrder.customers_id?.nick_name || '未设置昵称'}
               </Descriptions.Item>
-              <Descriptions.Item label="微信用户ID">
-                {selectedOrder.wechat_user_id?.id || '未知用户'}
+              <Descriptions.Item label="客户ID">
+                {selectedOrder.customers_id?.id || '未知用户'}
               </Descriptions.Item>
               <Descriptions.Item label="总金额">
                 <Text strong style={{ color: '#f50' }}>

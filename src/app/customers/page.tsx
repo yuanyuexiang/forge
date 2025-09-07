@@ -27,8 +27,8 @@ import {
   PhoneOutlined
 } from '@ant-design/icons';
 import { 
-  useGetWechatUsersQuery,
-  GetWechatUsersQuery
+  useGetCustomersQuery,
+  GetCustomersQuery
 } from '../../generated/graphql';
 import { ProtectedRoute, AdminLayout } from '@components';
 
@@ -36,40 +36,47 @@ const { Title, Text } = Typography;
 const { Search } = Input;
 
 // 使用生成的类型
-type WechatUser = GetWechatUsersQuery['wechat_users'][0];
+type Customer = GetCustomersQuery['customers'][0];
 
-function UsersContent() {
-  // 使用 GraphQL hooks 获取微信用户数据
-  const { data, loading, error, refetch } = useGetWechatUsersQuery();
-  const [selectedUser, setSelectedUser] = useState<WechatUser | null>(null);
+function CustomersContent() {
+  // 使用 GraphQL hooks 获取客户数据
+  const { data, loading, error, refetch } = useGetCustomersQuery();
+  const [selectedUser, setSelectedUser] = useState<Customer | null>(null);
   const [modalVisible, setModalVisible] = useState(false);
-  const [filteredUsers, setFilteredUsers] = useState<WechatUser[]>([]);
+  const [filteredUsers, setFilteredUsers] = useState<Customer[]>([]);
   const [searchText, setSearchText] = useState<string>('');
 
   // 使用useMemo来避免不必要的重新计算
-  const users = useMemo(() => data?.wechat_users || [], [data?.wechat_users]);
+  const users = useMemo(() => data?.customers || [], [data?.customers]);
 
   // 过滤用户
   useEffect(() => {
-    let filtered = users;
+    let filtered = [...users];
+    
     if (searchText) {
-      filtered = filtered.filter(user =>
-        user.nickname?.toLowerCase().includes(searchText.toLowerCase()) ||
-        user.openid?.toLowerCase().includes(searchText.toLowerCase()) ||
-        user.city?.toLowerCase().includes(searchText.toLowerCase()) ||
-        user.province?.toLowerCase().includes(searchText.toLowerCase())
+      filtered = filtered.filter((user: Customer) =>
+        user.nick_name?.toLowerCase().includes(searchText.toLowerCase()) ||
+        user.open_id?.toLowerCase().includes(searchText.toLowerCase())
       );
     }
+    
     setFilteredUsers(filtered);
   }, [users, searchText]);
 
-  // 错误处理
+  if (loading) {
+    return (
+      <div style={{ padding: 24, textAlign: 'center' }}>
+        <Title level={4}>加载中...</Title>
+      </div>
+    );
+  }
+
   if (error) {
     return (
-      <div style={{ padding: '24px' }}>
+      <div style={{ padding: 24 }}>
         <Alert
           message="加载失败"
-          description={`无法加载微信用户数据: ${error.message}`}
+          description={`无法加载客户数据: ${error.message}`}
           type="error"
           showIcon
         />
@@ -77,7 +84,7 @@ function UsersContent() {
     );
   }
 
-  const showUserDetail = (user: WechatUser) => {
+  const showUserDetail = (user: Customer) => {
     setSelectedUser(user);
     setModalVisible(true);
   };
@@ -91,222 +98,242 @@ function UsersContent() {
     }
   };
 
-  // 获取状态颜色
-  const getStatusColor = (isActive: boolean | null | undefined) => {
-    return isActive ? 'green' : 'red';
-  };
-
-  // 获取状态文本
-  const getStatusText = (isActive: boolean | null | undefined) => {
-    return isActive ? '活跃' : '非活跃';
+  // 获取状态显示文本
+  const getStatusText = (status: string | null | undefined) => {
+    switch (status) {
+      case 'active': return '活跃';
+      case 'inactive': return '不活跃';
+      case 'banned': return '已封禁';
+      default: return '未知';
+    }
   };
 
   const columns = [
     {
-      title: '用户信息',
+      title: '客户信息',
       key: 'userInfo',
-      render: (record: WechatUser) => (
+      render: (record: Customer) => (
         <Space>
           <Avatar 
-            src={record.headimgurl} 
+            src={record.avatar} 
             icon={<UserOutlined />}
             size="large"
           />
           <div>
-            <div>
-              <Text strong>{record.nickname || '未设置昵称'}</Text>
-              <Tag color={getSexText(record.sex) === '男' ? 'blue' : 'pink'} style={{ marginLeft: 8 }}>
-                {getSexText(record.sex)}
-              </Tag>
-            </div>
-            <div style={{ fontSize: '12px', color: '#666' }}>
-              <WechatOutlined /> {record.openid?.substring(0, 16)}...
-            </div>
+            <div style={{ fontWeight: 'bold' }}>{record.nick_name || '未设置昵称'}</div>
+            <div style={{ color: '#999', fontSize: '12px' }}>ID: {record.id}</div>
           </div>
         </Space>
-      )
+      ),
     },
     {
-      title: '地理位置',
-      key: 'location',
-      render: (record: WechatUser) => (
-        <Space direction="vertical" size="small">
-          <div>
-            <EnvironmentOutlined /> {record.province || '未知'} {record.city || ''}
-          </div>
-          <div style={{ fontSize: '12px', color: '#666' }}>
-            {record.country || '中国'}
-          </div>
-        </Space>
-      )
+      title: 'OpenID',
+      dataIndex: 'open_id',
+      key: 'open_id',
+      render: (openId: string) => (
+        <Text code style={{ fontSize: '12px' }}>
+          {openId ? openId.substring(0, 20) + '...' : '未设置'}
+        </Text>
+      ),
+    },
+    {
+      title: '性别',
+      dataIndex: 'sex',
+      key: 'sex',
+      render: (sex: number) => (
+        <Tag color={sex === 1 ? 'blue' : sex === 2 ? 'pink' : 'default'}>
+          {getSexText(sex)}
+        </Tag>
+      ),
     },
     {
       title: '状态',
+      dataIndex: 'status',
       key: 'status',
-      render: (record: WechatUser) => (
-        <Tag color={getStatusColor(record.is_active)}>
-          {getStatusText(record.is_active)}
+      render: (status: string) => (
+        <Tag color={status === 'active' ? 'green' : status === 'banned' ? 'red' : 'default'}>
+          {getStatusText(status)}
         </Tag>
-      )
+      ),
     },
     {
-      title: '注册时间',
-      key: 'created_at',
-      render: (record: WechatUser) => (
-        <Space>
-          <ClockCircleOutlined />
-          <Text>{record.created_at ? new Date(record.created_at).toLocaleDateString() : '未知'}</Text>
-        </Space>
-      )
+      title: '创建时间',
+      dataIndex: 'date_created',
+      key: 'date_created',
+      render: (date: string) => date ? new Date(date).toLocaleDateString() : '-',
     },
     {
       title: '操作',
-      key: 'actions',
-      render: (record: WechatUser) => (
-        <Button
-          type="link"
+      key: 'action',
+      render: (record: Customer) => (
+        <Button 
+          type="link" 
           icon={<EyeOutlined />}
           onClick={() => showUserDetail(record)}
         >
           查看详情
         </Button>
-      )
-    }
+      ),
+    },
   ];
 
-  // 计算统计数据
+  // 统计信息
   const totalUsers = users.length;
-  const activeUsers = users.filter(user => user.is_active).length;
-  const maleUsers = users.filter(user => user.sex === 1).length;
-  const femaleUsers = users.filter(user => user.sex === 2).length;
+  const activeUsers = users.filter((user: Customer) => user.status === 'active').length;
+  const maleUsers = users.filter((user: Customer) => user.sex === 1).length;
+  const femaleUsers = users.filter((user: Customer) => user.sex === 2).length;
 
   return (
-    <div style={{ padding: '24px' }}>
-      <Title level={2}>
-        <WechatOutlined /> 客户管理
-      </Title>
-      
-      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+    <div style={{ padding: 24, backgroundColor: '#f5f5f5', minHeight: '100vh' }}>
+      <div style={{ marginBottom: 24 }}>
+        <Title level={2} style={{ margin: 0 }}>
+          <WechatOutlined style={{ marginRight: 8, color: '#1890ff' }} />
+          客户管理
+        </Title>
+      </div>
+
+      {/* 统计卡片 */}
+      <Row gutter={16} style={{ marginBottom: 24 }}>
         <Col span={6}>
           <Card>
-            <Statistic
-              title="总客户数"
-              value={totalUsers}
+            <Statistic 
+              title="总客户数" 
+              value={totalUsers} 
               prefix={<UserOutlined />}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="活跃客户"
-              value={activeUsers}
-              prefix={<WechatOutlined />}
-              valueStyle={{ color: '#3f8600' }}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="男性客户"
-              value={maleUsers}
               valueStyle={{ color: '#1890ff' }}
             />
           </Card>
         </Col>
         <Col span={6}>
           <Card>
-            <Statistic
-              title="女性客户"
-              value={femaleUsers}
+            <Statistic 
+              title="活跃客户" 
+              value={activeUsers} 
+              prefix={<UserOutlined />}
+              valueStyle={{ color: '#52c41a' }}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic 
+              title="男性客户" 
+              value={maleUsers} 
+              valueStyle={{ color: '#1890ff' }}
+            />
+          </Card>
+        </Col>
+        <Col span={6}>
+          <Card>
+            <Statistic 
+              title="女性客户" 
+              value={femaleUsers} 
               valueStyle={{ color: '#eb2f96' }}
             />
           </Card>
         </Col>
       </Row>
 
-      <Card>
-        <Space style={{ marginBottom: 16 }}>
-          <Search
-            placeholder="搜索客户（昵称、OpenID、城市）"
-            allowClear
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: 300 }}
-          />
-          <Button onClick={() => refetch()}>刷新</Button>
-        </Space>
+      {/* 搜索框 */}
+      <Card style={{ marginBottom: 24 }}>
+        <Row gutter={16} align="middle">
+          <Col span={8}>
+            <Search
+              placeholder="搜索客户昵称或OpenID"
+              allowClear
+              onSearch={setSearchText}
+              onChange={(e) => setSearchText(e.target.value)}
+              style={{ width: '100%' }}
+            />
+          </Col>
+          <Col span={16}>
+            <Space>
+              <Button onClick={() => refetch()}>刷新数据</Button>
+              <Text type="secondary">
+                共找到 {filteredUsers.length} 个客户
+              </Text>
+            </Space>
+          </Col>
+        </Row>
+      </Card>
 
+      {/* 用户表格 */}
+      <Card>
         <Table
           columns={columns}
           dataSource={filteredUsers}
           rowKey="id"
           loading={loading}
           pagination={{
-            pageSize: 10,
             showSizeChanger: true,
             showQuickJumper: true,
-            showTotal: (total) => `共 ${total} 条客户记录`,
+            showTotal: (total) => `共 ${total} 条记录`,
+            size: 'small',
           }}
+          size="middle"
         />
       </Card>
 
+      {/* 用户详情模态框 */}
       <Modal
         title="客户详情"
         open={modalVisible}
         onCancel={() => setModalVisible(false)}
-        footer={null}
-        width={700}
+        footer={[
+          <Button key="close" onClick={() => setModalVisible(false)}>
+            关闭
+          </Button>
+        ]}
+        width={600}
       >
         {selectedUser && (
           <div>
             <div style={{ textAlign: 'center', marginBottom: 24 }}>
               <Avatar 
-                src={selectedUser.headimgurl} 
+                src={selectedUser.avatar} 
                 icon={<UserOutlined />}
                 size={80}
+                style={{ marginBottom: 16 }}
               />
-              <div style={{ marginTop: 8 }}>
-                <Title level={4}>{selectedUser.nickname || '未设置昵称'}</Title>
-                <Tag color={getStatusColor(selectedUser.is_active)}>
-                  {getStatusText(selectedUser.is_active)}
-                </Tag>
-              </div>
+              <Title level={4} style={{ margin: 0 }}>
+                {selectedUser.nick_name || '未设置昵称'}
+              </Title>
             </div>
             
-            <Descriptions bordered column={2}>
-              <Descriptions.Item label="用户ID">{selectedUser.id}</Descriptions.Item>
-              <Descriptions.Item label="昵称">{selectedUser.nickname || '未设置'}</Descriptions.Item>
-              <Descriptions.Item label="OpenID" span={2}>
-                <Text code copyable={{ text: selectedUser.openid || '' }}>
-                  {selectedUser.openid || '未知'}
+            <Descriptions column={2} bordered size="small">
+              <Descriptions.Item label="客户ID">
+                {selectedUser.id}
+              </Descriptions.Item>
+              <Descriptions.Item label="昵称">
+                {selectedUser.nick_name || '未设置'}
+              </Descriptions.Item>
+              <Descriptions.Item label="OpenID">
+                <Text code style={{ fontSize: '12px' }}>
+                  {selectedUser.open_id || '未设置'}
                 </Text>
               </Descriptions.Item>
-              <Descriptions.Item label="UnionID" span={2}>
-                <Text code copyable={{ text: selectedUser.unionid || '' }}>
-                  {selectedUser.unionid || '未设置'}
-                </Text>
-              </Descriptions.Item>
-              <Descriptions.Item label="性别">{getSexText(selectedUser.sex)}</Descriptions.Item>
-              <Descriptions.Item label="语言">{selectedUser.language || '未知'}</Descriptions.Item>
-              <Descriptions.Item label="国家">{selectedUser.country || '未知'}</Descriptions.Item>
-              <Descriptions.Item label="省份">{selectedUser.province || '未知'}</Descriptions.Item>
-              <Descriptions.Item label="城市">{selectedUser.city || '未知'}</Descriptions.Item>
-              <Descriptions.Item label="状态">
-                <Tag color={getStatusColor(selectedUser.is_active)}>
-                  {getStatusText(selectedUser.is_active)}
+              <Descriptions.Item label="性别">
+                <Tag color={selectedUser.sex === 1 ? 'blue' : selectedUser.sex === 2 ? 'pink' : 'default'}>
+                  {getSexText(selectedUser.sex)}
                 </Tag>
               </Descriptions.Item>
-              <Descriptions.Item label="权限范围">{selectedUser.scope || '基础权限'}</Descriptions.Item>
-              <Descriptions.Item label="特权信息">{selectedUser.privilege || '无特权'}</Descriptions.Item>
-              <Descriptions.Item label="注册时间">{selectedUser.created_at ? new Date(selectedUser.created_at).toLocaleString() : '未知'}</Descriptions.Item>
-              <Descriptions.Item label="最后更新">{selectedUser.updated_at ? new Date(selectedUser.updated_at).toLocaleString() : '未知'}</Descriptions.Item>
-              {selectedUser.boutique_id && (
-                <>
-                  <Descriptions.Item label="关联店铺ID">{selectedUser.boutique_id.id}</Descriptions.Item>
-                  <Descriptions.Item label="关联店铺名称">{selectedUser.boutique_id.name}</Descriptions.Item>
-                </>
-              )}
+              <Descriptions.Item label="状态">
+                <Tag color={selectedUser.status === 'active' ? 'green' : selectedUser.status === 'banned' ? 'red' : 'default'}>
+                  {getStatusText(selectedUser.status)}
+                </Tag>
+              </Descriptions.Item>
+              <Descriptions.Item label="类型">
+                {selectedUser.type || '未设置'}
+              </Descriptions.Item>
+              <Descriptions.Item label="排序">
+                {selectedUser.sort || 0}
+              </Descriptions.Item>
+              <Descriptions.Item label="创建时间">
+                {selectedUser.date_created ? new Date(selectedUser.date_created).toLocaleString() : '未知'}
+              </Descriptions.Item>
+              <Descriptions.Item label="更新时间">
+                {selectedUser.date_updated ? new Date(selectedUser.date_updated).toLocaleString() : '未知'}
+              </Descriptions.Item>
             </Descriptions>
           </div>
         )}
@@ -315,11 +342,11 @@ function UsersContent() {
   );
 }
 
-export default function UsersPage() {
+export default function CustomersPage() {
   return (
     <ProtectedRoute>
       <AdminLayout>
-        <UsersContent />
+        <CustomersContent />
       </AdminLayout>
     </ProtectedRoute>
   );

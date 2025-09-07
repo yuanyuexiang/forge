@@ -4,13 +4,12 @@
 query GetOrders($userId: ID) {
   orders(filter: { user_created: { id: { _eq: $userId } } }) {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
-      openid
-      headimgurl
-      city
-      province
+      nick_name
+      open_id
+      avatar
+      sex
     }
     boutique_id {
       id
@@ -34,13 +33,12 @@ query GetOrders($userId: ID) {
 query GetAllOrders {
   orders {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
-      openid
-      headimgurl
-      city
-      province
+      nick_name
+      open_id
+      avatar
+      sex
     }
     boutique_id {
       id
@@ -64,13 +62,12 @@ query GetAllOrders {
 query GetOrderById($id: ID!) {
   orders_by_id(id: $id) {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
-      openid
-      headimgurl
-      city
-      province
+      nick_name
+      open_id
+      avatar
+      sex
     }
     boutique_id {
       id
@@ -105,9 +102,9 @@ query GetOrderItems($orderId: GraphQLStringOrFloat!) {
 mutation CreateOrder($data: create_orders_input!) {
   create_orders_item(data: $data) {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
+      nick_name
     }
     boutique_id {
       id
@@ -125,9 +122,9 @@ mutation CreateOrder($data: create_orders_input!) {
 mutation UpdateOrder($id: ID!, $data: update_orders_input!) {
   update_orders_item(id: $id, data: $data) {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
+      nick_name
     }
     boutique_id {
       id

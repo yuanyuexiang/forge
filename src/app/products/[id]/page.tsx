@@ -196,7 +196,7 @@ function ProductEditContent() {
       // 初始化商品图片
       if (foundProduct.images && Array.isArray(foundProduct.images)) {
         const imagesList = foundProduct.images.map((imageId: string, index: number) => ({
-          uid: imageId,
+          uid: `${imageId}-${index}`,
           name: `图片${index + 1}`,
           status: 'done',
           url: getImageUrl(imageId),
@@ -298,7 +298,7 @@ function ProductEditContent() {
 
       // 更新图片列表
       const newImageList = [...imageList, {
-        uid: fileId,
+        uid: `${fileId}-${imageList.length}`,
         name: file.name,
         status: 'done',
         url: getImageUrl(fileId),
@@ -309,8 +309,12 @@ function ProductEditContent() {
       }];
       setImageList(newImageList);
 
-      // 更新表单值
-      const imageIds = newImageList.map(img => img.uid);
+      // 更新表单值 - 从uid中提取真实的imageId
+      const imageIds = newImageList.map(img => {
+        const uid = img.uid;
+        // 如果uid包含'-'，则提取imageId部分，否则直接使用uid
+        return uid.includes('-') ? uid.split('-')[0] : uid;
+      });
       form.setFieldValue('images', imageIds);
 
       message.success('图片上传成功');
@@ -331,7 +335,12 @@ function ProductEditContent() {
     } else {
       const newImageList = imageList.filter(item => item.uid !== file.uid);
       setImageList(newImageList);
-      const imageIds = newImageList.map(img => img.uid);
+      // 从uid中提取真实的imageId (格式: imageId-index)
+      const imageIds = newImageList.map(img => {
+        const uid = img.uid;
+        // 如果uid包含'-'，则提取imageId部分，否则直接使用uid
+        return uid.includes('-') ? uid.split('-')[0] : uid;
+      });
       form.setFieldValue('images', imageIds);
     }
   }, [form, imageList]);
@@ -348,7 +357,9 @@ function ProductEditContent() {
 
   // 预览处理 - 使用原图
   const handlePreview = useCallback((file: any) => {
-    const originalUrl = file.preview?.src || getOriginalImageUrl(file.uid);
+    // 从uid中提取真实的imageId
+    const imageId = file.uid.includes('-') ? file.uid.split('-')[0] : file.uid;
+    const originalUrl = file.preview?.src || getOriginalImageUrl(imageId);
     window.open(originalUrl, '_blank');
   }, [getOriginalImageUrl]);
 

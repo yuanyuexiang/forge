@@ -1,0 +1,96 @@
+# 客户相关的GraphQL操作
+
+# 查询所有客户
+query GetCustomers {
+  customers {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    user_updated {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+
+# 根据ID查询客户
+query GetCustomerById($id: ID!) {
+  customers_by_id(id: $id) {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    user_updated {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+
+# 创建客户
+mutation CreateCustomer($data: create_customers_input!) {
+  create_customers_item(data: $data) {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+  }
+}
+
+# 更新客户
+mutation UpdateCustomer($id: ID!, $data: update_customers_input!) {
+  update_customers_item(id: $id, data: $data) {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+  }
+}
+
+# 删除客户
+mutation DeleteCustomer($id: ID!) {
+  delete_customers_item(id: $id) {
+    id
+  }
+}

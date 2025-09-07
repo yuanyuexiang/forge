@@ -71,7 +71,7 @@ function DashboardContent() {
   const statsData = {
     totalOrders: dashboardData?.orders_aggregated?.[0]?.countAll || dashboardData?.orders?.length || 0,
     totalProducts: dashboardData?.products_aggregated?.[0]?.countAll || dashboardData?.products?.length || 0,
-    totalUsers: dashboardData?.wechat_users_aggregated?.[0]?.countAll || dashboardData?.wechat_users?.length || 0,
+    totalUsers: dashboardData?.customers_aggregated?.[0]?.countAll || dashboardData?.customers?.length || 0,
     totalCategories: dashboardData?.categories_aggregated?.[0]?.countAll || dashboardData?.categories?.length || 0,
     totalBoutiques: dashboardData?.boutiques_aggregated?.[0]?.countAll || dashboardData?.boutiques?.length || 0,
     todayOrders: dashboardData?.today_orders?.length || 0
@@ -83,7 +83,7 @@ function DashboardContent() {
   console.log('Dashboard loading:', dashboardLoading);
   console.log('Dashboard error:', dashboardError);
   console.log('Orders data:', ordersData);
-  console.log('WeChat users aggregated:', dashboardData?.wechat_users_aggregated);
+  console.log('Customers aggregated:', dashboardData?.customers_aggregated);
   console.log('Products aggregated:', dashboardData?.products_aggregated);
   console.log('Orders aggregated:', dashboardData?.orders_aggregated);
   console.log('Categories aggregated:', dashboardData?.categories_aggregated);
@@ -404,7 +404,7 @@ function DashboardContent() {
                 <div key={order.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
                   <div>
                     <div className="font-medium">#{order.id.substring(0, 8)}</div>
-                    <div className="text-sm text-gray-500">{order.wechat_user_id?.nickname || '未知用户'}</div>
+                    <div className="text-sm text-gray-500">{order.customers_id?.nick_name || '未知用户'}</div>
                   </div>
                   <div className="text-right">
                     <div className="font-medium">¥{order.total_price?.toFixed(2)}</div>

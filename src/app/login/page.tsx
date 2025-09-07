@@ -17,6 +17,7 @@ interface LoginFormValues {
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [testLoading, setTestLoading] = useState(false);
+  const [form] = Form.useForm(); // 添加Form实例
   const router = useRouter();
   const { login } = useAuth();
 
@@ -52,23 +53,13 @@ export default function LoginPage() {
     try {
       console.log('填入测试凭据到表单...');
       
-      // 获取表单实例并设置值
-      const form = document.querySelector('form');
-      if (form) {
-        const emailInput = form.querySelector('input[type="email"]') as HTMLInputElement;
-        const passwordInput = form.querySelector('input[type="password"]') as HTMLInputElement;
-        
-        if (emailInput && passwordInput) {
-          emailInput.value = 'tom.nanjing@gmail.com';
-          passwordInput.value = 'sual116y';
-          
-          // 触发change事件让Ant Design更新状态
-          emailInput.dispatchEvent(new Event('input', { bubbles: true }));
-          passwordInput.dispatchEvent(new Event('input', { bubbles: true }));
-          
-          message.success('已填入测试凭据，请点击登录按钮');
-        }
-      }
+      // 使用Form实例设置值
+      form.setFieldsValue({
+        email: 'tom.nanjing@gmail.com',
+        password: 'sual116y'
+      });
+      
+      message.success('已填入测试凭据，请点击登录按钮');
     } catch (error) {
       console.error('填入凭据失败:', error);
       message.error('填入凭据失败！');
@@ -161,6 +152,7 @@ export default function LoginPage() {
           
           <Form
             name="login"
+            form={form}
             onFinish={onFinish}
             autoComplete="off"
             layout="vertical"
@@ -219,7 +211,7 @@ export default function LoginPage() {
           </Form>
           
           {/* 开发调试信息 */}
-          <div 
+          {/* <div 
             className="mt-6 p-4 rounded-lg border"
             style={{ 
               backgroundColor: '#F9FAFB', 
@@ -258,7 +250,7 @@ export default function LoginPage() {
                 测试有效凭据
               </Button>
             </div>
-          </div>
+          </div> */}
           
           <div 
             className="text-center text-sm mt-8"

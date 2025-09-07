@@ -1,45 +1,41 @@
 query LoginUser($openid: String!) {
-  wechat_users(filter: { openid: { _eq: $openid } }) {
+  customers(filter: { open_id: { _eq: $openid } }) {
     id
-    nickname
-    openid
-    unionid
-    headimgurl
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
   }
 }
 
 query GetUserById($id: ID!) {
-  wechat_users_by_id(id: $id) {
+  customers_by_id(id: $id) {
     id
-    nickname
-    openid
-    unionid
-    headimgurl
-    city
-    country
-    province
-    language
+    nick_name
+    open_id
+    avatar
     sex
-    is_active
-    created_at
-    updated_at
+    status
+    type
+    sort
+    date_created
+    date_updated
   }
 }
 
 query GetAllUsers {
-  wechat_users {
+  customers {
     id
-    nickname
-    openid
-    unionid
-    headimgurl
-    city
-    country
-    province
-    language
+    nick_name
+    open_id
+    avatar
     sex
-    is_active
-    created_at
-    updated_at
+    status
+    type
+    sort
+    date_created
+    date_updated
   }
 }

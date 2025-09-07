@@ -40,32 +40,35 @@ export type Mutation = {
   create_boutiques_items: Array<Boutiques>;
   create_categories_item?: Maybe<Categories>;
   create_categories_items: Array<Categories>;
+  create_customers_item?: Maybe<Customers>;
+  create_customers_items: Array<Customers>;
   create_order_items_item?: Maybe<Order_Items>;
   create_order_items_items: Array<Order_Items>;
   create_orders_item?: Maybe<Orders>;
   create_orders_items: Array<Orders>;
   create_products_item?: Maybe<Products>;
   create_products_items: Array<Products>;
-  create_wechat_users_item?: Maybe<Wechat_Users>;
-  create_wechat_users_items: Array<Wechat_Users>;
   delete_boutiques_item?: Maybe<Delete_One>;
   delete_boutiques_items?: Maybe<Delete_Many>;
   delete_categories_item?: Maybe<Delete_One>;
   delete_categories_items?: Maybe<Delete_Many>;
+  delete_customers_item?: Maybe<Delete_One>;
+  delete_customers_items?: Maybe<Delete_Many>;
   delete_order_items_item?: Maybe<Delete_One>;
   delete_order_items_items?: Maybe<Delete_Many>;
   delete_orders_item?: Maybe<Delete_One>;
   delete_orders_items?: Maybe<Delete_Many>;
   delete_products_item?: Maybe<Delete_One>;
   delete_products_items?: Maybe<Delete_Many>;
-  delete_wechat_users_item?: Maybe<Delete_One>;
-  delete_wechat_users_items?: Maybe<Delete_Many>;
   update_boutiques_batch: Array<Boutiques>;
   update_boutiques_item?: Maybe<Boutiques>;
   update_boutiques_items: Array<Boutiques>;
   update_categories_batch: Array<Categories>;
   update_categories_item?: Maybe<Categories>;
   update_categories_items: Array<Categories>;
+  update_customers_batch: Array<Customers>;
+  update_customers_item?: Maybe<Customers>;
+  update_customers_items: Array<Customers>;
   update_order_items_batch: Array<Order_Items>;
   update_order_items_item?: Maybe<Order_Items>;
   update_order_items_items: Array<Order_Items>;
@@ -75,9 +78,6 @@ export type Mutation = {
   update_products_batch: Array<Products>;
   update_products_item?: Maybe<Products>;
   update_products_items: Array<Products>;
-  update_wechat_users_batch: Array<Wechat_Users>;
-  update_wechat_users_item?: Maybe<Wechat_Users>;
-  update_wechat_users_items: Array<Wechat_Users>;
 };
 
 
@@ -105,6 +105,22 @@ export type MutationCreate_Categories_ItemArgs = {
 export type MutationCreate_Categories_ItemsArgs = {
   data?: InputMaybe<Array<Create_Categories_Input>>;
   filter?: InputMaybe<Categories_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationCreate_Customers_ItemArgs = {
+  data: Create_Customers_Input;
+};
+
+
+export type MutationCreate_Customers_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Customers_Input>>;
+  filter?: InputMaybe<Customers_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -161,22 +177,6 @@ export type MutationCreate_Products_ItemsArgs = {
 };
 
 
-export type MutationCreate_Wechat_Users_ItemArgs = {
-  data: Create_Wechat_Users_Input;
-};
-
-
-export type MutationCreate_Wechat_Users_ItemsArgs = {
-  data?: InputMaybe<Array<Create_Wechat_Users_Input>>;
-  filter?: InputMaybe<Wechat_Users_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
 export type MutationDelete_Boutiques_ItemArgs = {
   id: Scalars['ID']['input'];
 };
@@ -193,6 +193,16 @@ export type MutationDelete_Categories_ItemArgs = {
 
 
 export type MutationDelete_Categories_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
+export type MutationDelete_Customers_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Customers_ItemsArgs = {
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
 };
 
@@ -223,16 +233,6 @@ export type MutationDelete_Products_ItemArgs = {
 
 
 export type MutationDelete_Products_ItemsArgs = {
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-};
-
-
-export type MutationDelete_Wechat_Users_ItemArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDelete_Wechat_Users_ItemsArgs = {
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
 };
 
@@ -286,6 +286,35 @@ export type MutationUpdate_Categories_ItemArgs = {
 export type MutationUpdate_Categories_ItemsArgs = {
   data: Update_Categories_Input;
   filter?: InputMaybe<Categories_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Customers_BatchArgs = {
+  data?: InputMaybe<Array<Update_Customers_Input>>;
+  filter?: InputMaybe<Customers_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Customers_ItemArgs = {
+  data: Update_Customers_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Customers_ItemsArgs = {
+  data: Update_Customers_Input;
+  filter?: InputMaybe<Customers_Filter>;
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -381,35 +410,6 @@ export type MutationUpdate_Products_ItemsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
-export type MutationUpdate_Wechat_Users_BatchArgs = {
-  data?: InputMaybe<Array<Update_Wechat_Users_Input>>;
-  filter?: InputMaybe<Wechat_Users_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_Wechat_Users_ItemArgs = {
-  data: Update_Wechat_Users_Input;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdate_Wechat_Users_ItemsArgs = {
-  data: Update_Wechat_Users_Input;
-  filter?: InputMaybe<Wechat_Users_Filter>;
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
 export type Query = {
   __typename?: 'Query';
   boutiques: Array<Boutiques>;
@@ -420,6 +420,10 @@ export type Query = {
   categories_aggregated: Array<Categories_Aggregated>;
   categories_by_id?: Maybe<Categories>;
   categories_by_version?: Maybe<Version_Categories>;
+  customers: Array<Customers>;
+  customers_aggregated: Array<Customers_Aggregated>;
+  customers_by_id?: Maybe<Customers>;
+  customers_by_version?: Maybe<Version_Customers>;
   order_items: Array<Order_Items>;
   order_items_aggregated: Array<Order_Items_Aggregated>;
   order_items_by_id?: Maybe<Order_Items>;
@@ -432,10 +436,6 @@ export type Query = {
   products_aggregated: Array<Products_Aggregated>;
   products_by_id?: Maybe<Products>;
   products_by_version?: Maybe<Version_Products>;
-  wechat_users: Array<Wechat_Users>;
-  wechat_users_aggregated: Array<Wechat_Users_Aggregated>;
-  wechat_users_by_id?: Maybe<Wechat_Users>;
-  wechat_users_by_version?: Maybe<Version_Wechat_Users>;
 };
 
 
@@ -500,6 +500,39 @@ export type QueryCategories_By_IdArgs = {
 
 
 export type QueryCategories_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
+};
+
+
+export type QueryCustomersArgs = {
+  filter?: InputMaybe<Customers_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryCustomers_AggregatedArgs = {
+  filter?: InputMaybe<Customers_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryCustomers_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryCustomers_By_VersionArgs = {
   id: Scalars['ID']['input'];
   version: Scalars['String']['input'];
 };
@@ -603,43 +636,11 @@ export type QueryProducts_By_VersionArgs = {
   version: Scalars['String']['input'];
 };
 
-
-export type QueryWechat_UsersArgs = {
-  filter?: InputMaybe<Wechat_Users_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryWechat_Users_AggregatedArgs = {
-  filter?: InputMaybe<Wechat_Users_Filter>;
-  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryWechat_Users_By_IdArgs = {
-  id: Scalars['ID']['input'];
-  version?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryWechat_Users_By_VersionArgs = {
-  id: Scalars['ID']['input'];
-  version: Scalars['String']['input'];
-};
-
 export type Subscription = {
   __typename?: 'Subscription';
   boutiques_mutated?: Maybe<Boutiques_Mutated>;
   categories_mutated?: Maybe<Categories_Mutated>;
+  customers_mutated?: Maybe<Customers_Mutated>;
   directus_access_mutated?: Maybe<Directus_Access_Mutated>;
   directus_activity_mutated?: Maybe<Directus_Activity_Mutated>;
   directus_comments_mutated?: Maybe<Directus_Comments_Mutated>;
@@ -664,7 +665,6 @@ export type Subscription = {
   order_items_mutated?: Maybe<Order_Items_Mutated>;
   orders_mutated?: Maybe<Orders_Mutated>;
   products_mutated?: Maybe<Products_Mutated>;
-  wechat_users_mutated?: Maybe<Wechat_Users_Mutated>;
 };
 
 
@@ -674,6 +674,11 @@ export type SubscriptionBoutiques_MutatedArgs = {
 
 
 export type SubscriptionCategories_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionCustomers_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
@@ -794,11 +799,6 @@ export type SubscriptionOrders_MutatedArgs = {
 
 
 export type SubscriptionProducts_MutatedArgs = {
-  event?: InputMaybe<EventEnum>;
-};
-
-
-export type SubscriptionWechat_Users_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
@@ -1073,6 +1073,21 @@ export type Create_Categories_Input = {
   user_updated?: InputMaybe<Create_Directus_Users_Input>;
 };
 
+export type Create_Customers_Input = {
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  nick_name?: InputMaybe<Scalars['String']['input']>;
+  open_id: Scalars['String']['input'];
+  sex?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
+};
+
 export type Create_Directus_Access_Input = {
   id?: InputMaybe<Scalars['ID']['input']>;
   policy?: InputMaybe<Create_Directus_Policies_Input>;
@@ -1195,6 +1210,7 @@ export type Create_Order_Items_Input = {
 export type Create_Orders_Input = {
   boutique?: InputMaybe<Create_Boutiques_Input>;
   boutique_id?: InputMaybe<Create_Boutiques_Input>;
+  customers_id?: InputMaybe<Create_Customers_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -1202,7 +1218,6 @@ export type Create_Orders_Input = {
   total_price?: InputMaybe<Scalars['Float']['input']>;
   user_created?: InputMaybe<Create_Directus_Users_Input>;
   user_updated?: InputMaybe<Create_Directus_Users_Input>;
-  wechat_user_id?: InputMaybe<Create_Wechat_Users_Input>;
 };
 
 export type Create_Products_Input = {
@@ -1235,27 +1250,105 @@ export type Create_Products_Input = {
   video_url?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type Create_Wechat_Users_Input = {
-  access_token?: InputMaybe<Scalars['String']['input']>;
-  boutique?: InputMaybe<Create_Boutiques_Input>;
-  boutique_id?: InputMaybe<Create_Boutiques_Input>;
-  city?: InputMaybe<Scalars['String']['input']>;
-  country?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['Date']['input']>;
-  expires_at?: InputMaybe<Scalars['Date']['input']>;
-  headimgurl?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  is_active?: InputMaybe<Scalars['Boolean']['input']>;
-  language?: InputMaybe<Scalars['String']['input']>;
-  nickname?: InputMaybe<Scalars['String']['input']>;
-  openid: Scalars['String']['input'];
-  privilege?: InputMaybe<Scalars['JSON']['input']>;
-  province?: InputMaybe<Scalars['String']['input']>;
-  refresh_token?: InputMaybe<Scalars['String']['input']>;
-  scope?: InputMaybe<Scalars['String']['input']>;
-  sex?: InputMaybe<Scalars['Int']['input']>;
-  unionid?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['Date']['input']>;
+export type Customers = {
+  __typename?: 'customers';
+  avatar?: Maybe<Scalars['String']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
+  id: Scalars['ID']['output'];
+  nick_name?: Maybe<Scalars['String']['output']>;
+  open_id: Scalars['String']['output'];
+  sex?: Maybe<Scalars['Int']['output']>;
+  sort?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type CustomersUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type CustomersUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Customers_Aggregated = {
+  __typename?: 'customers_aggregated';
+  avg?: Maybe<Customers_Aggregated_Fields>;
+  avgDistinct?: Maybe<Customers_Aggregated_Fields>;
+  count?: Maybe<Customers_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Customers_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Customers_Aggregated_Fields>;
+  min?: Maybe<Customers_Aggregated_Fields>;
+  sum?: Maybe<Customers_Aggregated_Fields>;
+  sumDistinct?: Maybe<Customers_Aggregated_Fields>;
+};
+
+export type Customers_Aggregated_Count = {
+  __typename?: 'customers_aggregated_count';
+  avatar?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  nick_name?: Maybe<Scalars['Int']['output']>;
+  open_id?: Maybe<Scalars['Int']['output']>;
+  sex?: Maybe<Scalars['Int']['output']>;
+  sort?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['Int']['output']>;
+  type?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Customers_Aggregated_Fields = {
+  __typename?: 'customers_aggregated_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  sex?: Maybe<Scalars['Float']['output']>;
+  sort?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Customers_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Customers_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Customers_Filter>>>;
+  avatar?: InputMaybe<String_Filter_Operators>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  nick_name?: InputMaybe<String_Filter_Operators>;
+  open_id?: InputMaybe<String_Filter_Operators>;
+  sex?: InputMaybe<Number_Filter_Operators>;
+  sort?: InputMaybe<Number_Filter_Operators>;
+  status?: InputMaybe<String_Filter_Operators>;
+  type?: InputMaybe<String_Filter_Operators>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
+};
+
+export type Customers_Mutated = {
+  __typename?: 'customers_mutated';
+  data?: Maybe<Customers>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
 };
 
 export type Date_Filter_Operators = {
@@ -2920,6 +3013,7 @@ export type Orders = {
   __typename?: 'orders';
   boutique?: Maybe<Boutiques>;
   boutique_id?: Maybe<Boutiques>;
+  customers_id?: Maybe<Customers>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
@@ -2929,7 +3023,6 @@ export type Orders = {
   total_price?: Maybe<Scalars['Float']['output']>;
   user_created?: Maybe<Directus_Users>;
   user_updated?: Maybe<Directus_Users>;
-  wechat_user_id?: Maybe<Wechat_Users>;
 };
 
 
@@ -2945,6 +3038,16 @@ export type OrdersBoutiqueArgs = {
 
 export type OrdersBoutique_IdArgs = {
   filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type OrdersCustomers_IdArgs = {
+  filter?: InputMaybe<Customers_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -2972,16 +3075,6 @@ export type OrdersUser_UpdatedArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
-
-export type OrdersWechat_User_IdArgs = {
-  filter?: InputMaybe<Wechat_Users_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
 export type Orders_Aggregated = {
   __typename?: 'orders_aggregated';
   avg?: Maybe<Orders_Aggregated_Fields>;
@@ -2999,6 +3092,7 @@ export type Orders_Aggregated = {
 export type Orders_Aggregated_Count = {
   __typename?: 'orders_aggregated_count';
   boutique_id?: Maybe<Scalars['Int']['output']>;
+  customers_id?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
@@ -3006,15 +3100,14 @@ export type Orders_Aggregated_Count = {
   total_price?: Maybe<Scalars['Int']['output']>;
   user_created?: Maybe<Scalars['Int']['output']>;
   user_updated?: Maybe<Scalars['Int']['output']>;
-  wechat_user_id?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Orders_Aggregated_Fields = {
   __typename?: 'orders_aggregated_fields';
   boutique_id?: Maybe<Scalars['Float']['output']>;
+  customers_id?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
-  wechat_user_id?: Maybe<Scalars['Float']['output']>;
 };
 
 export type Orders_Filter = {
@@ -3022,6 +3115,7 @@ export type Orders_Filter = {
   _or?: InputMaybe<Array<InputMaybe<Orders_Filter>>>;
   boutique?: InputMaybe<Boutiques_Filter>;
   boutique_id?: InputMaybe<Boutiques_Filter>;
+  customers_id?: InputMaybe<Customers_Filter>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
@@ -3031,7 +3125,6 @@ export type Orders_Filter = {
   total_price?: InputMaybe<Number_Filter_Operators>;
   user_created?: InputMaybe<Directus_Users_Filter>;
   user_updated?: InputMaybe<Directus_Users_Filter>;
-  wechat_user_id?: InputMaybe<Wechat_Users_Filter>;
 };
 
 export type Orders_Mutated = {
@@ -3278,6 +3371,21 @@ export type Update_Categories_Input = {
   user_updated?: InputMaybe<Update_Directus_Users_Input>;
 };
 
+export type Update_Customers_Input = {
+  avatar?: InputMaybe<Scalars['String']['input']>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  nick_name?: InputMaybe<Scalars['String']['input']>;
+  open_id?: InputMaybe<Scalars['String']['input']>;
+  sex?: InputMaybe<Scalars['Int']['input']>;
+  sort?: InputMaybe<Scalars['Int']['input']>;
+  status?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
+};
+
 export type Update_Directus_Access_Input = {
   id?: InputMaybe<Scalars['ID']['input']>;
   policy?: InputMaybe<Update_Directus_Policies_Input>;
@@ -3400,6 +3508,7 @@ export type Update_Order_Items_Input = {
 export type Update_Orders_Input = {
   boutique?: InputMaybe<Update_Boutiques_Input>;
   boutique_id?: InputMaybe<Update_Boutiques_Input>;
+  customers_id?: InputMaybe<Update_Customers_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -3407,7 +3516,6 @@ export type Update_Orders_Input = {
   total_price?: InputMaybe<Scalars['Float']['input']>;
   user_created?: InputMaybe<Update_Directus_Users_Input>;
   user_updated?: InputMaybe<Update_Directus_Users_Input>;
-  wechat_user_id?: InputMaybe<Update_Wechat_Users_Input>;
 };
 
 export type Update_Products_Input = {
@@ -3440,29 +3548,6 @@ export type Update_Products_Input = {
   video_url?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type Update_Wechat_Users_Input = {
-  access_token?: InputMaybe<Scalars['String']['input']>;
-  boutique?: InputMaybe<Update_Boutiques_Input>;
-  boutique_id?: InputMaybe<Update_Boutiques_Input>;
-  city?: InputMaybe<Scalars['String']['input']>;
-  country?: InputMaybe<Scalars['String']['input']>;
-  created_at?: InputMaybe<Scalars['Date']['input']>;
-  expires_at?: InputMaybe<Scalars['Date']['input']>;
-  headimgurl?: InputMaybe<Scalars['String']['input']>;
-  id?: InputMaybe<Scalars['ID']['input']>;
-  is_active?: InputMaybe<Scalars['Boolean']['input']>;
-  language?: InputMaybe<Scalars['String']['input']>;
-  nickname?: InputMaybe<Scalars['String']['input']>;
-  openid?: InputMaybe<Scalars['String']['input']>;
-  privilege?: InputMaybe<Scalars['JSON']['input']>;
-  province?: InputMaybe<Scalars['String']['input']>;
-  refresh_token?: InputMaybe<Scalars['String']['input']>;
-  scope?: InputMaybe<Scalars['String']['input']>;
-  sex?: InputMaybe<Scalars['Int']['input']>;
-  unionid?: InputMaybe<Scalars['String']['input']>;
-  updated_at?: InputMaybe<Scalars['Date']['input']>;
-};
-
 export type Version_Boutiques = {
   __typename?: 'version_boutiques';
   address?: Maybe<Scalars['String']['output']>;
@@ -3492,6 +3577,22 @@ export type Version_Categories = {
   user_updated?: Maybe<Scalars['JSON']['output']>;
 };
 
+export type Version_Customers = {
+  __typename?: 'version_customers';
+  avatar?: Maybe<Scalars['String']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  nick_name?: Maybe<Scalars['String']['output']>;
+  open_id?: Maybe<Scalars['String']['output']>;
+  sex?: Maybe<Scalars['Int']['output']>;
+  sort?: Maybe<Scalars['Int']['output']>;
+  status?: Maybe<Scalars['String']['output']>;
+  type?: Maybe<Scalars['String']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
 export type Version_Order_Items = {
   __typename?: 'version_order_items';
   id?: Maybe<Scalars['ID']['output']>;
@@ -3505,6 +3606,7 @@ export type Version_Orders = {
   __typename?: 'version_orders';
   boutique?: Maybe<Scalars['JSON']['output']>;
   boutique_id?: Maybe<Scalars['JSON']['output']>;
+  customers_id?: Maybe<Scalars['JSON']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
@@ -3512,7 +3614,6 @@ export type Version_Orders = {
   total_price?: Maybe<Scalars['Float']['output']>;
   user_created?: Maybe<Scalars['JSON']['output']>;
   user_updated?: Maybe<Scalars['JSON']['output']>;
-  wechat_user_id?: Maybe<Scalars['JSON']['output']>;
 };
 
 export type Version_Products = {
@@ -3546,176 +3647,24 @@ export type Version_Products = {
   video_url?: Maybe<Scalars['String']['output']>;
 };
 
-export type Version_Wechat_Users = {
-  __typename?: 'version_wechat_users';
-  access_token?: Maybe<Scalars['String']['output']>;
-  boutique?: Maybe<Scalars['JSON']['output']>;
-  boutique_id?: Maybe<Scalars['JSON']['output']>;
-  city?: Maybe<Scalars['String']['output']>;
-  country?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['Date']['output']>;
-  expires_at?: Maybe<Scalars['Date']['output']>;
-  headimgurl?: Maybe<Scalars['String']['output']>;
-  id?: Maybe<Scalars['ID']['output']>;
-  is_active?: Maybe<Scalars['Boolean']['output']>;
-  language?: Maybe<Scalars['String']['output']>;
-  nickname?: Maybe<Scalars['String']['output']>;
-  openid?: Maybe<Scalars['String']['output']>;
-  privilege?: Maybe<Scalars['JSON']['output']>;
-  province?: Maybe<Scalars['String']['output']>;
-  refresh_token?: Maybe<Scalars['String']['output']>;
-  scope?: Maybe<Scalars['String']['output']>;
-  sex?: Maybe<Scalars['Int']['output']>;
-  unionid?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['Date']['output']>;
-};
-
-export type Wechat_Users = {
-  __typename?: 'wechat_users';
-  access_token?: Maybe<Scalars['String']['output']>;
-  boutique?: Maybe<Boutiques>;
-  boutique_id?: Maybe<Boutiques>;
-  city?: Maybe<Scalars['String']['output']>;
-  country?: Maybe<Scalars['String']['output']>;
-  created_at?: Maybe<Scalars['Date']['output']>;
-  created_at_func?: Maybe<Datetime_Functions>;
-  expires_at?: Maybe<Scalars['Date']['output']>;
-  expires_at_func?: Maybe<Datetime_Functions>;
-  headimgurl?: Maybe<Scalars['String']['output']>;
-  id: Scalars['ID']['output'];
-  is_active?: Maybe<Scalars['Boolean']['output']>;
-  language?: Maybe<Scalars['String']['output']>;
-  nickname?: Maybe<Scalars['String']['output']>;
-  openid: Scalars['String']['output'];
-  privilege?: Maybe<Scalars['JSON']['output']>;
-  privilege_func?: Maybe<Count_Functions>;
-  province?: Maybe<Scalars['String']['output']>;
-  refresh_token?: Maybe<Scalars['String']['output']>;
-  scope?: Maybe<Scalars['String']['output']>;
-  sex?: Maybe<Scalars['Int']['output']>;
-  unionid?: Maybe<Scalars['String']['output']>;
-  updated_at?: Maybe<Scalars['Date']['output']>;
-  updated_at_func?: Maybe<Datetime_Functions>;
-};
-
-
-export type Wechat_UsersBoutiqueArgs = {
-  filter?: InputMaybe<Boutiques_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type Wechat_UsersBoutique_IdArgs = {
-  filter?: InputMaybe<Boutiques_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type Wechat_Users_Aggregated = {
-  __typename?: 'wechat_users_aggregated';
-  avg?: Maybe<Wechat_Users_Aggregated_Fields>;
-  avgDistinct?: Maybe<Wechat_Users_Aggregated_Fields>;
-  count?: Maybe<Wechat_Users_Aggregated_Count>;
-  countAll?: Maybe<Scalars['Int']['output']>;
-  countDistinct?: Maybe<Wechat_Users_Aggregated_Count>;
-  group?: Maybe<Scalars['JSON']['output']>;
-  max?: Maybe<Wechat_Users_Aggregated_Fields>;
-  min?: Maybe<Wechat_Users_Aggregated_Fields>;
-  sum?: Maybe<Wechat_Users_Aggregated_Fields>;
-  sumDistinct?: Maybe<Wechat_Users_Aggregated_Fields>;
-};
-
-export type Wechat_Users_Aggregated_Count = {
-  __typename?: 'wechat_users_aggregated_count';
-  access_token?: Maybe<Scalars['Int']['output']>;
-  boutique_id?: Maybe<Scalars['Int']['output']>;
-  city?: Maybe<Scalars['Int']['output']>;
-  country?: Maybe<Scalars['Int']['output']>;
-  created_at?: Maybe<Scalars['Int']['output']>;
-  expires_at?: Maybe<Scalars['Int']['output']>;
-  headimgurl?: Maybe<Scalars['Int']['output']>;
-  id?: Maybe<Scalars['Int']['output']>;
-  is_active?: Maybe<Scalars['Int']['output']>;
-  language?: Maybe<Scalars['Int']['output']>;
-  nickname?: Maybe<Scalars['Int']['output']>;
-  openid?: Maybe<Scalars['Int']['output']>;
-  privilege?: Maybe<Scalars['Int']['output']>;
-  province?: Maybe<Scalars['Int']['output']>;
-  refresh_token?: Maybe<Scalars['Int']['output']>;
-  scope?: Maybe<Scalars['Int']['output']>;
-  sex?: Maybe<Scalars['Int']['output']>;
-  unionid?: Maybe<Scalars['Int']['output']>;
-  updated_at?: Maybe<Scalars['Int']['output']>;
-};
-
-export type Wechat_Users_Aggregated_Fields = {
-  __typename?: 'wechat_users_aggregated_fields';
-  boutique_id?: Maybe<Scalars['Float']['output']>;
-  id?: Maybe<Scalars['Float']['output']>;
-  sex?: Maybe<Scalars['Float']['output']>;
-};
-
-export type Wechat_Users_Filter = {
-  _and?: InputMaybe<Array<InputMaybe<Wechat_Users_Filter>>>;
-  _or?: InputMaybe<Array<InputMaybe<Wechat_Users_Filter>>>;
-  access_token?: InputMaybe<String_Filter_Operators>;
-  boutique?: InputMaybe<Boutiques_Filter>;
-  boutique_id?: InputMaybe<Boutiques_Filter>;
-  city?: InputMaybe<String_Filter_Operators>;
-  country?: InputMaybe<String_Filter_Operators>;
-  created_at?: InputMaybe<Date_Filter_Operators>;
-  created_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-  expires_at?: InputMaybe<Date_Filter_Operators>;
-  expires_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-  headimgurl?: InputMaybe<String_Filter_Operators>;
-  id?: InputMaybe<Number_Filter_Operators>;
-  is_active?: InputMaybe<Boolean_Filter_Operators>;
-  language?: InputMaybe<String_Filter_Operators>;
-  nickname?: InputMaybe<String_Filter_Operators>;
-  openid?: InputMaybe<String_Filter_Operators>;
-  privilege?: InputMaybe<String_Filter_Operators>;
-  privilege_func?: InputMaybe<Count_Function_Filter_Operators>;
-  province?: InputMaybe<String_Filter_Operators>;
-  refresh_token?: InputMaybe<String_Filter_Operators>;
-  scope?: InputMaybe<String_Filter_Operators>;
-  sex?: InputMaybe<Number_Filter_Operators>;
-  unionid?: InputMaybe<String_Filter_Operators>;
-  updated_at?: InputMaybe<Date_Filter_Operators>;
-  updated_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
-};
-
-export type Wechat_Users_Mutated = {
-  __typename?: 'wechat_users_mutated';
-  data?: Maybe<Wechat_Users>;
-  event?: Maybe<EventEnum>;
-  key: Scalars['ID']['output'];
-};
-
 export type LoginUserQueryVariables = Exact<{
   openid: Scalars['String']['input'];
 }>;
 
 
-export type LoginUserQuery = { __typename?: 'Query', wechat_users: Array<{ __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, unionid?: string | null, headimgurl?: string | null }> };
+export type LoginUserQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null }> };
 
 export type GetUserByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetUserByIdQuery = { __typename?: 'Query', wechat_users_by_id?: { __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, unionid?: string | null, headimgurl?: string | null, city?: string | null, country?: string | null, province?: string | null, language?: string | null, sex?: number | null, is_active?: boolean | null, created_at?: any | null, updated_at?: any | null } | null };
+export type GetUserByIdQuery = { __typename?: 'Query', customers_by_id?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
 
 export type GetAllUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllUsersQuery = { __typename?: 'Query', wechat_users: Array<{ __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, unionid?: string | null, headimgurl?: string | null, city?: string | null, country?: string | null, province?: string | null, language?: string | null, sex?: number | null, is_active?: boolean | null, created_at?: any | null, updated_at?: any | null }> };
+export type GetAllUsersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null }> };
 
 export type GetBoutiquesQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['ID']['input']>;
@@ -3799,38 +3748,72 @@ export type DeleteCategoryMutationVariables = Exact<{
 
 export type DeleteCategoryMutation = { __typename?: 'Mutation', delete_categories_item?: { __typename?: 'delete_one', id: string } | null };
 
+export type GetCustomersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+
+export type GetCustomerByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetCustomerByIdQuery = { __typename?: 'Query', customers_by_id?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
+
+export type CreateCustomerMutationVariables = Exact<{
+  data: Create_Customers_Input;
+}>;
+
+
+export type CreateCustomerMutation = { __typename?: 'Mutation', create_customers_item?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+
+export type UpdateCustomerMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: Update_Customers_Input;
+}>;
+
+
+export type UpdateCustomerMutation = { __typename?: 'Mutation', update_customers_item?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+
+export type DeleteCustomerMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteCustomerMutation = { __typename?: 'Mutation', delete_customers_item?: { __typename?: 'delete_one', id: string } | null };
+
 export type GetDashboardDataQueryVariables = Exact<{
   today?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type GetDashboardDataQuery = { __typename?: 'Query', wechat_users: Array<{ __typename?: 'wechat_users', id: string }>, products: Array<{ __typename?: 'products', id: string }>, orders: Array<{ __typename?: 'orders', id: string }>, categories: Array<{ __typename?: 'categories', id: string }>, boutiques: Array<{ __typename?: 'boutiques', id: string }>, wechat_users_aggregated: Array<{ __typename?: 'wechat_users_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }>, boutiques_aggregated: Array<{ __typename?: 'boutiques_aggregated', countAll?: number | null }>, today_orders: Array<{ __typename?: 'orders', id: string, status?: string | null }> };
+export type GetDashboardDataQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string }>, products: Array<{ __typename?: 'products', id: string }>, orders: Array<{ __typename?: 'orders', id: string }>, categories: Array<{ __typename?: 'categories', id: string }>, boutiques: Array<{ __typename?: 'boutiques', id: string }>, customers_aggregated: Array<{ __typename?: 'customers_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }>, boutiques_aggregated: Array<{ __typename?: 'boutiques_aggregated', countAll?: number | null }>, today_orders: Array<{ __typename?: 'orders', id: string, status?: string | null }> };
 
 export type GetRecentOrdersQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, wechat_user_id?: { __typename?: 'wechat_users', id: string, nickname?: string | null } | null }> };
+export type GetRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null } | null }> };
 
 export type GetOrdersQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
-export type GetOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, wechat_user_id?: { __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, headimgurl?: string | null, city?: string | null, province?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetAllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, wechat_user_id?: { __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, headimgurl?: string | null, city?: string | null, province?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetAllOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetOrderByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetOrderByIdQuery = { __typename?: 'Query', orders_by_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, wechat_user_id?: { __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, headimgurl?: string | null, city?: string | null, province?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
+export type GetOrderByIdQuery = { __typename?: 'Query', orders_by_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
 
 export type GetOrderItemsQueryVariables = Exact<{
   orderId: Scalars['GraphQLStringOrFloat']['input'];
@@ -3844,7 +3827,7 @@ export type CreateOrderMutationVariables = Exact<{
 }>;
 
 
-export type CreateOrderMutation = { __typename?: 'Mutation', create_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, wechat_user_id?: { __typename?: 'wechat_users', id: string, nickname?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
+export type CreateOrderMutation = { __typename?: 'Mutation', create_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
 
 export type UpdateOrderMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3852,7 +3835,7 @@ export type UpdateOrderMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOrderMutation = { __typename?: 'Mutation', update_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, wechat_user_id?: { __typename?: 'wechat_users', id: string, nickname?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
+export type UpdateOrderMutation = { __typename?: 'Mutation', update_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
 
 export type DeleteOrderMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3910,49 +3893,17 @@ export type DeleteProductMutationVariables = Exact<{
 
 export type DeleteProductMutation = { __typename?: 'Mutation', delete_products_item?: { __typename?: 'delete_one', id: string } | null };
 
-export type GetWechatUsersQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetWechatUsersQuery = { __typename?: 'Query', wechat_users: Array<{ __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, unionid?: string | null, headimgurl?: string | null, city?: string | null, country?: string | null, province?: string | null, language?: string | null, sex?: number | null, is_active?: boolean | null, access_token?: string | null, refresh_token?: string | null, expires_at?: any | null, scope?: string | null, privilege?: any | null, created_at?: any | null, updated_at?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
-
-export type GetWechatUserByIdQueryVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type GetWechatUserByIdQuery = { __typename?: 'Query', wechat_users_by_id?: { __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, unionid?: string | null, headimgurl?: string | null, city?: string | null, country?: string | null, province?: string | null, language?: string | null, sex?: number | null, is_active?: boolean | null, access_token?: string | null, refresh_token?: string | null, expires_at?: any | null, scope?: string | null, privilege?: any | null, created_at?: any | null, updated_at?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null } | null } | null };
-
-export type CreateWechatUserMutationVariables = Exact<{
-  data: Create_Wechat_Users_Input;
-}>;
-
-
-export type CreateWechatUserMutation = { __typename?: 'Mutation', create_wechat_users_item?: { __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, unionid?: string | null, headimgurl?: string | null, city?: string | null, country?: string | null, province?: string | null, language?: string | null, sex?: number | null, is_active?: boolean | null, created_at?: any | null, updated_at?: any | null } | null };
-
-export type UpdateWechatUserMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-  data: Update_Wechat_Users_Input;
-}>;
-
-
-export type UpdateWechatUserMutation = { __typename?: 'Mutation', update_wechat_users_item?: { __typename?: 'wechat_users', id: string, nickname?: string | null, openid: string, unionid?: string | null, headimgurl?: string | null, city?: string | null, country?: string | null, province?: string | null, language?: string | null, sex?: number | null, is_active?: boolean | null, created_at?: any | null, updated_at?: any | null } | null };
-
-export type DeleteWechatUserMutationVariables = Exact<{
-  id: Scalars['ID']['input'];
-}>;
-
-
-export type DeleteWechatUserMutation = { __typename?: 'Mutation', delete_wechat_users_item?: { __typename?: 'delete_one', id: string } | null };
-
 
 export const LoginUserDocument = gql`
     query LoginUser($openid: String!) {
-  wechat_users(filter: {openid: {_eq: $openid}}) {
+  customers(filter: {open_id: {_eq: $openid}}) {
     id
-    nickname
-    openid
-    unionid
-    headimgurl
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
   }
 }
     `;
@@ -3991,20 +3942,17 @@ export type LoginUserSuspenseQueryHookResult = ReturnType<typeof useLoginUserSus
 export type LoginUserQueryResult = ApolloReactCommon.QueryResult<LoginUserQuery, LoginUserQueryVariables>;
 export const GetUserByIdDocument = gql`
     query GetUserById($id: ID!) {
-  wechat_users_by_id(id: $id) {
+  customers_by_id(id: $id) {
     id
-    nickname
-    openid
-    unionid
-    headimgurl
-    city
-    country
-    province
-    language
+    nick_name
+    open_id
+    avatar
     sex
-    is_active
-    created_at
-    updated_at
+    status
+    type
+    sort
+    date_created
+    date_updated
   }
 }
     `;
@@ -4043,20 +3991,17 @@ export type GetUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetUserByI
 export type GetUserByIdQueryResult = ApolloReactCommon.QueryResult<GetUserByIdQuery, GetUserByIdQueryVariables>;
 export const GetAllUsersDocument = gql`
     query GetAllUsers {
-  wechat_users {
+  customers {
     id
-    nickname
-    openid
-    unionid
-    headimgurl
-    city
-    country
-    province
-    language
+    nick_name
+    open_id
+    avatar
     sex
-    is_active
-    created_at
-    updated_at
+    status
+    type
+    sort
+    date_created
+    date_updated
   }
 }
     `;
@@ -4642,9 +4587,248 @@ export function useDeleteCategoryMutation(baseOptions?: ApolloReactHooks.Mutatio
 export type DeleteCategoryMutationHookResult = ReturnType<typeof useDeleteCategoryMutation>;
 export type DeleteCategoryMutationResult = ApolloReactCommon.MutationResult<DeleteCategoryMutation>;
 export type DeleteCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
+export const GetCustomersDocument = gql`
+    query GetCustomers {
+  customers {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    user_updated {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCustomersQuery__
+ *
+ * To run a query within a React component, call `useGetCustomersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCustomersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCustomersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCustomersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetCustomersQuery, GetCustomersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCustomersQuery, GetCustomersQueryVariables>(GetCustomersDocument, options);
+      }
+export function useGetCustomersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCustomersQuery, GetCustomersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCustomersQuery, GetCustomersQueryVariables>(GetCustomersDocument, options);
+        }
+export function useGetCustomersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCustomersQuery, GetCustomersQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCustomersQuery, GetCustomersQueryVariables>(GetCustomersDocument, options);
+        }
+export type GetCustomersQueryHookResult = ReturnType<typeof useGetCustomersQuery>;
+export type GetCustomersLazyQueryHookResult = ReturnType<typeof useGetCustomersLazyQuery>;
+export type GetCustomersSuspenseQueryHookResult = ReturnType<typeof useGetCustomersSuspenseQuery>;
+export type GetCustomersQueryResult = ApolloReactCommon.QueryResult<GetCustomersQuery, GetCustomersQueryVariables>;
+export const GetCustomerByIdDocument = gql`
+    query GetCustomerById($id: ID!) {
+  customers_by_id(id: $id) {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    user_updated {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCustomerByIdQuery__
+ *
+ * To run a query within a React component, call `useGetCustomerByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCustomerByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCustomerByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetCustomerByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables> & ({ variables: GetCustomerByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+      }
+export function useGetCustomerByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+        }
+export function useGetCustomerByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>(GetCustomerByIdDocument, options);
+        }
+export type GetCustomerByIdQueryHookResult = ReturnType<typeof useGetCustomerByIdQuery>;
+export type GetCustomerByIdLazyQueryHookResult = ReturnType<typeof useGetCustomerByIdLazyQuery>;
+export type GetCustomerByIdSuspenseQueryHookResult = ReturnType<typeof useGetCustomerByIdSuspenseQuery>;
+export type GetCustomerByIdQueryResult = ApolloReactCommon.QueryResult<GetCustomerByIdQuery, GetCustomerByIdQueryVariables>;
+export const CreateCustomerDocument = gql`
+    mutation CreateCustomer($data: create_customers_input!) {
+  create_customers_item(data: $data) {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+  }
+}
+    `;
+export type CreateCustomerMutationFn = ApolloReactCommon.MutationFunction<CreateCustomerMutation, CreateCustomerMutationVariables>;
+
+/**
+ * __useCreateCustomerMutation__
+ *
+ * To run a mutation, you first call `useCreateCustomerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCustomerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCustomerMutation, { data, loading, error }] = useCreateCustomerMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateCustomerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateCustomerMutation, CreateCustomerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateCustomerMutation, CreateCustomerMutationVariables>(CreateCustomerDocument, options);
+      }
+export type CreateCustomerMutationHookResult = ReturnType<typeof useCreateCustomerMutation>;
+export type CreateCustomerMutationResult = ApolloReactCommon.MutationResult<CreateCustomerMutation>;
+export type CreateCustomerMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateCustomerMutation, CreateCustomerMutationVariables>;
+export const UpdateCustomerDocument = gql`
+    mutation UpdateCustomer($id: ID!, $data: update_customers_input!) {
+  update_customers_item(id: $id, data: $data) {
+    id
+    nick_name
+    open_id
+    avatar
+    sex
+    status
+    type
+    sort
+    date_created
+    date_updated
+  }
+}
+    `;
+export type UpdateCustomerMutationFn = ApolloReactCommon.MutationFunction<UpdateCustomerMutation, UpdateCustomerMutationVariables>;
+
+/**
+ * __useUpdateCustomerMutation__
+ *
+ * To run a mutation, you first call `useUpdateCustomerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCustomerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCustomerMutation, { data, loading, error }] = useUpdateCustomerMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateCustomerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateCustomerMutation, UpdateCustomerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateCustomerMutation, UpdateCustomerMutationVariables>(UpdateCustomerDocument, options);
+      }
+export type UpdateCustomerMutationHookResult = ReturnType<typeof useUpdateCustomerMutation>;
+export type UpdateCustomerMutationResult = ApolloReactCommon.MutationResult<UpdateCustomerMutation>;
+export type UpdateCustomerMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateCustomerMutation, UpdateCustomerMutationVariables>;
+export const DeleteCustomerDocument = gql`
+    mutation DeleteCustomer($id: ID!) {
+  delete_customers_item(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteCustomerMutationFn = ApolloReactCommon.MutationFunction<DeleteCustomerMutation, DeleteCustomerMutationVariables>;
+
+/**
+ * __useDeleteCustomerMutation__
+ *
+ * To run a mutation, you first call `useDeleteCustomerMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteCustomerMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteCustomerMutation, { data, loading, error }] = useDeleteCustomerMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteCustomerMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteCustomerMutation, DeleteCustomerMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteCustomerMutation, DeleteCustomerMutationVariables>(DeleteCustomerDocument, options);
+      }
+export type DeleteCustomerMutationHookResult = ReturnType<typeof useDeleteCustomerMutation>;
+export type DeleteCustomerMutationResult = ApolloReactCommon.MutationResult<DeleteCustomerMutation>;
+export type DeleteCustomerMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteCustomerMutation, DeleteCustomerMutationVariables>;
 export const GetDashboardDataDocument = gql`
     query GetDashboardData($today: String) {
-  wechat_users(limit: 1000) {
+  customers(limit: 1000) {
     id
   }
   products(limit: 1000) {
@@ -4659,7 +4843,7 @@ export const GetDashboardDataDocument = gql`
   boutiques(limit: 1000) {
     id
   }
-  wechat_users_aggregated {
+  customers_aggregated {
     countAll
   }
   products_aggregated {
@@ -4717,9 +4901,9 @@ export const GetRecentOrdersDocument = gql`
     query GetRecentOrders($limit: Int = 5) {
   orders(limit: $limit, sort: ["-date_created"]) {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
+      nick_name
     }
     total_price
     status
@@ -4764,13 +4948,12 @@ export const GetOrdersDocument = gql`
     query GetOrders($userId: ID) {
   orders(filter: {user_created: {id: {_eq: $userId}}}) {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
-      openid
-      headimgurl
-      city
-      province
+      nick_name
+      open_id
+      avatar
+      sex
     }
     boutique_id {
       id
@@ -4827,13 +5010,12 @@ export const GetAllOrdersDocument = gql`
     query GetAllOrders {
   orders {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
-      openid
-      headimgurl
-      city
-      province
+      nick_name
+      open_id
+      avatar
+      sex
     }
     boutique_id {
       id
@@ -4889,13 +5071,12 @@ export const GetOrderByIdDocument = gql`
     query GetOrderById($id: ID!) {
   orders_by_id(id: $id) {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
-      openid
-      headimgurl
-      city
-      province
+      nick_name
+      open_id
+      avatar
+      sex
     }
     boutique_id {
       id
@@ -4996,9 +5177,9 @@ export const CreateOrderDocument = gql`
     mutation CreateOrder($data: create_orders_input!) {
   create_orders_item(data: $data) {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
+      nick_name
     }
     boutique_id {
       id
@@ -5042,9 +5223,9 @@ export const UpdateOrderDocument = gql`
     mutation UpdateOrder($id: ID!, $data: update_orders_input!) {
   update_orders_item(id: $id, data: $data) {
     id
-    wechat_user_id {
+    customers_id {
       id
-      nickname
+      nick_name
     }
     boutique_id {
       id
@@ -5529,248 +5710,3 @@ export function useDeleteProductMutation(baseOptions?: ApolloReactHooks.Mutation
 export type DeleteProductMutationHookResult = ReturnType<typeof useDeleteProductMutation>;
 export type DeleteProductMutationResult = ApolloReactCommon.MutationResult<DeleteProductMutation>;
 export type DeleteProductMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteProductMutation, DeleteProductMutationVariables>;
-export const GetWechatUsersDocument = gql`
-    query GetWechatUsers {
-  wechat_users {
-    id
-    nickname
-    openid
-    unionid
-    headimgurl
-    city
-    country
-    province
-    language
-    sex
-    is_active
-    access_token
-    refresh_token
-    expires_at
-    scope
-    privilege
-    created_at
-    updated_at
-    boutique_id {
-      id
-      name
-    }
-  }
-}
-    `;
-
-/**
- * __useGetWechatUsersQuery__
- *
- * To run a query within a React component, call `useGetWechatUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetWechatUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetWechatUsersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetWechatUsersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetWechatUsersQuery, GetWechatUsersQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetWechatUsersQuery, GetWechatUsersQueryVariables>(GetWechatUsersDocument, options);
-      }
-export function useGetWechatUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetWechatUsersQuery, GetWechatUsersQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetWechatUsersQuery, GetWechatUsersQueryVariables>(GetWechatUsersDocument, options);
-        }
-export function useGetWechatUsersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetWechatUsersQuery, GetWechatUsersQueryVariables>) {
-          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetWechatUsersQuery, GetWechatUsersQueryVariables>(GetWechatUsersDocument, options);
-        }
-export type GetWechatUsersQueryHookResult = ReturnType<typeof useGetWechatUsersQuery>;
-export type GetWechatUsersLazyQueryHookResult = ReturnType<typeof useGetWechatUsersLazyQuery>;
-export type GetWechatUsersSuspenseQueryHookResult = ReturnType<typeof useGetWechatUsersSuspenseQuery>;
-export type GetWechatUsersQueryResult = ApolloReactCommon.QueryResult<GetWechatUsersQuery, GetWechatUsersQueryVariables>;
-export const GetWechatUserByIdDocument = gql`
-    query GetWechatUserById($id: ID!) {
-  wechat_users_by_id(id: $id) {
-    id
-    nickname
-    openid
-    unionid
-    headimgurl
-    city
-    country
-    province
-    language
-    sex
-    is_active
-    access_token
-    refresh_token
-    expires_at
-    scope
-    privilege
-    created_at
-    updated_at
-    boutique_id {
-      id
-      name
-    }
-  }
-}
-    `;
-
-/**
- * __useGetWechatUserByIdQuery__
- *
- * To run a query within a React component, call `useGetWechatUserByIdQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetWechatUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetWechatUserByIdQuery({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useGetWechatUserByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetWechatUserByIdQuery, GetWechatUserByIdQueryVariables> & ({ variables: GetWechatUserByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetWechatUserByIdQuery, GetWechatUserByIdQueryVariables>(GetWechatUserByIdDocument, options);
-      }
-export function useGetWechatUserByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetWechatUserByIdQuery, GetWechatUserByIdQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetWechatUserByIdQuery, GetWechatUserByIdQueryVariables>(GetWechatUserByIdDocument, options);
-        }
-export function useGetWechatUserByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetWechatUserByIdQuery, GetWechatUserByIdQueryVariables>) {
-          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetWechatUserByIdQuery, GetWechatUserByIdQueryVariables>(GetWechatUserByIdDocument, options);
-        }
-export type GetWechatUserByIdQueryHookResult = ReturnType<typeof useGetWechatUserByIdQuery>;
-export type GetWechatUserByIdLazyQueryHookResult = ReturnType<typeof useGetWechatUserByIdLazyQuery>;
-export type GetWechatUserByIdSuspenseQueryHookResult = ReturnType<typeof useGetWechatUserByIdSuspenseQuery>;
-export type GetWechatUserByIdQueryResult = ApolloReactCommon.QueryResult<GetWechatUserByIdQuery, GetWechatUserByIdQueryVariables>;
-export const CreateWechatUserDocument = gql`
-    mutation CreateWechatUser($data: create_wechat_users_input!) {
-  create_wechat_users_item(data: $data) {
-    id
-    nickname
-    openid
-    unionid
-    headimgurl
-    city
-    country
-    province
-    language
-    sex
-    is_active
-    created_at
-    updated_at
-  }
-}
-    `;
-export type CreateWechatUserMutationFn = ApolloReactCommon.MutationFunction<CreateWechatUserMutation, CreateWechatUserMutationVariables>;
-
-/**
- * __useCreateWechatUserMutation__
- *
- * To run a mutation, you first call `useCreateWechatUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateWechatUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createWechatUserMutation, { data, loading, error }] = useCreateWechatUserMutation({
- *   variables: {
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useCreateWechatUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateWechatUserMutation, CreateWechatUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useMutation<CreateWechatUserMutation, CreateWechatUserMutationVariables>(CreateWechatUserDocument, options);
-      }
-export type CreateWechatUserMutationHookResult = ReturnType<typeof useCreateWechatUserMutation>;
-export type CreateWechatUserMutationResult = ApolloReactCommon.MutationResult<CreateWechatUserMutation>;
-export type CreateWechatUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateWechatUserMutation, CreateWechatUserMutationVariables>;
-export const UpdateWechatUserDocument = gql`
-    mutation UpdateWechatUser($id: ID!, $data: update_wechat_users_input!) {
-  update_wechat_users_item(id: $id, data: $data) {
-    id
-    nickname
-    openid
-    unionid
-    headimgurl
-    city
-    country
-    province
-    language
-    sex
-    is_active
-    created_at
-    updated_at
-  }
-}
-    `;
-export type UpdateWechatUserMutationFn = ApolloReactCommon.MutationFunction<UpdateWechatUserMutation, UpdateWechatUserMutationVariables>;
-
-/**
- * __useUpdateWechatUserMutation__
- *
- * To run a mutation, you first call `useUpdateWechatUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateWechatUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateWechatUserMutation, { data, loading, error }] = useUpdateWechatUserMutation({
- *   variables: {
- *      id: // value for 'id'
- *      data: // value for 'data'
- *   },
- * });
- */
-export function useUpdateWechatUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateWechatUserMutation, UpdateWechatUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useMutation<UpdateWechatUserMutation, UpdateWechatUserMutationVariables>(UpdateWechatUserDocument, options);
-      }
-export type UpdateWechatUserMutationHookResult = ReturnType<typeof useUpdateWechatUserMutation>;
-export type UpdateWechatUserMutationResult = ApolloReactCommon.MutationResult<UpdateWechatUserMutation>;
-export type UpdateWechatUserMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateWechatUserMutation, UpdateWechatUserMutationVariables>;
-export const DeleteWechatUserDocument = gql`
-    mutation DeleteWechatUser($id: ID!) {
-  delete_wechat_users_item(id: $id) {
-    id
-  }
-}
-    `;
-export type DeleteWechatUserMutationFn = ApolloReactCommon.MutationFunction<DeleteWechatUserMutation, DeleteWechatUserMutationVariables>;
-
-/**
- * __useDeleteWechatUserMutation__
- *
- * To run a mutation, you first call `useDeleteWechatUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteWechatUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteWechatUserMutation, { data, loading, error }] = useDeleteWechatUserMutation({
- *   variables: {
- *      id: // value for 'id'
- *   },
- * });
- */
-export function useDeleteWechatUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteWechatUserMutation, DeleteWechatUserMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useMutation<DeleteWechatUserMutation, DeleteWechatUserMutationVariables>(DeleteWechatUserDocument, options);
-      }
-export type DeleteWechatUserMutationHookResult = ReturnType<typeof useDeleteWechatUserMutation>;
-export type DeleteWechatUserMutationResult = ApolloReactCommon.MutationResult<DeleteWechatUserMutation>;
-export type DeleteWechatUserMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteWechatUserMutation, DeleteWechatUserMutationVariables>;
