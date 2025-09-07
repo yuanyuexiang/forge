@@ -1,6 +1,9 @@
-import { ApolloClient, InMemoryCache, HttpLink, from, fromPromise } from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink, from, fromPromise, split } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { createClient } from 'graphql-ws';
+import { getMainDefinition } from '@apollo/client/utilities';
 import { DIRECTUS_CONFIG } from './directus-config';
 import { TokenManager } from '../auth/token-manager';
 import { getEnvironmentInfo } from '../utils/environment';
@@ -143,15 +146,47 @@ const createApolloClient = () => {
     }
   });
 
-  // 组合所有链接
-  const link = from([
-    errorLink,
-    authLink,
-    httpLink
-  ]);
+  // 创建 WebSocket 链接用于 Subscription
+  const wsLink = typeof window !== 'undefined' ? new GraphQLWsLink(
+    createClient({
+      url: DIRECTUS_CONFIG.getWebSocketEndpoint(),
+      connectionParams: async () => {
+        const token = await TokenManager.getValidToken();
+        return {
+          authorization: token ? `Bearer ${token}` : "",
+        };
+      },
+      on: {
+        connected: () => {
+          apiLogger.info('WebSocket connected for subscriptions');
+        },
+        closed: () => {
+          apiLogger.info('WebSocket connection closed');
+        },
+        error: (error) => {
+          apiLogger.error('WebSocket error', error);
+        },
+      },
+    })
+  ) : null;
+
+  // 使用 split 根据操作类型选择链接
+  const splitLink = wsLink 
+    ? split(
+        ({ query }) => {
+          const definition = getMainDefinition(query);
+          return (
+            definition.kind === 'OperationDefinition' &&
+            definition.operation === 'subscription'
+          );
+        },
+        wsLink,
+        from([errorLink, authLink, httpLink])
+      )
+    : from([errorLink, authLink, httpLink]);
 
   return new ApolloClient({
-    link,
+    link: splitLink,
     cache: new InMemoryCache({
       typePolicies: {
         // 可以在这里定义缓存策略

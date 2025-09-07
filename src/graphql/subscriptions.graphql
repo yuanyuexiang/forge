@@ -1,0 +1,91 @@
+# 实时订阅相关的 GraphQL 操作
+
+# 订阅产品变化
+subscription ProductSubscription($event: EventEnum) {
+  products_mutated(event: $event) {
+    key
+    event
+    data {
+      id
+      name
+      price
+      status
+      date_updated
+      user_created {
+        id
+      }
+    }
+  }
+}
+
+# 订阅订单变化
+subscription OrderSubscription($event: EventEnum) {
+  orders_mutated(event: $event) {
+    key
+    event
+    data {
+      id
+      status
+      total_price
+      date_updated
+      customers_id {
+        id
+        nick_name
+      }
+      user_created {
+        id
+      }
+    }
+  }
+}
+
+# 订阅分类变化
+subscription CategorySubscription($event: EventEnum) {
+  categories_mutated(event: $event) {
+    key
+    event
+    data {
+      id
+      name
+      description
+      date_updated
+      user_created {
+        id
+      }
+    }
+  }
+}
+
+# 订阅客户变化
+subscription CustomerSubscription($event: EventEnum) {
+  customers_mutated(event: $event) {
+    key
+    event
+    data {
+      id
+      nick_name
+      status
+      date_updated
+      user_created {
+        id
+      }
+    }
+  }
+}
+
+# 订阅精品店变化
+subscription BoutiqueSubscription($event: EventEnum) {
+  boutiques_mutated(event: $event) {
+    key
+    event
+    data {
+      id
+      name
+      status
+      date_updated
+      user_created {
+        id
+      }
+    }
+  }
+}
