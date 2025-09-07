@@ -59,8 +59,19 @@ function BoutiqueEditContent() {
 
   const isEditMode = params.id !== 'new';
 
-  // 查询店铺列表
-  const { data: boutiquesData, refetch } = useGetBoutiquesQuery();
+  // 获取当前用户 ID
+  const [userId, setUserId] = useState<string | null>(null);
+  
+  useEffect(() => {
+    const currentUserId = TokenManager.getCurrentUserId();
+    setUserId(currentUserId);
+  }, []);
+
+  // 查询店铺列表（带权限过滤）
+  const { data: boutiquesData, refetch } = useGetBoutiquesQuery({
+    variables: userId ? { userId } : undefined,
+    skip: !userId
+  });
   
   // 创建店铺
   const [createBoutique] = useCreateBoutiqueMutation({
@@ -153,6 +164,11 @@ function BoutiqueEditContent() {
       router.push('/boutiques');
     }
   };
+
+  // 当数据加载完成时初始化表单
+  useEffect(() => {
+    fetchBoutique();
+  }, [boutiquesData, params.id, isEditMode]);
 
   // 主图上传处理
   const handleMainImageUpload = useCallback(async (file: File) => {
