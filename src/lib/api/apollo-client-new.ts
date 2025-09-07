@@ -3,11 +3,10 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { TokenManager } from '@lib/auth/token-manager';
 import { apiLogger } from '@lib/utils/logger';
-import { DIRECTUS_CONFIG } from './directus-config';
 
 // 简化的 HTTP Link - 支持查询、变更和 HTTP Multipart Subscriptions
 const httpLink = new HttpLink({
-  uri: DIRECTUS_CONFIG.getGraphQLEndpoint(), // 使用代理端点
+  uri: process.env.NEXT_PUBLIC_DIRECTUS_URL + '/graphql',
   // Apollo Client 会自动为 subscription 操作添加必要的 headers
 });
 

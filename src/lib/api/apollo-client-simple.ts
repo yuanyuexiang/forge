@@ -3,15 +3,13 @@ import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
 import { TokenManager } from '@lib/auth/token-manager';
 import { apiLogger } from '@lib/utils/logger';
-import { DIRECTUS_CONFIG } from './directus-config';
 
-// 简化的 HTTP Link - 支持查询、变更和 HTTP Multipart Subscriptions
+// HTTP Link for all operations (including subscriptions via multipart HTTP)
 const httpLink = new HttpLink({
-  uri: DIRECTUS_CONFIG.getGraphQLEndpoint(), // 使用代理端点
-  // Apollo Client 会自动为 subscription 操作添加必要的 headers
+  uri: process.env.NEXT_PUBLIC_DIRECTUS_URL + '/graphql',
 });
 
-// 认证链接
+// Auth link to add authorization headers
 const authLink = setContext(async (_, { headers }) => {
   try {
     const token = await TokenManager.getValidToken();
@@ -28,7 +26,7 @@ const authLink = setContext(async (_, { headers }) => {
   }
 });
 
-// 错误处理链接
+// Error link for handling GraphQL and network errors
 const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) => {
   if (graphQLErrors) {
     graphQLErrors.forEach(({ message, locations, path, extensions }) => {
@@ -36,17 +34,13 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
         message,
         locations,
         path,
-        extensions,
-        operation: operation.operationName
+        extensions
       });
       
-      // 处理认证错误
+      // Handle authentication errors
       if (extensions?.code === 'UNAUTHENTICATED') {
         TokenManager.clearTokens();
-        // 可以在这里触发重新登录逻辑
-        if (typeof window !== 'undefined') {
-          window.location.href = '/login';
-        }
+        // 可以触发重新登录逻辑
       }
     });
   }
@@ -54,40 +48,26 @@ const errorLink = onError(({ graphQLErrors, networkError, operation, forward }) 
   if (networkError) {
     apiLogger.error('Network error:', networkError);
     
-    // 处理网络认证错误
+    // Handle specific network errors
     if ('statusCode' in networkError && networkError.statusCode === 401) {
       TokenManager.clearTokens();
-      if (typeof window !== 'undefined') {
-        window.location.href = '/login';
-      }
     }
   }
 });
 
-// 创建 Apollo Client
+// Create the Apollo Client with HTTP-only approach
 const client = new ApolloClient({
   link: from([
     errorLink,
     authLink,
-    httpLink  // 单一 HTTP 链接处理所有操作类型
+    httpLink  // Single HTTP link handles queries, mutations, AND subscriptions
   ]),
   cache: new InMemoryCache({
     typePolicies: {
+      // Configure cache policies as needed
       Query: {
         fields: {
-          // 配置字段策略以支持轮询更新
-          products: {
-            merge: (existing = [], incoming) => incoming,
-          },
-          orders: {
-            merge: (existing = [], incoming) => incoming,
-          },
-          customers: {
-            merge: (existing = [], incoming) => incoming,
-          },
-          categories: {
-            merge: (existing = [], incoming) => incoming,
-          }
+          // Add any specific field policies
         }
       }
     }
@@ -95,15 +75,11 @@ const client = new ApolloClient({
   defaultOptions: {
     watchQuery: {
       errorPolicy: 'all',
-      fetchPolicy: 'cache-and-network',
-      notifyOnNetworkStatusChange: true
+      fetchPolicy: 'cache-and-network'
     },
     query: {
       errorPolicy: 'all',
       fetchPolicy: 'cache-first'
-    },
-    mutate: {
-      errorPolicy: 'all'
     }
   }
 });
