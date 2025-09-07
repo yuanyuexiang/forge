@@ -131,7 +131,6 @@ function CategoriesContent() {
   const saveCategory = async () => {
     try {
       const values = await form.validateFields();
-      console.log('表单值:', values);
       
       if (editingCategory) {
         // 更新分类 - 需要将 boutique_id 包装为对象
@@ -140,7 +139,6 @@ function CategoriesContent() {
           boutique_id: values.boutique_id ? { id: values.boutique_id } : null
         };
         
-        console.log('更新分类数据:', updateData);
         await updateCategory({
           variables: {
             id: editingCategory.id,
@@ -148,27 +146,15 @@ function CategoriesContent() {
           }
         });
       } else {
-        // 创建分类 - 同样需要将 boutique_id 包装为对象
-        const createData = {
-          name: values.name,
-          description: values.description || null,
-          boutique_id: values.boutique_id ? { id: values.boutique_id } : null
-        };
-        
-        console.log('创建分类数据:', createData);
+        // 创建分类
         await createCategory({
           variables: {
-            data: createData
+            data: values
           }
         });
       }
     } catch (error) {
       console.error('保存分类失败:', error);
-      if (error instanceof Error && error.message) {
-        message.error(`保存失败: ${error.message}`);
-      } else {
-        message.error('保存分类失败，请检查控制台获取详细信息');
-      }
     }
   };
 
@@ -345,6 +331,7 @@ function CategoriesContent() {
           <Form.Item
             label="所属店铺"
             name="boutique_id"
+            rules={[{ required: true, message: '请选择所属店铺' }]}
           >
             <Select
               placeholder="请选择店铺"
