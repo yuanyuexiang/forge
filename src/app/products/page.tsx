@@ -23,11 +23,15 @@ import {
   CheckCircleOutlined
 } from '@ant-design/icons';
 import { ProtectedRoute, AdminLayout } from '@components';
-import {
+import { 
   useGetProductsQuery,
   useDeleteProductMutation,
   GetProductsQuery
 } from '@generated/graphql';
+import { FILE_CONFIG } from '@lib/api';
+import { TokenManager } from '@lib/auth';
+import { useProductUpdates } from '@/hooks/useRealtimeUpdates-simple';
+import RealtimeStatus from '@/components/RealtimeStatus';
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -88,18 +92,14 @@ function ProductsContent() {
     setUserId(currentUserId);
   }, []);
 
-  // 查询产品列表 - 使用轮询实现实时更新
-  const { 
-    data: productsData, 
-    loading, 
-    error, 
-    refetch
-  } = useGetProductsQuery({
+  // 查询产品列表
+  const { data: productsData, loading, error, refetch } = useGetProductsQuery({
     variables: userId ? { userId } : undefined,
-    skip: !userId, // 如果没有用户 ID 就跳过查询
-    pollInterval: 30000, // 30秒轮询
-    notifyOnNetworkStatusChange: true,
+    skip: !userId // 如果没有用户 ID 就跳过查询
   });
+
+  // 启用产品实时更新
+  const { connectionStatus, isConnected } = useProductUpdates();
   
   // 从 URL 参数恢复状态
   useEffect(() => {
@@ -397,24 +397,7 @@ function ProductsContent() {
       <div className="mb-6 flex justify-between items-center">
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
           <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>商品管理</Title>
-          <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px',
-            fontSize: '12px',
-            color: '#6B7280',
-            backgroundColor: '#F3F4F6',
-            padding: '4px 8px',
-            borderRadius: '6px'
-          }}>
-            <div style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              backgroundColor: '#10B981'
-            }} />
-            轮询模式 (30秒)
-          </div>
+          <RealtimeStatus connectionStatus={connectionStatus} showLabel />
         </div>
         <Button 
           type="primary" 

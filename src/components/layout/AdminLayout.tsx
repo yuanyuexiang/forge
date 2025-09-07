@@ -62,14 +62,20 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     {
       key: 'dashboard',
       icon: <DashboardOutlined />,
-      label: '仪表板',
+      label: '仪表盘',
       onClick: () => router.push('/dashboard'),
     },
     {
-      key: 'realtime-dashboard',
-      icon: <DatabaseOutlined />,
-      label: '实时数据',
-      onClick: () => router.push('/realtime-dashboard'),
+      key: 'boutiques',
+      icon: <ShopOutlined />,
+      label: '店铺管理',
+      onClick: () => router.push('/boutiques'),
+    },
+    {
+      key: 'categories',
+      icon: <TagOutlined />,
+      label: '分类管理',
+      onClick: () => router.push('/categories'),
     },
     {
       key: 'products',
@@ -89,7 +95,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       label: '客户管理',
       onClick: () => router.push('/customers'),
     },
-  ];  const userMenuItems = [
+  ];
+
+  const userMenuItems = [
     {
       key: 'profile',
       icon: <UserOutlined />,

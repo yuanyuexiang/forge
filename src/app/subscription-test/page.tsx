@@ -3,7 +3,7 @@
 import React from 'react';
 import { Card, Typography, Space, Divider } from 'antd';
 import { useSubscription } from '@/hooks/useSubscription';
-import { useRealtimeUpdates } from '@/hooks/useRealtimeUpdates-real';
+import { useRealtimeUpdates } from '@/hooks/useRealtimeUpdates-simple';
 import RealtimeStatus from '@/components/RealtimeStatus';
 
 const { Title, Text } = Typography;
