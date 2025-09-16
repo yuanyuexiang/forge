@@ -132,6 +132,11 @@ function BoutiqueEditContent() {
       form.setFieldsValue({
         name: foundBoutique.name,
         address: foundBoutique.address,
+        city: foundBoutique.city,
+        code: foundBoutique.code,
+        category: foundBoutique.category,
+        contact: foundBoutique.contact,
+        expire_date: foundBoutique.expire_date,
         stars: foundBoutique.stars,
         status: foundBoutique.status,
         sort: foundBoutique.sort,
@@ -417,6 +422,41 @@ function BoutiqueEditContent() {
                 name="address"
               >
                 <Input placeholder="请输入店铺地址" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="城市"
+                name="city"
+              >
+                <Input placeholder="请输入所在城市" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="店铺代码"
+                name="code"
+              >
+                <Input placeholder="请输入店铺代码" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="店铺类别"
+                name="category"
+              >
+                <Input placeholder="请输入店铺类别" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="联系方式"
+                name="contact"
+              >
+                <Input placeholder="请输入联系电话或邮箱" size="large" />
+              </Form.Item>
+
+              <Form.Item
+                label="过期时间"
+                name="expire_date"
+              >
+                <Input placeholder="请输入过期时间 (YYYY-MM-DD)" size="large" />
               </Form.Item>
 
               <Form.Item

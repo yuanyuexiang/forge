@@ -14,7 +14,9 @@ import {
   Tag,
   Avatar,
   Space,
-  Empty
+  Empty,
+  Button,
+  message
 } from 'antd';
 import { 
   EyeOutlined, 
@@ -22,7 +24,8 @@ import {
   UserOutlined,
   ShopOutlined,
   RiseOutlined,
-  BarChartOutlined
+  BarChartOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 import { 
   useGetViewsQuery,
@@ -33,6 +36,7 @@ import {
 } from '../../generated/graphql';
 import { ProtectedRoute, AdminLayout } from '@components';
 import { TokenManager } from '@lib/auth';
+import { exportViews } from '@lib/utils';
 import dayjs from 'dayjs';
 
 const { Title } = Typography;
@@ -99,6 +103,21 @@ export default function ViewsPage() {
   const todayViews = views.filter(v => 
     v.date_created && dayjs(v.date_created).isAfter(dayjs().startOf('day'))
   ).length;
+
+  // 处理导出功能
+  const handleExport = () => {
+    try {
+      if (views.length === 0) {
+        message.warning('暂无数据可导出');
+        return;
+      }
+      exportViews(views);
+      message.success('数据导出成功');
+    } catch (error) {
+      console.error('导出失败:', error);
+      message.error('导出失败，请重试');
+    }
+  };
 
   // 热门商品统计
   const productViewCounts = views.reduce((acc, view) => {
@@ -262,13 +281,22 @@ export default function ViewsPage() {
     <ProtectedRoute>
       <AdminLayout>
         <div style={{ height: '100%', padding: '24px', backgroundColor: '#F9FAFB' }}>
-          <div className="mb-6">
-            <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>
-              商品浏览分析
-            </Title>
-            <p style={{ color: '#6B7280', marginTop: 4, marginBottom: 0 }}>
-              分析用户浏览行为，了解热门商品和活跃用户
-            </p>
+          <div className="mb-6 flex justify-between items-center">
+            <div>
+              <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>
+                商品浏览分析
+              </Title>
+              <p style={{ color: '#6B7280', marginTop: 4, marginBottom: 0 }}>
+                分析用户浏览行为，了解热门商品和活跃用户
+              </p>
+            </div>
+            <Button 
+              icon={<DownloadOutlined />}
+              onClick={handleExport}
+              disabled={views.length === 0}
+            >
+              导出数据
+            </Button>
           </div>
 
           {/* 统计卡片 */}

@@ -4223,26 +4223,26 @@ export type GetBoutiquesQueryVariables = Exact<{
 }>;
 
 
-export type GetBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetAllBoutiquesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetAllBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetBoutiqueByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetBoutiqueByIdQuery = { __typename?: 'Query', boutiques_by_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+export type GetBoutiqueByIdQuery = { __typename?: 'Query', boutiques_by_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
 
 export type CreateBoutiqueMutationVariables = Exact<{
   data: Create_Boutiques_Input;
 }>;
 
 
-export type CreateBoutiqueMutation = { __typename?: 'Mutation', create_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null } | null };
+export type CreateBoutiqueMutation = { __typename?: 'Mutation', create_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null } | null };
 
 export type UpdateBoutiqueMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4250,7 +4250,7 @@ export type UpdateBoutiqueMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBoutiqueMutation = { __typename?: 'Mutation', update_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_updated?: any | null } | null };
+export type UpdateBoutiqueMutation = { __typename?: 'Mutation', update_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_updated?: any | null } | null };
 
 export type DeleteBoutiqueMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4785,6 +4785,11 @@ export const GetBoutiquesDocument = gql`
     id
     name
     address
+    city
+    code
+    category
+    contact
+    expire_date
     main_image
     images
     stars
@@ -4840,6 +4845,11 @@ export const GetAllBoutiquesDocument = gql`
     id
     name
     address
+    city
+    code
+    category
+    contact
+    expire_date
     main_image
     images
     stars
@@ -4894,6 +4904,11 @@ export const GetBoutiqueByIdDocument = gql`
     id
     name
     address
+    city
+    code
+    category
+    contact
+    expire_date
     main_image
     images
     stars
@@ -4943,6 +4958,11 @@ export const CreateBoutiqueDocument = gql`
     id
     name
     address
+    city
+    code
+    category
+    contact
+    expire_date
     main_image
     images
     stars
@@ -4984,6 +5004,11 @@ export const UpdateBoutiqueDocument = gql`
     id
     name
     address
+    city
+    code
+    category
+    contact
+    expire_date
     main_image
     images
     stars

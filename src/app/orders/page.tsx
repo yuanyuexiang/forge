@@ -24,7 +24,8 @@ import {
   ShoppingCartOutlined,
   DollarOutlined,
   UserOutlined,
-  ClockCircleOutlined 
+  ClockCircleOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 import { 
   useGetOrdersQuery,
@@ -33,6 +34,7 @@ import {
 } from '../../generated/graphql';
 import { ProtectedRoute, AdminLayout } from '@components';
 import { TokenManager } from '@lib/auth';
+import { exportOrders } from '@lib/utils';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -123,6 +125,21 @@ function OrdersContent() {
       case 'completed': return 'green';
       case 'cancelled': return 'red';
       default: return 'default';
+    }
+  };
+
+  // 处理导出功能
+  const handleExport = () => {
+    try {
+      if (orders.length === 0) {
+        message.warning('暂无数据可导出');
+        return;
+      }
+      exportOrders(orders);
+      message.success('数据导出成功');
+    } catch (error) {
+      console.error('导出失败:', error);
+      message.error('导出失败，请重试');
     }
   };
 
@@ -323,6 +340,13 @@ function OrdersContent() {
             style={{ width: 300 }}
           />
           <Button onClick={() => refetch()}>刷新</Button>
+          <Button 
+            icon={<DownloadOutlined />}
+            onClick={handleExport}
+            disabled={orders.length === 0}
+          >
+            导出数据
+          </Button>
         </Space>
       </div>
 

@@ -300,6 +300,62 @@ function BoutiquesContent() {
       sorter: (a: Boutique, b: Boutique) => (a.address || '').localeCompare(b.address || ''),
     },
     {
+      title: '城市',
+      dataIndex: 'city',
+      key: 'city',
+      width: 120,
+      render: (city: string) => city || '-',
+      sorter: (a: Boutique, b: Boutique) => (a.city || '').localeCompare(b.city || ''),
+    },
+    {
+      title: '店铺代码',
+      dataIndex: 'code',
+      key: 'code',
+      width: 120,
+      render: (code: string) => code || '-',
+      sorter: (a: Boutique, b: Boutique) => (a.code || '').localeCompare(b.code || ''),
+    },
+    {
+      title: '类别',
+      dataIndex: 'category',
+      key: 'category',
+      width: 120,
+      render: (category: string) => category || '-',
+      sorter: (a: Boutique, b: Boutique) => (a.category || '').localeCompare(b.category || ''),
+    },
+    {
+      title: '联系方式',
+      dataIndex: 'contact',
+      key: 'contact',
+      width: 140,
+      render: (contact: string) => (
+        <div 
+          style={{ 
+            overflow: 'hidden', 
+            textOverflow: 'ellipsis', 
+            whiteSpace: 'nowrap',
+            maxWidth: '120px'
+          }}
+          title={contact}
+        >
+          {contact || '-'}
+        </div>
+      ),
+      sorter: (a: Boutique, b: Boutique) => (a.contact || '').localeCompare(b.contact || ''),
+    },
+    {
+      title: '过期时间',
+      dataIndex: 'expire_date',
+      key: 'expire_date',
+      width: 120,
+      render: (date: string) => date ? new Date(date).toLocaleDateString() : '-',
+      sorter: (a: Boutique, b: Boutique) => {
+        const dateA = a.expire_date ? new Date(a.expire_date).getTime() : 0;
+        const dateB = b.expire_date ? new Date(b.expire_date).getTime() : 0;
+        return dateA - dateB;
+      },
+    },
+    {
       title: '状态',
       dataIndex: 'status',
       key: 'status',

@@ -24,7 +24,8 @@ import {
   DeleteOutlined,
   DesktopOutlined,
   ClockCircleOutlined,
-  UserOutlined
+  UserOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 import { 
   useGetTerminalsQuery,
@@ -35,6 +36,7 @@ import {
 } from '../../generated/graphql';
 import { ProtectedRoute, AdminLayout } from '@components';
 import { TokenManager } from '@lib/auth';
+import { exportTerminals } from '@lib/utils';
 import dayjs from 'dayjs';
 
 const { Title } = Typography;
@@ -116,6 +118,21 @@ export default function TerminalsPage() {
       terminal.user_created?.email?.toLowerCase().includes(searchLower)
     );
   });
+
+  // 处理导出功能
+  const handleExport = () => {
+    try {
+      if (terminals.length === 0) {
+        message.warning('暂无数据可导出');
+        return;
+      }
+      exportTerminals(terminals);
+      message.success('数据导出成功');
+    } catch (error) {
+      console.error('导出失败:', error);
+      message.error('导出失败，请重试');
+    }
+  };
 
   // 计算统计数据
   const totalTerminals = terminals.length;
@@ -257,17 +274,26 @@ export default function TerminalsPage() {
             <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>
               终端设备管理
             </Title>
-            <Button 
-              type="primary" 
-              icon={<PlusOutlined />}
-              onClick={() => {
-                setEditingTerminal(null);
-                form.resetFields();
-                setIsModalVisible(true);
-              }}
-            >
-              新增终端设备
-            </Button>
+            <Space>
+              <Button 
+                icon={<DownloadOutlined />}
+                onClick={handleExport}
+                disabled={terminals.length === 0}
+              >
+                导出数据
+              </Button>
+              <Button 
+                type="primary" 
+                icon={<PlusOutlined />}
+                onClick={() => {
+                  setEditingTerminal(null);
+                  form.resetFields();
+                  setIsModalVisible(true);
+                }}
+              >
+                新增终端设备
+              </Button>
+            </Space>
           </div>
 
           {/* 统计卡片 */}

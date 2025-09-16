@@ -24,7 +24,8 @@ import {
   WechatOutlined,
   ClockCircleOutlined,
   EnvironmentOutlined,
-  PhoneOutlined
+  PhoneOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 import { 
   useGetCustomersQuery,
@@ -32,6 +33,7 @@ import {
 } from '../../generated/graphql';
 import { ProtectedRoute, AdminLayout } from '@components';
 import { TokenManager } from '@lib/auth';
+import { exportCustomers } from '@lib/utils';
 
 const { Title, Text } = Typography;
 const { Search } = Input;
@@ -118,6 +120,21 @@ function CustomersContent() {
       case 'inactive': return '不活跃';
       case 'banned': return '已封禁';
       default: return '未知';
+    }
+  };
+
+  // 处理导出功能
+  const handleExport = () => {
+    try {
+      if (users.length === 0) {
+        message.warning('暂无数据可导出');
+        return;
+      }
+      exportCustomers(users);
+      message.success('数据导出成功');
+    } catch (error) {
+      console.error('导出失败:', error);
+      message.error('导出失败，请重试');
     }
   };
 
@@ -262,6 +279,13 @@ function CustomersContent() {
           <Col span={16}>
             <Space>
               <Button onClick={() => refetch()}>刷新数据</Button>
+              <Button 
+                icon={<DownloadOutlined />}
+                onClick={handleExport}
+                disabled={users.length === 0}
+              >
+                导出数据
+              </Button>
               <Text type="secondary">
                 共找到 {filteredUsers.length} 个客户
               </Text>

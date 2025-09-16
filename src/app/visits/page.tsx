@@ -15,7 +15,9 @@ import {
   Avatar,
   Space,
   Empty,
-  Progress
+  Progress,
+  Button,
+  message
 } from 'antd';
 import { 
   ShopOutlined, 
@@ -24,7 +26,8 @@ import {
   RiseOutlined,
   FallOutlined,
   TeamOutlined,
-  EnvironmentOutlined
+  EnvironmentOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 import { 
   useGetVisitsQuery,
@@ -35,6 +38,7 @@ import {
 } from '../../generated/graphql';
 import { ProtectedRoute, AdminLayout } from '@components';
 import { TokenManager } from '@lib/auth';
+import { exportVisits } from '@lib/utils';
 import dayjs from 'dayjs';
 
 const { Title } = Typography;
@@ -102,6 +106,21 @@ export default function VisitsPage() {
   const totalVisits = visits.length;
   const uniqueCustomers = new Set(visits.map(v => v.customer?.id).filter(Boolean)).size;
   const uniqueBoutiques = new Set(visits.map(v => v.boutique?.id).filter(Boolean)).size;
+  
+  // 处理导出功能
+  const handleExport = () => {
+    try {
+      if (visits.length === 0) {
+        message.warning('暂无数据可导出');
+        return;
+      }
+      exportVisits(visits);
+      message.success('数据导出成功');
+    } catch (error) {
+      console.error('导出失败:', error);
+      message.error('导出失败，请重试');
+    }
+  };
   
   const todayVisits = visits.filter(v => 
     v.date_created && dayjs(v.date_created).isAfter(dayjs().startOf('day'))
@@ -273,13 +292,22 @@ export default function VisitsPage() {
     <ProtectedRoute>
       <AdminLayout>
         <div style={{ height: '100%', padding: '24px', backgroundColor: '#F9FAFB' }}>
-          <div className="mb-6">
-            <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>
-              店铺访问统计
-            </Title>
-            <p style={{ color: '#6B7280', marginTop: 4, marginBottom: 0 }}>
-              分析店铺访问情况，了解热门店铺和客户行为模式
-            </p>
+          <div className="mb-6 flex justify-between items-center">
+            <div>
+              <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>
+                店铺访问统计
+              </Title>
+              <p style={{ color: '#6B7280', marginTop: 4, marginBottom: 0 }}>
+                分析店铺访问情况，了解热门店铺和客户行为模式
+              </p>
+            </div>
+            <Button 
+              icon={<DownloadOutlined />}
+              onClick={handleExport}
+              disabled={visits.length === 0}
+            >
+              导出数据
+            </Button>
           </div>
 
           {/* 统计卡片 */}
