@@ -4,14 +4,14 @@
 query GetOrders($userId: ID) {
   orders(filter: { user_created: { id: { _eq: $userId } } }) {
     id
-    customers_id {
+    customer {
       id
       nick_name
       open_id
       avatar
       sex
     }
-    boutique_id {
+    boutique {
       id
       name
       address
@@ -33,14 +33,14 @@ query GetOrders($userId: ID) {
 query GetAllOrders {
   orders {
     id
-    customers_id {
+    customer {
       id
       nick_name
       open_id
       avatar
       sex
     }
-    boutique_id {
+    boutique {
       id
       name
       address
@@ -62,14 +62,14 @@ query GetAllOrders {
 query GetOrderById($id: ID!) {
   orders_by_id(id: $id) {
     id
-    customers_id {
+    customer {
       id
       nick_name
       open_id
       avatar
       sex
     }
-    boutique_id {
+    boutique {
       id
       name
       address
@@ -81,32 +81,32 @@ query GetOrderById($id: ID!) {
   }
 }
 
-# 查询订单项
-query GetOrderItems($orderId: GraphQLStringOrFloat!) {
-  order_items(filter: { order_id: { id: { _eq: $orderId } } }) {
-    id
-    order_id {
-      id
-    }
-    product_id {
-      id
-      name
-      description
-    }
-    quantity
-    price
-  }
-}
+# 由于schema中没有order_items表，这个查询需要重新设计
+# query GetOrderItems($orderId: GraphQLStringOrFloat!) {
+#   order_items(filter: { order_id: { id: { _eq: $orderId } } }) {
+#     id
+#     order_id {
+#       id
+#     }
+#     product_id {
+#       id
+#       name
+#       description
+#     }
+#     quantity
+#     price
+#   }
+# }
 
 # 创建订单
 mutation CreateOrder($data: create_orders_input!) {
   create_orders_item(data: $data) {
     id
-    customers_id {
+    customer {
       id
       nick_name
     }
-    boutique_id {
+    boutique {
       id
       name
       address
@@ -122,11 +122,11 @@ mutation CreateOrder($data: create_orders_input!) {
 mutation UpdateOrder($id: ID!, $data: update_orders_input!) {
   update_orders_item(id: $id, data: $data) {
     id
-    customers_id {
+    customer {
       id
       nick_name
     }
-    boutique_id {
+    boutique {
       id
       name
       address

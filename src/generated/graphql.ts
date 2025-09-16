@@ -42,24 +42,32 @@ export type Mutation = {
   create_categories_items: Array<Categories>;
   create_customers_item?: Maybe<Customers>;
   create_customers_items: Array<Customers>;
-  create_order_items_item?: Maybe<Order_Items>;
-  create_order_items_items: Array<Order_Items>;
   create_orders_item?: Maybe<Orders>;
   create_orders_items: Array<Orders>;
   create_products_item?: Maybe<Products>;
   create_products_items: Array<Products>;
+  create_terminals_item?: Maybe<Terminals>;
+  create_terminals_items: Array<Terminals>;
+  create_views_item?: Maybe<Views>;
+  create_views_items: Array<Views>;
+  create_visits_item?: Maybe<Visits>;
+  create_visits_items: Array<Visits>;
   delete_boutiques_item?: Maybe<Delete_One>;
   delete_boutiques_items?: Maybe<Delete_Many>;
   delete_categories_item?: Maybe<Delete_One>;
   delete_categories_items?: Maybe<Delete_Many>;
   delete_customers_item?: Maybe<Delete_One>;
   delete_customers_items?: Maybe<Delete_Many>;
-  delete_order_items_item?: Maybe<Delete_One>;
-  delete_order_items_items?: Maybe<Delete_Many>;
   delete_orders_item?: Maybe<Delete_One>;
   delete_orders_items?: Maybe<Delete_Many>;
   delete_products_item?: Maybe<Delete_One>;
   delete_products_items?: Maybe<Delete_Many>;
+  delete_terminals_item?: Maybe<Delete_One>;
+  delete_terminals_items?: Maybe<Delete_Many>;
+  delete_views_item?: Maybe<Delete_One>;
+  delete_views_items?: Maybe<Delete_Many>;
+  delete_visits_item?: Maybe<Delete_One>;
+  delete_visits_items?: Maybe<Delete_Many>;
   update_boutiques_batch: Array<Boutiques>;
   update_boutiques_item?: Maybe<Boutiques>;
   update_boutiques_items: Array<Boutiques>;
@@ -69,15 +77,21 @@ export type Mutation = {
   update_customers_batch: Array<Customers>;
   update_customers_item?: Maybe<Customers>;
   update_customers_items: Array<Customers>;
-  update_order_items_batch: Array<Order_Items>;
-  update_order_items_item?: Maybe<Order_Items>;
-  update_order_items_items: Array<Order_Items>;
   update_orders_batch: Array<Orders>;
   update_orders_item?: Maybe<Orders>;
   update_orders_items: Array<Orders>;
   update_products_batch: Array<Products>;
   update_products_item?: Maybe<Products>;
   update_products_items: Array<Products>;
+  update_terminals_batch: Array<Terminals>;
+  update_terminals_item?: Maybe<Terminals>;
+  update_terminals_items: Array<Terminals>;
+  update_views_batch: Array<Views>;
+  update_views_item?: Maybe<Views>;
+  update_views_items: Array<Views>;
+  update_visits_batch: Array<Visits>;
+  update_visits_item?: Maybe<Visits>;
+  update_visits_items: Array<Visits>;
 };
 
 
@@ -129,22 +143,6 @@ export type MutationCreate_Customers_ItemsArgs = {
 };
 
 
-export type MutationCreate_Order_Items_ItemArgs = {
-  data: Create_Order_Items_Input;
-};
-
-
-export type MutationCreate_Order_Items_ItemsArgs = {
-  data?: InputMaybe<Array<Create_Order_Items_Input>>;
-  filter?: InputMaybe<Order_Items_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
 export type MutationCreate_Orders_ItemArgs = {
   data: Create_Orders_Input;
 };
@@ -169,6 +167,54 @@ export type MutationCreate_Products_ItemArgs = {
 export type MutationCreate_Products_ItemsArgs = {
   data?: InputMaybe<Array<Create_Products_Input>>;
   filter?: InputMaybe<Products_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationCreate_Terminals_ItemArgs = {
+  data: Create_Terminals_Input;
+};
+
+
+export type MutationCreate_Terminals_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Terminals_Input>>;
+  filter?: InputMaybe<Terminals_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationCreate_Views_ItemArgs = {
+  data: Create_Views_Input;
+};
+
+
+export type MutationCreate_Views_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Views_Input>>;
+  filter?: InputMaybe<Views_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationCreate_Visits_ItemArgs = {
+  data: Create_Visits_Input;
+};
+
+
+export type MutationCreate_Visits_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Visits_Input>>;
+  filter?: InputMaybe<Visits_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -207,16 +253,6 @@ export type MutationDelete_Customers_ItemsArgs = {
 };
 
 
-export type MutationDelete_Order_Items_ItemArgs = {
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationDelete_Order_Items_ItemsArgs = {
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-};
-
-
 export type MutationDelete_Orders_ItemArgs = {
   id: Scalars['ID']['input'];
 };
@@ -233,6 +269,36 @@ export type MutationDelete_Products_ItemArgs = {
 
 
 export type MutationDelete_Products_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
+export type MutationDelete_Terminals_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Terminals_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
+export type MutationDelete_Views_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Views_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
+export type MutationDelete_Visits_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Visits_ItemsArgs = {
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
 };
 
@@ -324,35 +390,6 @@ export type MutationUpdate_Customers_ItemsArgs = {
 };
 
 
-export type MutationUpdate_Order_Items_BatchArgs = {
-  data?: InputMaybe<Array<Update_Order_Items_Input>>;
-  filter?: InputMaybe<Order_Items_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type MutationUpdate_Order_Items_ItemArgs = {
-  data: Update_Order_Items_Input;
-  id: Scalars['ID']['input'];
-};
-
-
-export type MutationUpdate_Order_Items_ItemsArgs = {
-  data: Update_Order_Items_Input;
-  filter?: InputMaybe<Order_Items_Filter>;
-  ids: Array<InputMaybe<Scalars['ID']['input']>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
 export type MutationUpdate_Orders_BatchArgs = {
   data?: InputMaybe<Array<Update_Orders_Input>>;
   filter?: InputMaybe<Orders_Filter>;
@@ -410,6 +447,93 @@ export type MutationUpdate_Products_ItemsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
+
+export type MutationUpdate_Terminals_BatchArgs = {
+  data?: InputMaybe<Array<Update_Terminals_Input>>;
+  filter?: InputMaybe<Terminals_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Terminals_ItemArgs = {
+  data: Update_Terminals_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Terminals_ItemsArgs = {
+  data: Update_Terminals_Input;
+  filter?: InputMaybe<Terminals_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Views_BatchArgs = {
+  data?: InputMaybe<Array<Update_Views_Input>>;
+  filter?: InputMaybe<Views_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Views_ItemArgs = {
+  data: Update_Views_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Views_ItemsArgs = {
+  data: Update_Views_Input;
+  filter?: InputMaybe<Views_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Visits_BatchArgs = {
+  data?: InputMaybe<Array<Update_Visits_Input>>;
+  filter?: InputMaybe<Visits_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Visits_ItemArgs = {
+  data: Update_Visits_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Visits_ItemsArgs = {
+  data: Update_Visits_Input;
+  filter?: InputMaybe<Visits_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 export type Query = {
   __typename?: 'Query';
   boutiques: Array<Boutiques>;
@@ -424,10 +548,6 @@ export type Query = {
   customers_aggregated: Array<Customers_Aggregated>;
   customers_by_id?: Maybe<Customers>;
   customers_by_version?: Maybe<Version_Customers>;
-  order_items: Array<Order_Items>;
-  order_items_aggregated: Array<Order_Items_Aggregated>;
-  order_items_by_id?: Maybe<Order_Items>;
-  order_items_by_version?: Maybe<Version_Order_Items>;
   orders: Array<Orders>;
   orders_aggregated: Array<Orders_Aggregated>;
   orders_by_id?: Maybe<Orders>;
@@ -436,6 +556,18 @@ export type Query = {
   products_aggregated: Array<Products_Aggregated>;
   products_by_id?: Maybe<Products>;
   products_by_version?: Maybe<Version_Products>;
+  terminals: Array<Terminals>;
+  terminals_aggregated: Array<Terminals_Aggregated>;
+  terminals_by_id?: Maybe<Terminals>;
+  terminals_by_version?: Maybe<Version_Terminals>;
+  views: Array<Views>;
+  views_aggregated: Array<Views_Aggregated>;
+  views_by_id?: Maybe<Views>;
+  views_by_version?: Maybe<Version_Views>;
+  visits: Array<Visits>;
+  visits_aggregated: Array<Visits_Aggregated>;
+  visits_by_id?: Maybe<Visits>;
+  visits_by_version?: Maybe<Version_Visits>;
 };
 
 
@@ -538,39 +670,6 @@ export type QueryCustomers_By_VersionArgs = {
 };
 
 
-export type QueryOrder_ItemsArgs = {
-  filter?: InputMaybe<Order_Items_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryOrder_Items_AggregatedArgs = {
-  filter?: InputMaybe<Order_Items_Filter>;
-  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type QueryOrder_Items_By_IdArgs = {
-  id: Scalars['ID']['input'];
-  version?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryOrder_Items_By_VersionArgs = {
-  id: Scalars['ID']['input'];
-  version: Scalars['String']['input'];
-};
-
-
 export type QueryOrdersArgs = {
   filter?: InputMaybe<Orders_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
@@ -636,6 +735,105 @@ export type QueryProducts_By_VersionArgs = {
   version: Scalars['String']['input'];
 };
 
+
+export type QueryTerminalsArgs = {
+  filter?: InputMaybe<Terminals_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryTerminals_AggregatedArgs = {
+  filter?: InputMaybe<Terminals_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryTerminals_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryTerminals_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
+};
+
+
+export type QueryViewsArgs = {
+  filter?: InputMaybe<Views_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryViews_AggregatedArgs = {
+  filter?: InputMaybe<Views_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryViews_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryViews_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
+};
+
+
+export type QueryVisitsArgs = {
+  filter?: InputMaybe<Visits_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryVisits_AggregatedArgs = {
+  filter?: InputMaybe<Visits_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryVisits_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryVisits_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   boutiques_mutated?: Maybe<Boutiques_Mutated>;
@@ -662,9 +860,11 @@ export type Subscription = {
   directus_users_mutated?: Maybe<Directus_Users_Mutated>;
   directus_versions_mutated?: Maybe<Directus_Versions_Mutated>;
   directus_webhooks_mutated?: Maybe<Directus_Webhooks_Mutated>;
-  order_items_mutated?: Maybe<Order_Items_Mutated>;
   orders_mutated?: Maybe<Orders_Mutated>;
   products_mutated?: Maybe<Products_Mutated>;
+  terminals_mutated?: Maybe<Terminals_Mutated>;
+  views_mutated?: Maybe<Views_Mutated>;
+  visits_mutated?: Maybe<Visits_Mutated>;
 };
 
 
@@ -788,17 +988,27 @@ export type SubscriptionDirectus_Webhooks_MutatedArgs = {
 };
 
 
-export type SubscriptionOrder_Items_MutatedArgs = {
-  event?: InputMaybe<EventEnum>;
-};
-
-
 export type SubscriptionOrders_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
 
 export type SubscriptionProducts_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionTerminals_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionViews_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionVisits_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
@@ -827,10 +1037,16 @@ export type Boolean_Filter_Operators = {
 export type Boutiques = {
   __typename?: 'boutiques';
   address?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  code?: Maybe<Scalars['String']['output']>;
+  contact?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   date_updated_func?: Maybe<Datetime_Functions>;
+  expire_date?: Maybe<Scalars['Date']['output']>;
+  expire_date_func?: Maybe<Datetime_Functions>;
   id: Scalars['ID']['output'];
   images?: Maybe<Scalars['JSON']['output']>;
   images_func?: Maybe<Count_Functions>;
@@ -880,8 +1096,13 @@ export type Boutiques_Aggregated = {
 export type Boutiques_Aggregated_Count = {
   __typename?: 'boutiques_aggregated_count';
   address?: Maybe<Scalars['Int']['output']>;
+  category?: Maybe<Scalars['Int']['output']>;
+  city?: Maybe<Scalars['Int']['output']>;
+  code?: Maybe<Scalars['Int']['output']>;
+  contact?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
+  expire_date?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   images?: Maybe<Scalars['Int']['output']>;
   main_image?: Maybe<Scalars['Int']['output']>;
@@ -904,10 +1125,16 @@ export type Boutiques_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Boutiques_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Boutiques_Filter>>>;
   address?: InputMaybe<String_Filter_Operators>;
+  category?: InputMaybe<String_Filter_Operators>;
+  city?: InputMaybe<String_Filter_Operators>;
+  code?: InputMaybe<String_Filter_Operators>;
+  contact?: InputMaybe<String_Filter_Operators>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
   date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  expire_date?: InputMaybe<Date_Filter_Operators>;
+  expire_date_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
   images?: InputMaybe<String_Filter_Operators>;
   images_func?: InputMaybe<Count_Function_Filter_Operators>;
@@ -1048,8 +1275,13 @@ export type Count_Functions = {
 
 export type Create_Boutiques_Input = {
   address?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  contact?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
+  expire_date?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   images?: InputMaybe<Scalars['JSON']['input']>;
   main_image?: InputMaybe<Scalars['String']['input']>;
@@ -1075,6 +1307,7 @@ export type Create_Categories_Input = {
 
 export type Create_Customers_Input = {
   avatar?: InputMaybe<Scalars['String']['input']>;
+  boutique?: InputMaybe<Create_Boutiques_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -1199,21 +1432,13 @@ export type Create_Directus_Users_Input = {
   token?: InputMaybe<Scalars['Hash']['input']>;
 };
 
-export type Create_Order_Items_Input = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-  order_id?: InputMaybe<Create_Orders_Input>;
-  price?: InputMaybe<Scalars['Float']['input']>;
-  product_id?: InputMaybe<Create_Products_Input>;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-};
-
 export type Create_Orders_Input = {
   boutique?: InputMaybe<Create_Boutiques_Input>;
-  boutique_id?: InputMaybe<Create_Boutiques_Input>;
-  customers_id?: InputMaybe<Create_Customers_Input>;
+  customer?: InputMaybe<Create_Customers_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  product?: InputMaybe<Create_Products_Input>;
   status?: InputMaybe<Scalars['String']['input']>;
   total_price?: InputMaybe<Scalars['Float']['input']>;
   user_created?: InputMaybe<Create_Directus_Users_Input>;
@@ -1250,9 +1475,39 @@ export type Create_Products_Input = {
   video_url?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Create_Terminals_Input = {
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
+};
+
+export type Create_Views_Input = {
+  boutique?: InputMaybe<Create_Boutiques_Input>;
+  customer?: InputMaybe<Create_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  product?: InputMaybe<Create_Products_Input>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
+};
+
+export type Create_Visits_Input = {
+  boutique?: InputMaybe<Create_Boutiques_Input>;
+  customer?: InputMaybe<Create_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  user_created?: InputMaybe<Create_Directus_Users_Input>;
+  user_updated?: InputMaybe<Create_Directus_Users_Input>;
+};
+
 export type Customers = {
   __typename?: 'customers';
   avatar?: Maybe<Scalars['String']['output']>;
+  boutique?: Maybe<Boutiques>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
@@ -1266,6 +1521,16 @@ export type Customers = {
   type?: Maybe<Scalars['String']['output']>;
   user_created?: Maybe<Directus_Users>;
   user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type CustomersBoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -1305,6 +1570,7 @@ export type Customers_Aggregated = {
 export type Customers_Aggregated_Count = {
   __typename?: 'customers_aggregated_count';
   avatar?: Maybe<Scalars['Int']['output']>;
+  boutique?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
@@ -1320,6 +1586,7 @@ export type Customers_Aggregated_Count = {
 
 export type Customers_Aggregated_Fields = {
   __typename?: 'customers_aggregated_fields';
+  boutique?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
   sex?: Maybe<Scalars['Float']['output']>;
   sort?: Maybe<Scalars['Float']['output']>;
@@ -1329,6 +1596,7 @@ export type Customers_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Customers_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Customers_Filter>>>;
   avatar?: InputMaybe<String_Filter_Operators>;
+  boutique?: InputMaybe<Boutiques_Filter>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
@@ -2931,94 +3199,16 @@ export type Number_Filter_Operators = {
   _null?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type Order_Items = {
-  __typename?: 'order_items';
-  id: Scalars['ID']['output'];
-  order_id?: Maybe<Orders>;
-  price?: Maybe<Scalars['Float']['output']>;
-  product_id?: Maybe<Products>;
-  quantity?: Maybe<Scalars['Int']['output']>;
-};
-
-
-export type Order_ItemsOrder_IdArgs = {
-  filter?: InputMaybe<Orders_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-
-export type Order_ItemsProduct_IdArgs = {
-  filter?: InputMaybe<Products_Filter>;
-  limit?: InputMaybe<Scalars['Int']['input']>;
-  offset?: InputMaybe<Scalars['Int']['input']>;
-  page?: InputMaybe<Scalars['Int']['input']>;
-  search?: InputMaybe<Scalars['String']['input']>;
-  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
-};
-
-export type Order_Items_Aggregated = {
-  __typename?: 'order_items_aggregated';
-  avg?: Maybe<Order_Items_Aggregated_Fields>;
-  avgDistinct?: Maybe<Order_Items_Aggregated_Fields>;
-  count?: Maybe<Order_Items_Aggregated_Count>;
-  countAll?: Maybe<Scalars['Int']['output']>;
-  countDistinct?: Maybe<Order_Items_Aggregated_Count>;
-  group?: Maybe<Scalars['JSON']['output']>;
-  max?: Maybe<Order_Items_Aggregated_Fields>;
-  min?: Maybe<Order_Items_Aggregated_Fields>;
-  sum?: Maybe<Order_Items_Aggregated_Fields>;
-  sumDistinct?: Maybe<Order_Items_Aggregated_Fields>;
-};
-
-export type Order_Items_Aggregated_Count = {
-  __typename?: 'order_items_aggregated_count';
-  id?: Maybe<Scalars['Int']['output']>;
-  order_id?: Maybe<Scalars['Int']['output']>;
-  price?: Maybe<Scalars['Int']['output']>;
-  product_id?: Maybe<Scalars['Int']['output']>;
-  quantity?: Maybe<Scalars['Int']['output']>;
-};
-
-export type Order_Items_Aggregated_Fields = {
-  __typename?: 'order_items_aggregated_fields';
-  id?: Maybe<Scalars['Float']['output']>;
-  order_id?: Maybe<Scalars['Float']['output']>;
-  price?: Maybe<Scalars['Float']['output']>;
-  product_id?: Maybe<Scalars['Float']['output']>;
-  quantity?: Maybe<Scalars['Float']['output']>;
-};
-
-export type Order_Items_Filter = {
-  _and?: InputMaybe<Array<InputMaybe<Order_Items_Filter>>>;
-  _or?: InputMaybe<Array<InputMaybe<Order_Items_Filter>>>;
-  id?: InputMaybe<Number_Filter_Operators>;
-  order_id?: InputMaybe<Orders_Filter>;
-  price?: InputMaybe<Number_Filter_Operators>;
-  product_id?: InputMaybe<Products_Filter>;
-  quantity?: InputMaybe<Number_Filter_Operators>;
-};
-
-export type Order_Items_Mutated = {
-  __typename?: 'order_items_mutated';
-  data?: Maybe<Order_Items>;
-  event?: Maybe<EventEnum>;
-  key: Scalars['ID']['output'];
-};
-
 export type Orders = {
   __typename?: 'orders';
   boutique?: Maybe<Boutiques>;
-  boutique_id?: Maybe<Boutiques>;
-  customers_id?: Maybe<Customers>;
+  customer?: Maybe<Customers>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   date_updated_func?: Maybe<Datetime_Functions>;
   id: Scalars['ID']['output'];
+  product?: Maybe<Products>;
   status?: Maybe<Scalars['String']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
   user_created?: Maybe<Directus_Users>;
@@ -3036,8 +3226,8 @@ export type OrdersBoutiqueArgs = {
 };
 
 
-export type OrdersBoutique_IdArgs = {
-  filter?: InputMaybe<Boutiques_Filter>;
+export type OrdersCustomerArgs = {
+  filter?: InputMaybe<Customers_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -3046,8 +3236,8 @@ export type OrdersBoutique_IdArgs = {
 };
 
 
-export type OrdersCustomers_IdArgs = {
-  filter?: InputMaybe<Customers_Filter>;
+export type OrdersProductArgs = {
+  filter?: InputMaybe<Products_Filter>;
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   page?: InputMaybe<Scalars['Int']['input']>;
@@ -3091,11 +3281,12 @@ export type Orders_Aggregated = {
 
 export type Orders_Aggregated_Count = {
   __typename?: 'orders_aggregated_count';
-  boutique_id?: Maybe<Scalars['Int']['output']>;
-  customers_id?: Maybe<Scalars['Int']['output']>;
+  boutique?: Maybe<Scalars['Int']['output']>;
+  customer?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  product?: Maybe<Scalars['Int']['output']>;
   status?: Maybe<Scalars['Int']['output']>;
   total_price?: Maybe<Scalars['Int']['output']>;
   user_created?: Maybe<Scalars['Int']['output']>;
@@ -3104,9 +3295,10 @@ export type Orders_Aggregated_Count = {
 
 export type Orders_Aggregated_Fields = {
   __typename?: 'orders_aggregated_fields';
-  boutique_id?: Maybe<Scalars['Float']['output']>;
-  customers_id?: Maybe<Scalars['Float']['output']>;
+  boutique?: Maybe<Scalars['Float']['output']>;
+  customer?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
+  product?: Maybe<Scalars['Float']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
 };
 
@@ -3114,13 +3306,13 @@ export type Orders_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Orders_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Orders_Filter>>>;
   boutique?: InputMaybe<Boutiques_Filter>;
-  boutique_id?: InputMaybe<Boutiques_Filter>;
-  customers_id?: InputMaybe<Customers_Filter>;
+  customer?: InputMaybe<Customers_Filter>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
   date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
+  product?: InputMaybe<Products_Filter>;
   status?: InputMaybe<String_Filter_Operators>;
   total_price?: InputMaybe<Number_Filter_Operators>;
   user_created?: InputMaybe<Directus_Users_Filter>;
@@ -3344,10 +3536,93 @@ export type String_Filter_Operators = {
   _starts_with?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Terminals = {
+  __typename?: 'terminals';
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
+  id: Scalars['ID']['output'];
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type TerminalsUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type TerminalsUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Terminals_Aggregated = {
+  __typename?: 'terminals_aggregated';
+  avg?: Maybe<Terminals_Aggregated_Fields>;
+  avgDistinct?: Maybe<Terminals_Aggregated_Fields>;
+  count?: Maybe<Terminals_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Terminals_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Terminals_Aggregated_Fields>;
+  min?: Maybe<Terminals_Aggregated_Fields>;
+  sum?: Maybe<Terminals_Aggregated_Fields>;
+  sumDistinct?: Maybe<Terminals_Aggregated_Fields>;
+};
+
+export type Terminals_Aggregated_Count = {
+  __typename?: 'terminals_aggregated_count';
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Terminals_Aggregated_Fields = {
+  __typename?: 'terminals_aggregated_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Terminals_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Terminals_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Terminals_Filter>>>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
+};
+
+export type Terminals_Mutated = {
+  __typename?: 'terminals_mutated';
+  data?: Maybe<Terminals>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
+};
+
 export type Update_Boutiques_Input = {
   address?: InputMaybe<Scalars['String']['input']>;
+  category?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  code?: InputMaybe<Scalars['String']['input']>;
+  contact?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
+  expire_date?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   images?: InputMaybe<Scalars['JSON']['input']>;
   main_image?: InputMaybe<Scalars['String']['input']>;
@@ -3373,6 +3648,7 @@ export type Update_Categories_Input = {
 
 export type Update_Customers_Input = {
   avatar?: InputMaybe<Scalars['String']['input']>;
+  boutique?: InputMaybe<Update_Boutiques_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
@@ -3497,21 +3773,13 @@ export type Update_Directus_Users_Input = {
   token?: InputMaybe<Scalars['Hash']['input']>;
 };
 
-export type Update_Order_Items_Input = {
-  id?: InputMaybe<Scalars['ID']['input']>;
-  order_id?: InputMaybe<Update_Orders_Input>;
-  price?: InputMaybe<Scalars['Float']['input']>;
-  product_id?: InputMaybe<Update_Products_Input>;
-  quantity?: InputMaybe<Scalars['Int']['input']>;
-};
-
 export type Update_Orders_Input = {
   boutique?: InputMaybe<Update_Boutiques_Input>;
-  boutique_id?: InputMaybe<Update_Boutiques_Input>;
-  customers_id?: InputMaybe<Update_Customers_Input>;
+  customer?: InputMaybe<Update_Customers_Input>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  product?: InputMaybe<Update_Products_Input>;
   status?: InputMaybe<Scalars['String']['input']>;
   total_price?: InputMaybe<Scalars['Float']['input']>;
   user_created?: InputMaybe<Update_Directus_Users_Input>;
@@ -3548,11 +3816,45 @@ export type Update_Products_Input = {
   video_url?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type Update_Terminals_Input = {
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
+};
+
+export type Update_Views_Input = {
+  boutique?: InputMaybe<Update_Boutiques_Input>;
+  customer?: InputMaybe<Update_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  product?: InputMaybe<Update_Products_Input>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
+};
+
+export type Update_Visits_Input = {
+  boutique?: InputMaybe<Update_Boutiques_Input>;
+  customer?: InputMaybe<Update_Customers_Input>;
+  date_created?: InputMaybe<Scalars['Date']['input']>;
+  date_updated?: InputMaybe<Scalars['Date']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  user_created?: InputMaybe<Update_Directus_Users_Input>;
+  user_updated?: InputMaybe<Update_Directus_Users_Input>;
+};
+
 export type Version_Boutiques = {
   __typename?: 'version_boutiques';
   address?: Maybe<Scalars['String']['output']>;
+  category?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  code?: Maybe<Scalars['String']['output']>;
+  contact?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
+  expire_date?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   images?: Maybe<Scalars['JSON']['output']>;
   main_image?: Maybe<Scalars['String']['output']>;
@@ -3580,6 +3882,7 @@ export type Version_Categories = {
 export type Version_Customers = {
   __typename?: 'version_customers';
   avatar?: Maybe<Scalars['String']['output']>;
+  boutique?: Maybe<Scalars['JSON']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
@@ -3593,23 +3896,14 @@ export type Version_Customers = {
   user_updated?: Maybe<Scalars['JSON']['output']>;
 };
 
-export type Version_Order_Items = {
-  __typename?: 'version_order_items';
-  id?: Maybe<Scalars['ID']['output']>;
-  order_id?: Maybe<Scalars['JSON']['output']>;
-  price?: Maybe<Scalars['Float']['output']>;
-  product_id?: Maybe<Scalars['JSON']['output']>;
-  quantity?: Maybe<Scalars['Int']['output']>;
-};
-
 export type Version_Orders = {
   __typename?: 'version_orders';
   boutique?: Maybe<Scalars['JSON']['output']>;
-  boutique_id?: Maybe<Scalars['JSON']['output']>;
-  customers_id?: Maybe<Scalars['JSON']['output']>;
+  customer?: Maybe<Scalars['JSON']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  product?: Maybe<Scalars['JSON']['output']>;
   status?: Maybe<Scalars['String']['output']>;
   total_price?: Maybe<Scalars['Float']['output']>;
   user_created?: Maybe<Scalars['JSON']['output']>;
@@ -3645,6 +3939,264 @@ export type Version_Products = {
   user_created?: Maybe<Scalars['JSON']['output']>;
   user_updated?: Maybe<Scalars['JSON']['output']>;
   video_url?: Maybe<Scalars['String']['output']>;
+};
+
+export type Version_Terminals = {
+  __typename?: 'version_terminals';
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type Version_Views = {
+  __typename?: 'version_views';
+  boutique?: Maybe<Scalars['JSON']['output']>;
+  customer?: Maybe<Scalars['JSON']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  product?: Maybe<Scalars['JSON']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type Version_Visits = {
+  __typename?: 'version_visits';
+  boutique?: Maybe<Scalars['JSON']['output']>;
+  customer?: Maybe<Scalars['JSON']['output']>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  user_created?: Maybe<Scalars['JSON']['output']>;
+  user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type Views = {
+  __typename?: 'views';
+  boutique?: Maybe<Boutiques>;
+  customer?: Maybe<Customers>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
+  id: Scalars['ID']['output'];
+  product?: Maybe<Products>;
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type ViewsBoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ViewsCustomerArgs = {
+  filter?: InputMaybe<Customers_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ViewsProductArgs = {
+  filter?: InputMaybe<Products_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ViewsUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type ViewsUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Views_Aggregated = {
+  __typename?: 'views_aggregated';
+  avg?: Maybe<Views_Aggregated_Fields>;
+  avgDistinct?: Maybe<Views_Aggregated_Fields>;
+  count?: Maybe<Views_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Views_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Views_Aggregated_Fields>;
+  min?: Maybe<Views_Aggregated_Fields>;
+  sum?: Maybe<Views_Aggregated_Fields>;
+  sumDistinct?: Maybe<Views_Aggregated_Fields>;
+};
+
+export type Views_Aggregated_Count = {
+  __typename?: 'views_aggregated_count';
+  boutique?: Maybe<Scalars['Int']['output']>;
+  customer?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  product?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Views_Aggregated_Fields = {
+  __typename?: 'views_aggregated_fields';
+  boutique?: Maybe<Scalars['Float']['output']>;
+  customer?: Maybe<Scalars['Float']['output']>;
+  id?: Maybe<Scalars['Float']['output']>;
+  product?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Views_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Views_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Views_Filter>>>;
+  boutique?: InputMaybe<Boutiques_Filter>;
+  customer?: InputMaybe<Customers_Filter>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  product?: InputMaybe<Products_Filter>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
+};
+
+export type Views_Mutated = {
+  __typename?: 'views_mutated';
+  data?: Maybe<Views>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
+};
+
+export type Visits = {
+  __typename?: 'visits';
+  boutique?: Maybe<Boutiques>;
+  customer?: Maybe<Customers>;
+  date_created?: Maybe<Scalars['Date']['output']>;
+  date_created_func?: Maybe<Datetime_Functions>;
+  date_updated?: Maybe<Scalars['Date']['output']>;
+  date_updated_func?: Maybe<Datetime_Functions>;
+  id: Scalars['ID']['output'];
+  user_created?: Maybe<Directus_Users>;
+  user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type VisitsBoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type VisitsCustomerArgs = {
+  filter?: InputMaybe<Customers_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type VisitsUser_CreatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type VisitsUser_UpdatedArgs = {
+  filter?: InputMaybe<Directus_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+export type Visits_Aggregated = {
+  __typename?: 'visits_aggregated';
+  avg?: Maybe<Visits_Aggregated_Fields>;
+  avgDistinct?: Maybe<Visits_Aggregated_Fields>;
+  count?: Maybe<Visits_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Visits_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Visits_Aggregated_Fields>;
+  min?: Maybe<Visits_Aggregated_Fields>;
+  sum?: Maybe<Visits_Aggregated_Fields>;
+  sumDistinct?: Maybe<Visits_Aggregated_Fields>;
+};
+
+export type Visits_Aggregated_Count = {
+  __typename?: 'visits_aggregated_count';
+  boutique?: Maybe<Scalars['Int']['output']>;
+  customer?: Maybe<Scalars['Int']['output']>;
+  date_created?: Maybe<Scalars['Int']['output']>;
+  date_updated?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  user_created?: Maybe<Scalars['Int']['output']>;
+  user_updated?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Visits_Aggregated_Fields = {
+  __typename?: 'visits_aggregated_fields';
+  boutique?: Maybe<Scalars['Float']['output']>;
+  customer?: Maybe<Scalars['Float']['output']>;
+  id?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Visits_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Visits_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Visits_Filter>>>;
+  boutique?: InputMaybe<Boutiques_Filter>;
+  customer?: InputMaybe<Customers_Filter>;
+  date_created?: InputMaybe<Date_Filter_Operators>;
+  date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  date_updated?: InputMaybe<Date_Filter_Operators>;
+  date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  user_created?: InputMaybe<Directus_Users_Filter>;
+  user_updated?: InputMaybe<Directus_Users_Filter>;
+};
+
+export type Visits_Mutated = {
+  __typename?: 'visits_mutated';
+  data?: Maybe<Visits>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
 };
 
 export type LoginUserQueryVariables = Exact<{
@@ -3795,7 +4347,7 @@ export type GetDashboardDataQueryVariables = Exact<{
 }>;
 
 
-export type GetDashboardDataQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string }>, products: Array<{ __typename?: 'products', id: string }>, orders: Array<{ __typename?: 'orders', id: string }>, categories: Array<{ __typename?: 'categories', id: string }>, boutiques: Array<{ __typename?: 'boutiques', id: string }>, customers_aggregated: Array<{ __typename?: 'customers_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }>, boutiques_aggregated: Array<{ __typename?: 'boutiques_aggregated', countAll?: number | null }>, today_orders: Array<{ __typename?: 'orders', id: string, status?: string | null }> };
+export type GetDashboardDataQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string }>, products: Array<{ __typename?: 'products', id: string }>, orders: Array<{ __typename?: 'orders', id: string }>, categories: Array<{ __typename?: 'categories', id: string }>, boutiques: Array<{ __typename?: 'boutiques', id: string }>, terminals: Array<{ __typename?: 'terminals', id: string }>, views: Array<{ __typename?: 'views', id: string }>, visits: Array<{ __typename?: 'visits', id: string }>, customers_aggregated: Array<{ __typename?: 'customers_aggregated', countAll?: number | null }>, products_aggregated: Array<{ __typename?: 'products_aggregated', countAll?: number | null }>, orders_aggregated: Array<{ __typename?: 'orders_aggregated', countAll?: number | null }>, categories_aggregated: Array<{ __typename?: 'categories_aggregated', countAll?: number | null }>, boutiques_aggregated: Array<{ __typename?: 'boutiques_aggregated', countAll?: number | null }>, terminals_aggregated: Array<{ __typename?: 'terminals_aggregated', countAll?: number | null }>, views_aggregated: Array<{ __typename?: 'views_aggregated', countAll?: number | null }>, visits_aggregated: Array<{ __typename?: 'visits_aggregated', countAll?: number | null }>, today_orders: Array<{ __typename?: 'orders', id: string, status?: string | null }> };
 
 export type GetAllDashboardDataQueryVariables = Exact<{
   today?: InputMaybe<Scalars['String']['input']>;
@@ -3810,47 +4362,40 @@ export type GetRecentOrdersQueryVariables = Exact<{
 }>;
 
 
-export type GetRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null } | null }> };
+export type GetRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null }> };
 
 export type GetAllRecentOrdersQueryVariables = Exact<{
   limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type GetAllRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null } | null }> };
+export type GetAllRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null }> };
 
 export type GetOrdersQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['ID']['input']>;
 }>;
 
 
-export type GetOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetAllOrdersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetAllOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetOrderByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetOrderByIdQuery = { __typename?: 'Query', orders_by_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
-
-export type GetOrderItemsQueryVariables = Exact<{
-  orderId: Scalars['GraphQLStringOrFloat']['input'];
-}>;
-
-
-export type GetOrderItemsQuery = { __typename?: 'Query', order_items: Array<{ __typename?: 'order_items', id: string, quantity?: number | null, price?: number | null, order_id?: { __typename?: 'orders', id: string } | null, product_id?: { __typename?: 'products', id: string, name: string, description?: string | null } | null }> };
+export type GetOrderByIdQuery = { __typename?: 'Query', orders_by_id?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
 
 export type CreateOrderMutationVariables = Exact<{
   data: Create_Orders_Input;
 }>;
 
 
-export type CreateOrderMutation = { __typename?: 'Mutation', create_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
+export type CreateOrderMutation = { __typename?: 'Mutation', create_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
 
 export type UpdateOrderMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3858,7 +4403,7 @@ export type UpdateOrderMutationVariables = Exact<{
 }>;
 
 
-export type UpdateOrderMutation = { __typename?: 'Mutation', update_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customers_id?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
+export type UpdateOrderMutation = { __typename?: 'Mutation', update_orders_item?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null };
 
 export type DeleteOrderMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -3915,6 +4460,180 @@ export type DeleteProductMutationVariables = Exact<{
 
 
 export type DeleteProductMutation = { __typename?: 'Mutation', delete_products_item?: { __typename?: 'delete_one', id: string } | null };
+
+export type GetTerminalsQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type GetTerminalsQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+
+export type GetAllTerminalsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllTerminalsQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+
+export type GetTerminalByIdQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetTerminalByIdQuery = { __typename?: 'Query', terminals_by_id?: { __typename?: 'terminals', id: string, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
+
+export type CreateTerminalMutationVariables = Exact<{
+  data: Create_Terminals_Input;
+}>;
+
+
+export type CreateTerminalMutation = { __typename?: 'Mutation', create_terminals_item?: { __typename?: 'terminals', id: string, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
+
+export type UpdateTerminalMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: Update_Terminals_Input;
+}>;
+
+
+export type UpdateTerminalMutation = { __typename?: 'Mutation', update_terminals_item?: { __typename?: 'terminals', id: string, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
+
+export type DeleteTerminalMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteTerminalMutation = { __typename?: 'Mutation', delete_terminals_item?: { __typename?: 'delete_one', id: string } | null };
+
+export type DeleteTerminalsMutationVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['ID']['input']>> | InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type DeleteTerminalsMutation = { __typename?: 'Mutation', delete_terminals_items?: { __typename?: 'delete_many', ids: Array<string | null> } | null };
+
+export type GetViewsQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type GetViewsQuery = { __typename?: 'Query', views: Array<{ __typename?: 'views', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, product?: { __typename?: 'products', id: string, name: string, main_image?: string | null, price: number, market_price?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null }> };
+
+export type GetAllViewsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllViewsQuery = { __typename?: 'Query', views: Array<{ __typename?: 'views', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, product?: { __typename?: 'products', id: string, name: string, main_image?: string | null, price: number, market_price?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null }> };
+
+export type GetViewsByCustomerQueryVariables = Exact<{
+  customerId: Scalars['GraphQLStringOrFloat']['input'];
+}>;
+
+
+export type GetViewsByCustomerQuery = { __typename?: 'Query', views: Array<{ __typename?: 'views', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string } | null, product?: { __typename?: 'products', id: string, name: string, main_image?: string | null, price: number, market_price?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null }> };
+
+export type GetViewsByProductQueryVariables = Exact<{
+  productId: Scalars['GraphQLStringOrFloat']['input'];
+}>;
+
+
+export type GetViewsByProductQuery = { __typename?: 'Query', views: Array<{ __typename?: 'views', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string } | null, product?: { __typename?: 'products', id: string, name: string } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
+
+export type GetViewsByBoutiqueQueryVariables = Exact<{
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
+}>;
+
+
+export type GetViewsByBoutiqueQuery = { __typename?: 'Query', views: Array<{ __typename?: 'views', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string } | null, product?: { __typename?: 'products', id: string, name: string, main_image?: string | null, price: number } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
+
+export type CreateViewMutationVariables = Exact<{
+  data: Create_Views_Input;
+}>;
+
+
+export type CreateViewMutation = { __typename?: 'Mutation', create_views_item?: { __typename?: 'views', id: string, date_created?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, product?: { __typename?: 'products', id: string, name: string } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null } | null } | null };
+
+export type UpdateViewMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: Update_Views_Input;
+}>;
+
+
+export type UpdateViewMutation = { __typename?: 'Mutation', update_views_item?: { __typename?: 'views', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, product?: { __typename?: 'products', id: string, name: string } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null } | null } | null };
+
+export type DeleteViewMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteViewMutation = { __typename?: 'Mutation', delete_views_item?: { __typename?: 'delete_one', id: string } | null };
+
+export type DeleteViewsMutationVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['ID']['input']>> | InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type DeleteViewsMutation = { __typename?: 'Mutation', delete_views_items?: { __typename?: 'delete_many', ids: Array<string | null> } | null };
+
+export type GetVisitsQueryVariables = Exact<{
+  userId?: InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type GetVisitsQuery = { __typename?: 'Query', visits: Array<{ __typename?: 'visits', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null }> };
+
+export type GetAllVisitsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllVisitsQuery = { __typename?: 'Query', visits: Array<{ __typename?: 'visits', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null }> };
+
+export type GetVisitsByCustomerQueryVariables = Exact<{
+  customerId: Scalars['GraphQLStringOrFloat']['input'];
+}>;
+
+
+export type GetVisitsByCustomerQuery = { __typename?: 'Query', visits: Array<{ __typename?: 'visits', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, category?: string | null } | null }> };
+
+export type GetVisitsByBoutiqueQueryVariables = Exact<{
+  boutiqueId: Scalars['GraphQLStringOrFloat']['input'];
+}>;
+
+
+export type GetVisitsByBoutiqueQuery = { __typename?: 'Query', visits: Array<{ __typename?: 'visits', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null } | null }> };
+
+export type GetVisitStatsQueryVariables = Exact<{
+  boutiqueId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
+  startDate?: InputMaybe<Scalars['String']['input']>;
+  endDate?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type GetVisitStatsQuery = { __typename?: 'Query', visits_aggregated: Array<{ __typename?: 'visits_aggregated', group?: any | null, countAll?: number | null }> };
+
+export type CreateVisitMutationVariables = Exact<{
+  data: Create_Visits_Input;
+}>;
+
+
+export type CreateVisitMutation = { __typename?: 'Mutation', create_visits_item?: { __typename?: 'visits', id: string, date_created?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null } | null } | null };
+
+export type UpdateVisitMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+  data: Update_Visits_Input;
+}>;
+
+
+export type UpdateVisitMutation = { __typename?: 'Mutation', update_visits_item?: { __typename?: 'visits', id: string, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null } | null } | null };
+
+export type DeleteVisitMutationVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteVisitMutation = { __typename?: 'Mutation', delete_visits_item?: { __typename?: 'delete_one', id: string } | null };
+
+export type DeleteVisitsMutationVariables = Exact<{
+  ids: Array<InputMaybe<Scalars['ID']['input']>> | InputMaybe<Scalars['ID']['input']>;
+}>;
+
+
+export type DeleteVisitsMutation = { __typename?: 'Mutation', delete_visits_items?: { __typename?: 'delete_many', ids: Array<string | null> } | null };
 
 
 export const LoginUserDocument = gql`
@@ -4927,6 +5646,15 @@ export const GetDashboardDataDocument = gql`
   boutiques(filter: {user_created: {id: {_eq: $userId}}}, limit: 1000) {
     id
   }
+  terminals(filter: {user_created: {id: {_eq: $userId}}}, limit: 1000) {
+    id
+  }
+  views(filter: {user_created: {id: {_eq: $userId}}}, limit: 1000) {
+    id
+  }
+  visits(filter: {user_created: {id: {_eq: $userId}}}, limit: 1000) {
+    id
+  }
   customers_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
     countAll
   }
@@ -4940,6 +5668,15 @@ export const GetDashboardDataDocument = gql`
     countAll
   }
   boutiques_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
+    countAll
+  }
+  terminals_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
+    countAll
+  }
+  views_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
+    countAll
+  }
+  visits_aggregated(filter: {user_created: {id: {_eq: $userId}}}) {
     countAll
   }
   today_orders: orders(
@@ -5063,7 +5800,7 @@ export const GetRecentOrdersDocument = gql`
     sort: ["-date_created"]
   ) {
     id
-    customers_id {
+    customer {
       id
       nick_name
     }
@@ -5111,7 +5848,7 @@ export const GetAllRecentOrdersDocument = gql`
     query GetAllRecentOrders($limit: Int = 5) {
   orders(limit: $limit, sort: ["-date_created"]) {
     id
-    customers_id {
+    customer {
       id
       nick_name
     }
@@ -5158,14 +5895,14 @@ export const GetOrdersDocument = gql`
     query GetOrders($userId: ID) {
   orders(filter: {user_created: {id: {_eq: $userId}}}) {
     id
-    customers_id {
+    customer {
       id
       nick_name
       open_id
       avatar
       sex
     }
-    boutique_id {
+    boutique {
       id
       name
       address
@@ -5220,14 +5957,14 @@ export const GetAllOrdersDocument = gql`
     query GetAllOrders {
   orders {
     id
-    customers_id {
+    customer {
       id
       nick_name
       open_id
       avatar
       sex
     }
-    boutique_id {
+    boutique {
       id
       name
       address
@@ -5281,14 +6018,14 @@ export const GetOrderByIdDocument = gql`
     query GetOrderById($id: ID!) {
   orders_by_id(id: $id) {
     id
-    customers_id {
+    customer {
       id
       nick_name
       open_id
       avatar
       sex
     }
-    boutique_id {
+    boutique {
       id
       name
       address
@@ -5333,65 +6070,15 @@ export type GetOrderByIdQueryHookResult = ReturnType<typeof useGetOrderByIdQuery
 export type GetOrderByIdLazyQueryHookResult = ReturnType<typeof useGetOrderByIdLazyQuery>;
 export type GetOrderByIdSuspenseQueryHookResult = ReturnType<typeof useGetOrderByIdSuspenseQuery>;
 export type GetOrderByIdQueryResult = ApolloReactCommon.QueryResult<GetOrderByIdQuery, GetOrderByIdQueryVariables>;
-export const GetOrderItemsDocument = gql`
-    query GetOrderItems($orderId: GraphQLStringOrFloat!) {
-  order_items(filter: {order_id: {id: {_eq: $orderId}}}) {
-    id
-    order_id {
-      id
-    }
-    product_id {
-      id
-      name
-      description
-    }
-    quantity
-    price
-  }
-}
-    `;
-
-/**
- * __useGetOrderItemsQuery__
- *
- * To run a query within a React component, call `useGetOrderItemsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetOrderItemsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetOrderItemsQuery({
- *   variables: {
- *      orderId: // value for 'orderId'
- *   },
- * });
- */
-export function useGetOrderItemsQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetOrderItemsQuery, GetOrderItemsQueryVariables> & ({ variables: GetOrderItemsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return ApolloReactHooks.useQuery<GetOrderItemsQuery, GetOrderItemsQueryVariables>(GetOrderItemsDocument, options);
-      }
-export function useGetOrderItemsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetOrderItemsQuery, GetOrderItemsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useLazyQuery<GetOrderItemsQuery, GetOrderItemsQueryVariables>(GetOrderItemsDocument, options);
-        }
-export function useGetOrderItemsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetOrderItemsQuery, GetOrderItemsQueryVariables>) {
-          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return ApolloReactHooks.useSuspenseQuery<GetOrderItemsQuery, GetOrderItemsQueryVariables>(GetOrderItemsDocument, options);
-        }
-export type GetOrderItemsQueryHookResult = ReturnType<typeof useGetOrderItemsQuery>;
-export type GetOrderItemsLazyQueryHookResult = ReturnType<typeof useGetOrderItemsLazyQuery>;
-export type GetOrderItemsSuspenseQueryHookResult = ReturnType<typeof useGetOrderItemsSuspenseQuery>;
-export type GetOrderItemsQueryResult = ApolloReactCommon.QueryResult<GetOrderItemsQuery, GetOrderItemsQueryVariables>;
 export const CreateOrderDocument = gql`
     mutation CreateOrder($data: create_orders_input!) {
   create_orders_item(data: $data) {
     id
-    customers_id {
+    customer {
       id
       nick_name
     }
-    boutique_id {
+    boutique {
       id
       name
       address
@@ -5433,11 +6120,11 @@ export const UpdateOrderDocument = gql`
     mutation UpdateOrder($id: ID!, $data: update_orders_input!) {
   update_orders_item(id: $id, data: $data) {
     id
-    customers_id {
+    customer {
       id
       nick_name
     }
-    boutique_id {
+    boutique {
       id
       name
       address
@@ -5920,3 +6607,1162 @@ export function useDeleteProductMutation(baseOptions?: ApolloReactHooks.Mutation
 export type DeleteProductMutationHookResult = ReturnType<typeof useDeleteProductMutation>;
 export type DeleteProductMutationResult = ApolloReactCommon.MutationResult<DeleteProductMutation>;
 export type DeleteProductMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteProductMutation, DeleteProductMutationVariables>;
+export const GetTerminalsDocument = gql`
+    query GetTerminals($userId: ID) {
+  terminals(filter: {user_created: {id: {_eq: $userId}}}) {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetTerminalsQuery__
+ *
+ * To run a query within a React component, call `useGetTerminalsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTerminalsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTerminalsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetTerminalsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetTerminalsQuery, GetTerminalsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetTerminalsQuery, GetTerminalsQueryVariables>(GetTerminalsDocument, options);
+      }
+export function useGetTerminalsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTerminalsQuery, GetTerminalsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetTerminalsQuery, GetTerminalsQueryVariables>(GetTerminalsDocument, options);
+        }
+export function useGetTerminalsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetTerminalsQuery, GetTerminalsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetTerminalsQuery, GetTerminalsQueryVariables>(GetTerminalsDocument, options);
+        }
+export type GetTerminalsQueryHookResult = ReturnType<typeof useGetTerminalsQuery>;
+export type GetTerminalsLazyQueryHookResult = ReturnType<typeof useGetTerminalsLazyQuery>;
+export type GetTerminalsSuspenseQueryHookResult = ReturnType<typeof useGetTerminalsSuspenseQuery>;
+export type GetTerminalsQueryResult = ApolloReactCommon.QueryResult<GetTerminalsQuery, GetTerminalsQueryVariables>;
+export const GetAllTerminalsDocument = gql`
+    query GetAllTerminals {
+  terminals {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetAllTerminalsQuery__
+ *
+ * To run a query within a React component, call `useGetAllTerminalsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllTerminalsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllTerminalsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllTerminalsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllTerminalsQuery, GetAllTerminalsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAllTerminalsQuery, GetAllTerminalsQueryVariables>(GetAllTerminalsDocument, options);
+      }
+export function useGetAllTerminalsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllTerminalsQuery, GetAllTerminalsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAllTerminalsQuery, GetAllTerminalsQueryVariables>(GetAllTerminalsDocument, options);
+        }
+export function useGetAllTerminalsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllTerminalsQuery, GetAllTerminalsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAllTerminalsQuery, GetAllTerminalsQueryVariables>(GetAllTerminalsDocument, options);
+        }
+export type GetAllTerminalsQueryHookResult = ReturnType<typeof useGetAllTerminalsQuery>;
+export type GetAllTerminalsLazyQueryHookResult = ReturnType<typeof useGetAllTerminalsLazyQuery>;
+export type GetAllTerminalsSuspenseQueryHookResult = ReturnType<typeof useGetAllTerminalsSuspenseQuery>;
+export type GetAllTerminalsQueryResult = ApolloReactCommon.QueryResult<GetAllTerminalsQuery, GetAllTerminalsQueryVariables>;
+export const GetTerminalByIdDocument = gql`
+    query GetTerminalById($id: ID!) {
+  terminals_by_id(id: $id) {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetTerminalByIdQuery__
+ *
+ * To run a query within a React component, call `useGetTerminalByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTerminalByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTerminalByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetTerminalByIdQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetTerminalByIdQuery, GetTerminalByIdQueryVariables> & ({ variables: GetTerminalByIdQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetTerminalByIdQuery, GetTerminalByIdQueryVariables>(GetTerminalByIdDocument, options);
+      }
+export function useGetTerminalByIdLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetTerminalByIdQuery, GetTerminalByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetTerminalByIdQuery, GetTerminalByIdQueryVariables>(GetTerminalByIdDocument, options);
+        }
+export function useGetTerminalByIdSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetTerminalByIdQuery, GetTerminalByIdQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetTerminalByIdQuery, GetTerminalByIdQueryVariables>(GetTerminalByIdDocument, options);
+        }
+export type GetTerminalByIdQueryHookResult = ReturnType<typeof useGetTerminalByIdQuery>;
+export type GetTerminalByIdLazyQueryHookResult = ReturnType<typeof useGetTerminalByIdLazyQuery>;
+export type GetTerminalByIdSuspenseQueryHookResult = ReturnType<typeof useGetTerminalByIdSuspenseQuery>;
+export type GetTerminalByIdQueryResult = ApolloReactCommon.QueryResult<GetTerminalByIdQuery, GetTerminalByIdQueryVariables>;
+export const CreateTerminalDocument = gql`
+    mutation CreateTerminal($data: create_terminals_input!) {
+  create_terminals_item(data: $data) {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+export type CreateTerminalMutationFn = ApolloReactCommon.MutationFunction<CreateTerminalMutation, CreateTerminalMutationVariables>;
+
+/**
+ * __useCreateTerminalMutation__
+ *
+ * To run a mutation, you first call `useCreateTerminalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTerminalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTerminalMutation, { data, loading, error }] = useCreateTerminalMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateTerminalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTerminalMutation, CreateTerminalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateTerminalMutation, CreateTerminalMutationVariables>(CreateTerminalDocument, options);
+      }
+export type CreateTerminalMutationHookResult = ReturnType<typeof useCreateTerminalMutation>;
+export type CreateTerminalMutationResult = ApolloReactCommon.MutationResult<CreateTerminalMutation>;
+export type CreateTerminalMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTerminalMutation, CreateTerminalMutationVariables>;
+export const UpdateTerminalDocument = gql`
+    mutation UpdateTerminal($id: ID!, $data: update_terminals_input!) {
+  update_terminals_item(id: $id, data: $data) {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+export type UpdateTerminalMutationFn = ApolloReactCommon.MutationFunction<UpdateTerminalMutation, UpdateTerminalMutationVariables>;
+
+/**
+ * __useUpdateTerminalMutation__
+ *
+ * To run a mutation, you first call `useUpdateTerminalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateTerminalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateTerminalMutation, { data, loading, error }] = useUpdateTerminalMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateTerminalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateTerminalMutation, UpdateTerminalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateTerminalMutation, UpdateTerminalMutationVariables>(UpdateTerminalDocument, options);
+      }
+export type UpdateTerminalMutationHookResult = ReturnType<typeof useUpdateTerminalMutation>;
+export type UpdateTerminalMutationResult = ApolloReactCommon.MutationResult<UpdateTerminalMutation>;
+export type UpdateTerminalMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateTerminalMutation, UpdateTerminalMutationVariables>;
+export const DeleteTerminalDocument = gql`
+    mutation DeleteTerminal($id: ID!) {
+  delete_terminals_item(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteTerminalMutationFn = ApolloReactCommon.MutationFunction<DeleteTerminalMutation, DeleteTerminalMutationVariables>;
+
+/**
+ * __useDeleteTerminalMutation__
+ *
+ * To run a mutation, you first call `useDeleteTerminalMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTerminalMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTerminalMutation, { data, loading, error }] = useDeleteTerminalMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteTerminalMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTerminalMutation, DeleteTerminalMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteTerminalMutation, DeleteTerminalMutationVariables>(DeleteTerminalDocument, options);
+      }
+export type DeleteTerminalMutationHookResult = ReturnType<typeof useDeleteTerminalMutation>;
+export type DeleteTerminalMutationResult = ApolloReactCommon.MutationResult<DeleteTerminalMutation>;
+export type DeleteTerminalMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTerminalMutation, DeleteTerminalMutationVariables>;
+export const DeleteTerminalsDocument = gql`
+    mutation DeleteTerminals($ids: [ID]!) {
+  delete_terminals_items(ids: $ids) {
+    ids
+  }
+}
+    `;
+export type DeleteTerminalsMutationFn = ApolloReactCommon.MutationFunction<DeleteTerminalsMutation, DeleteTerminalsMutationVariables>;
+
+/**
+ * __useDeleteTerminalsMutation__
+ *
+ * To run a mutation, you first call `useDeleteTerminalsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTerminalsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTerminalsMutation, { data, loading, error }] = useDeleteTerminalsMutation({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useDeleteTerminalsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteTerminalsMutation, DeleteTerminalsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteTerminalsMutation, DeleteTerminalsMutationVariables>(DeleteTerminalsDocument, options);
+      }
+export type DeleteTerminalsMutationHookResult = ReturnType<typeof useDeleteTerminalsMutation>;
+export type DeleteTerminalsMutationResult = ApolloReactCommon.MutationResult<DeleteTerminalsMutation>;
+export type DeleteTerminalsMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTerminalsMutation, DeleteTerminalsMutationVariables>;
+export const GetViewsDocument = gql`
+    query GetViews($userId: ID) {
+  views(filter: {user_created: {id: {_eq: $userId}}}) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    product {
+      id
+      name
+      main_image
+      price
+      market_price
+    }
+    boutique {
+      id
+      name
+      address
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetViewsQuery__
+ *
+ * To run a query within a React component, call `useGetViewsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetViewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetViewsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetViewsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetViewsQuery, GetViewsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetViewsQuery, GetViewsQueryVariables>(GetViewsDocument, options);
+      }
+export function useGetViewsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetViewsQuery, GetViewsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetViewsQuery, GetViewsQueryVariables>(GetViewsDocument, options);
+        }
+export function useGetViewsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetViewsQuery, GetViewsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetViewsQuery, GetViewsQueryVariables>(GetViewsDocument, options);
+        }
+export type GetViewsQueryHookResult = ReturnType<typeof useGetViewsQuery>;
+export type GetViewsLazyQueryHookResult = ReturnType<typeof useGetViewsLazyQuery>;
+export type GetViewsSuspenseQueryHookResult = ReturnType<typeof useGetViewsSuspenseQuery>;
+export type GetViewsQueryResult = ApolloReactCommon.QueryResult<GetViewsQuery, GetViewsQueryVariables>;
+export const GetAllViewsDocument = gql`
+    query GetAllViews {
+  views {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    product {
+      id
+      name
+      main_image
+      price
+      market_price
+    }
+    boutique {
+      id
+      name
+      address
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetAllViewsQuery__
+ *
+ * To run a query within a React component, call `useGetAllViewsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllViewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllViewsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllViewsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllViewsQuery, GetAllViewsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAllViewsQuery, GetAllViewsQueryVariables>(GetAllViewsDocument, options);
+      }
+export function useGetAllViewsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllViewsQuery, GetAllViewsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAllViewsQuery, GetAllViewsQueryVariables>(GetAllViewsDocument, options);
+        }
+export function useGetAllViewsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllViewsQuery, GetAllViewsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAllViewsQuery, GetAllViewsQueryVariables>(GetAllViewsDocument, options);
+        }
+export type GetAllViewsQueryHookResult = ReturnType<typeof useGetAllViewsQuery>;
+export type GetAllViewsLazyQueryHookResult = ReturnType<typeof useGetAllViewsLazyQuery>;
+export type GetAllViewsSuspenseQueryHookResult = ReturnType<typeof useGetAllViewsSuspenseQuery>;
+export type GetAllViewsQueryResult = ApolloReactCommon.QueryResult<GetAllViewsQuery, GetAllViewsQueryVariables>;
+export const GetViewsByCustomerDocument = gql`
+    query GetViewsByCustomer($customerId: GraphQLStringOrFloat!) {
+  views(filter: {customer: {id: {_eq: $customerId}}}) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+    }
+    product {
+      id
+      name
+      main_image
+      price
+      market_price
+    }
+    boutique {
+      id
+      name
+      address
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetViewsByCustomerQuery__
+ *
+ * To run a query within a React component, call `useGetViewsByCustomerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetViewsByCustomerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetViewsByCustomerQuery({
+ *   variables: {
+ *      customerId: // value for 'customerId'
+ *   },
+ * });
+ */
+export function useGetViewsByCustomerQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetViewsByCustomerQuery, GetViewsByCustomerQueryVariables> & ({ variables: GetViewsByCustomerQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetViewsByCustomerQuery, GetViewsByCustomerQueryVariables>(GetViewsByCustomerDocument, options);
+      }
+export function useGetViewsByCustomerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetViewsByCustomerQuery, GetViewsByCustomerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetViewsByCustomerQuery, GetViewsByCustomerQueryVariables>(GetViewsByCustomerDocument, options);
+        }
+export function useGetViewsByCustomerSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetViewsByCustomerQuery, GetViewsByCustomerQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetViewsByCustomerQuery, GetViewsByCustomerQueryVariables>(GetViewsByCustomerDocument, options);
+        }
+export type GetViewsByCustomerQueryHookResult = ReturnType<typeof useGetViewsByCustomerQuery>;
+export type GetViewsByCustomerLazyQueryHookResult = ReturnType<typeof useGetViewsByCustomerLazyQuery>;
+export type GetViewsByCustomerSuspenseQueryHookResult = ReturnType<typeof useGetViewsByCustomerSuspenseQuery>;
+export type GetViewsByCustomerQueryResult = ApolloReactCommon.QueryResult<GetViewsByCustomerQuery, GetViewsByCustomerQueryVariables>;
+export const GetViewsByProductDocument = gql`
+    query GetViewsByProduct($productId: GraphQLStringOrFloat!) {
+  views(filter: {product: {id: {_eq: $productId}}}) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+    }
+    product {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetViewsByProductQuery__
+ *
+ * To run a query within a React component, call `useGetViewsByProductQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetViewsByProductQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetViewsByProductQuery({
+ *   variables: {
+ *      productId: // value for 'productId'
+ *   },
+ * });
+ */
+export function useGetViewsByProductQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetViewsByProductQuery, GetViewsByProductQueryVariables> & ({ variables: GetViewsByProductQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetViewsByProductQuery, GetViewsByProductQueryVariables>(GetViewsByProductDocument, options);
+      }
+export function useGetViewsByProductLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetViewsByProductQuery, GetViewsByProductQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetViewsByProductQuery, GetViewsByProductQueryVariables>(GetViewsByProductDocument, options);
+        }
+export function useGetViewsByProductSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetViewsByProductQuery, GetViewsByProductQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetViewsByProductQuery, GetViewsByProductQueryVariables>(GetViewsByProductDocument, options);
+        }
+export type GetViewsByProductQueryHookResult = ReturnType<typeof useGetViewsByProductQuery>;
+export type GetViewsByProductLazyQueryHookResult = ReturnType<typeof useGetViewsByProductLazyQuery>;
+export type GetViewsByProductSuspenseQueryHookResult = ReturnType<typeof useGetViewsByProductSuspenseQuery>;
+export type GetViewsByProductQueryResult = ApolloReactCommon.QueryResult<GetViewsByProductQuery, GetViewsByProductQueryVariables>;
+export const GetViewsByBoutiqueDocument = gql`
+    query GetViewsByBoutique($boutiqueId: GraphQLStringOrFloat!) {
+  views(filter: {boutique: {id: {_eq: $boutiqueId}}}) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+    }
+    product {
+      id
+      name
+      main_image
+      price
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetViewsByBoutiqueQuery__
+ *
+ * To run a query within a React component, call `useGetViewsByBoutiqueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetViewsByBoutiqueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetViewsByBoutiqueQuery({
+ *   variables: {
+ *      boutiqueId: // value for 'boutiqueId'
+ *   },
+ * });
+ */
+export function useGetViewsByBoutiqueQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetViewsByBoutiqueQuery, GetViewsByBoutiqueQueryVariables> & ({ variables: GetViewsByBoutiqueQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetViewsByBoutiqueQuery, GetViewsByBoutiqueQueryVariables>(GetViewsByBoutiqueDocument, options);
+      }
+export function useGetViewsByBoutiqueLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetViewsByBoutiqueQuery, GetViewsByBoutiqueQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetViewsByBoutiqueQuery, GetViewsByBoutiqueQueryVariables>(GetViewsByBoutiqueDocument, options);
+        }
+export function useGetViewsByBoutiqueSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetViewsByBoutiqueQuery, GetViewsByBoutiqueQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetViewsByBoutiqueQuery, GetViewsByBoutiqueQueryVariables>(GetViewsByBoutiqueDocument, options);
+        }
+export type GetViewsByBoutiqueQueryHookResult = ReturnType<typeof useGetViewsByBoutiqueQuery>;
+export type GetViewsByBoutiqueLazyQueryHookResult = ReturnType<typeof useGetViewsByBoutiqueLazyQuery>;
+export type GetViewsByBoutiqueSuspenseQueryHookResult = ReturnType<typeof useGetViewsByBoutiqueSuspenseQuery>;
+export type GetViewsByBoutiqueQueryResult = ApolloReactCommon.QueryResult<GetViewsByBoutiqueQuery, GetViewsByBoutiqueQueryVariables>;
+export const CreateViewDocument = gql`
+    mutation CreateView($data: create_views_input!) {
+  create_views_item(data: $data) {
+    id
+    customer {
+      id
+      nick_name
+    }
+    product {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+  }
+}
+    `;
+export type CreateViewMutationFn = ApolloReactCommon.MutationFunction<CreateViewMutation, CreateViewMutationVariables>;
+
+/**
+ * __useCreateViewMutation__
+ *
+ * To run a mutation, you first call `useCreateViewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateViewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createViewMutation, { data, loading, error }] = useCreateViewMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateViewMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateViewMutation, CreateViewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateViewMutation, CreateViewMutationVariables>(CreateViewDocument, options);
+      }
+export type CreateViewMutationHookResult = ReturnType<typeof useCreateViewMutation>;
+export type CreateViewMutationResult = ApolloReactCommon.MutationResult<CreateViewMutation>;
+export type CreateViewMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateViewMutation, CreateViewMutationVariables>;
+export const UpdateViewDocument = gql`
+    mutation UpdateView($id: ID!, $data: update_views_input!) {
+  update_views_item(id: $id, data: $data) {
+    id
+    customer {
+      id
+      nick_name
+    }
+    product {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+export type UpdateViewMutationFn = ApolloReactCommon.MutationFunction<UpdateViewMutation, UpdateViewMutationVariables>;
+
+/**
+ * __useUpdateViewMutation__
+ *
+ * To run a mutation, you first call `useUpdateViewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateViewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateViewMutation, { data, loading, error }] = useUpdateViewMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateViewMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateViewMutation, UpdateViewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateViewMutation, UpdateViewMutationVariables>(UpdateViewDocument, options);
+      }
+export type UpdateViewMutationHookResult = ReturnType<typeof useUpdateViewMutation>;
+export type UpdateViewMutationResult = ApolloReactCommon.MutationResult<UpdateViewMutation>;
+export type UpdateViewMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateViewMutation, UpdateViewMutationVariables>;
+export const DeleteViewDocument = gql`
+    mutation DeleteView($id: ID!) {
+  delete_views_item(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteViewMutationFn = ApolloReactCommon.MutationFunction<DeleteViewMutation, DeleteViewMutationVariables>;
+
+/**
+ * __useDeleteViewMutation__
+ *
+ * To run a mutation, you first call `useDeleteViewMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteViewMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteViewMutation, { data, loading, error }] = useDeleteViewMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteViewMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteViewMutation, DeleteViewMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteViewMutation, DeleteViewMutationVariables>(DeleteViewDocument, options);
+      }
+export type DeleteViewMutationHookResult = ReturnType<typeof useDeleteViewMutation>;
+export type DeleteViewMutationResult = ApolloReactCommon.MutationResult<DeleteViewMutation>;
+export type DeleteViewMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteViewMutation, DeleteViewMutationVariables>;
+export const DeleteViewsDocument = gql`
+    mutation DeleteViews($ids: [ID]!) {
+  delete_views_items(ids: $ids) {
+    ids
+  }
+}
+    `;
+export type DeleteViewsMutationFn = ApolloReactCommon.MutationFunction<DeleteViewsMutation, DeleteViewsMutationVariables>;
+
+/**
+ * __useDeleteViewsMutation__
+ *
+ * To run a mutation, you first call `useDeleteViewsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteViewsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteViewsMutation, { data, loading, error }] = useDeleteViewsMutation({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useDeleteViewsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteViewsMutation, DeleteViewsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteViewsMutation, DeleteViewsMutationVariables>(DeleteViewsDocument, options);
+      }
+export type DeleteViewsMutationHookResult = ReturnType<typeof useDeleteViewsMutation>;
+export type DeleteViewsMutationResult = ApolloReactCommon.MutationResult<DeleteViewsMutation>;
+export type DeleteViewsMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteViewsMutation, DeleteViewsMutationVariables>;
+export const GetVisitsDocument = gql`
+    query GetVisits($userId: ID) {
+  visits(filter: {user_created: {id: {_eq: $userId}}}) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetVisitsQuery__
+ *
+ * To run a query within a React component, call `useGetVisitsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVisitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVisitsQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetVisitsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetVisitsQuery, GetVisitsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetVisitsQuery, GetVisitsQueryVariables>(GetVisitsDocument, options);
+      }
+export function useGetVisitsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetVisitsQuery, GetVisitsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetVisitsQuery, GetVisitsQueryVariables>(GetVisitsDocument, options);
+        }
+export function useGetVisitsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetVisitsQuery, GetVisitsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetVisitsQuery, GetVisitsQueryVariables>(GetVisitsDocument, options);
+        }
+export type GetVisitsQueryHookResult = ReturnType<typeof useGetVisitsQuery>;
+export type GetVisitsLazyQueryHookResult = ReturnType<typeof useGetVisitsLazyQuery>;
+export type GetVisitsSuspenseQueryHookResult = ReturnType<typeof useGetVisitsSuspenseQuery>;
+export type GetVisitsQueryResult = ApolloReactCommon.QueryResult<GetVisitsQuery, GetVisitsQueryVariables>;
+export const GetAllVisitsDocument = gql`
+    query GetAllVisits {
+  visits {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetAllVisitsQuery__
+ *
+ * To run a query within a React component, call `useGetAllVisitsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetAllVisitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetAllVisitsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetAllVisitsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetAllVisitsQuery, GetAllVisitsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetAllVisitsQuery, GetAllVisitsQueryVariables>(GetAllVisitsDocument, options);
+      }
+export function useGetAllVisitsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetAllVisitsQuery, GetAllVisitsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetAllVisitsQuery, GetAllVisitsQueryVariables>(GetAllVisitsDocument, options);
+        }
+export function useGetAllVisitsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetAllVisitsQuery, GetAllVisitsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetAllVisitsQuery, GetAllVisitsQueryVariables>(GetAllVisitsDocument, options);
+        }
+export type GetAllVisitsQueryHookResult = ReturnType<typeof useGetAllVisitsQuery>;
+export type GetAllVisitsLazyQueryHookResult = ReturnType<typeof useGetAllVisitsLazyQuery>;
+export type GetAllVisitsSuspenseQueryHookResult = ReturnType<typeof useGetAllVisitsSuspenseQuery>;
+export type GetAllVisitsQueryResult = ApolloReactCommon.QueryResult<GetAllVisitsQuery, GetAllVisitsQueryVariables>;
+export const GetVisitsByCustomerDocument = gql`
+    query GetVisitsByCustomer($customerId: GraphQLStringOrFloat!) {
+  visits(filter: {customer: {id: {_eq: $customerId}}}) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetVisitsByCustomerQuery__
+ *
+ * To run a query within a React component, call `useGetVisitsByCustomerQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVisitsByCustomerQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVisitsByCustomerQuery({
+ *   variables: {
+ *      customerId: // value for 'customerId'
+ *   },
+ * });
+ */
+export function useGetVisitsByCustomerQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetVisitsByCustomerQuery, GetVisitsByCustomerQueryVariables> & ({ variables: GetVisitsByCustomerQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetVisitsByCustomerQuery, GetVisitsByCustomerQueryVariables>(GetVisitsByCustomerDocument, options);
+      }
+export function useGetVisitsByCustomerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetVisitsByCustomerQuery, GetVisitsByCustomerQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetVisitsByCustomerQuery, GetVisitsByCustomerQueryVariables>(GetVisitsByCustomerDocument, options);
+        }
+export function useGetVisitsByCustomerSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetVisitsByCustomerQuery, GetVisitsByCustomerQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetVisitsByCustomerQuery, GetVisitsByCustomerQueryVariables>(GetVisitsByCustomerDocument, options);
+        }
+export type GetVisitsByCustomerQueryHookResult = ReturnType<typeof useGetVisitsByCustomerQuery>;
+export type GetVisitsByCustomerLazyQueryHookResult = ReturnType<typeof useGetVisitsByCustomerLazyQuery>;
+export type GetVisitsByCustomerSuspenseQueryHookResult = ReturnType<typeof useGetVisitsByCustomerSuspenseQuery>;
+export type GetVisitsByCustomerQueryResult = ApolloReactCommon.QueryResult<GetVisitsByCustomerQuery, GetVisitsByCustomerQueryVariables>;
+export const GetVisitsByBoutiqueDocument = gql`
+    query GetVisitsByBoutique($boutiqueId: GraphQLStringOrFloat!) {
+  visits(filter: {boutique: {id: {_eq: $boutiqueId}}}) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+
+/**
+ * __useGetVisitsByBoutiqueQuery__
+ *
+ * To run a query within a React component, call `useGetVisitsByBoutiqueQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVisitsByBoutiqueQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVisitsByBoutiqueQuery({
+ *   variables: {
+ *      boutiqueId: // value for 'boutiqueId'
+ *   },
+ * });
+ */
+export function useGetVisitsByBoutiqueQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetVisitsByBoutiqueQuery, GetVisitsByBoutiqueQueryVariables> & ({ variables: GetVisitsByBoutiqueQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetVisitsByBoutiqueQuery, GetVisitsByBoutiqueQueryVariables>(GetVisitsByBoutiqueDocument, options);
+      }
+export function useGetVisitsByBoutiqueLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetVisitsByBoutiqueQuery, GetVisitsByBoutiqueQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetVisitsByBoutiqueQuery, GetVisitsByBoutiqueQueryVariables>(GetVisitsByBoutiqueDocument, options);
+        }
+export function useGetVisitsByBoutiqueSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetVisitsByBoutiqueQuery, GetVisitsByBoutiqueQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetVisitsByBoutiqueQuery, GetVisitsByBoutiqueQueryVariables>(GetVisitsByBoutiqueDocument, options);
+        }
+export type GetVisitsByBoutiqueQueryHookResult = ReturnType<typeof useGetVisitsByBoutiqueQuery>;
+export type GetVisitsByBoutiqueLazyQueryHookResult = ReturnType<typeof useGetVisitsByBoutiqueLazyQuery>;
+export type GetVisitsByBoutiqueSuspenseQueryHookResult = ReturnType<typeof useGetVisitsByBoutiqueSuspenseQuery>;
+export type GetVisitsByBoutiqueQueryResult = ApolloReactCommon.QueryResult<GetVisitsByBoutiqueQuery, GetVisitsByBoutiqueQueryVariables>;
+export const GetVisitStatsDocument = gql`
+    query GetVisitStats($boutiqueId: GraphQLStringOrFloat, $startDate: String, $endDate: String) {
+  visits_aggregated(
+    filter: {_and: [{boutique: {id: {_eq: $boutiqueId}}}, {date_created: {_gte: $startDate}}, {date_created: {_lte: $endDate}}]}
+    groupBy: ["date_created"]
+  ) {
+    group
+    countAll
+  }
+}
+    `;
+
+/**
+ * __useGetVisitStatsQuery__
+ *
+ * To run a query within a React component, call `useGetVisitStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVisitStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVisitStatsQuery({
+ *   variables: {
+ *      boutiqueId: // value for 'boutiqueId'
+ *      startDate: // value for 'startDate'
+ *      endDate: // value for 'endDate'
+ *   },
+ * });
+ */
+export function useGetVisitStatsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<GetVisitStatsQuery, GetVisitStatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetVisitStatsQuery, GetVisitStatsQueryVariables>(GetVisitStatsDocument, options);
+      }
+export function useGetVisitStatsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetVisitStatsQuery, GetVisitStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetVisitStatsQuery, GetVisitStatsQueryVariables>(GetVisitStatsDocument, options);
+        }
+export function useGetVisitStatsSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetVisitStatsQuery, GetVisitStatsQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetVisitStatsQuery, GetVisitStatsQueryVariables>(GetVisitStatsDocument, options);
+        }
+export type GetVisitStatsQueryHookResult = ReturnType<typeof useGetVisitStatsQuery>;
+export type GetVisitStatsLazyQueryHookResult = ReturnType<typeof useGetVisitStatsLazyQuery>;
+export type GetVisitStatsSuspenseQueryHookResult = ReturnType<typeof useGetVisitStatsSuspenseQuery>;
+export type GetVisitStatsQueryResult = ApolloReactCommon.QueryResult<GetVisitStatsQuery, GetVisitStatsQueryVariables>;
+export const CreateVisitDocument = gql`
+    mutation CreateVisit($data: create_visits_input!) {
+  create_visits_item(data: $data) {
+    id
+    customer {
+      id
+      nick_name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+  }
+}
+    `;
+export type CreateVisitMutationFn = ApolloReactCommon.MutationFunction<CreateVisitMutation, CreateVisitMutationVariables>;
+
+/**
+ * __useCreateVisitMutation__
+ *
+ * To run a mutation, you first call `useCreateVisitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateVisitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createVisitMutation, { data, loading, error }] = useCreateVisitMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateVisitMutation, CreateVisitMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<CreateVisitMutation, CreateVisitMutationVariables>(CreateVisitDocument, options);
+      }
+export type CreateVisitMutationHookResult = ReturnType<typeof useCreateVisitMutation>;
+export type CreateVisitMutationResult = ApolloReactCommon.MutationResult<CreateVisitMutation>;
+export type CreateVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateVisitMutation, CreateVisitMutationVariables>;
+export const UpdateVisitDocument = gql`
+    mutation UpdateVisit($id: ID!, $data: update_visits_input!) {
+  update_visits_item(id: $id, data: $data) {
+    id
+    customer {
+      id
+      nick_name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+    `;
+export type UpdateVisitMutationFn = ApolloReactCommon.MutationFunction<UpdateVisitMutation, UpdateVisitMutationVariables>;
+
+/**
+ * __useUpdateVisitMutation__
+ *
+ * To run a mutation, you first call `useUpdateVisitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateVisitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateVisitMutation, { data, loading, error }] = useUpdateVisitMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateVisitMutation, UpdateVisitMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<UpdateVisitMutation, UpdateVisitMutationVariables>(UpdateVisitDocument, options);
+      }
+export type UpdateVisitMutationHookResult = ReturnType<typeof useUpdateVisitMutation>;
+export type UpdateVisitMutationResult = ApolloReactCommon.MutationResult<UpdateVisitMutation>;
+export type UpdateVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateVisitMutation, UpdateVisitMutationVariables>;
+export const DeleteVisitDocument = gql`
+    mutation DeleteVisit($id: ID!) {
+  delete_visits_item(id: $id) {
+    id
+  }
+}
+    `;
+export type DeleteVisitMutationFn = ApolloReactCommon.MutationFunction<DeleteVisitMutation, DeleteVisitMutationVariables>;
+
+/**
+ * __useDeleteVisitMutation__
+ *
+ * To run a mutation, you first call `useDeleteVisitMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteVisitMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteVisitMutation, { data, loading, error }] = useDeleteVisitMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteVisitMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteVisitMutation, DeleteVisitMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteVisitMutation, DeleteVisitMutationVariables>(DeleteVisitDocument, options);
+      }
+export type DeleteVisitMutationHookResult = ReturnType<typeof useDeleteVisitMutation>;
+export type DeleteVisitMutationResult = ApolloReactCommon.MutationResult<DeleteVisitMutation>;
+export type DeleteVisitMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteVisitMutation, DeleteVisitMutationVariables>;
+export const DeleteVisitsDocument = gql`
+    mutation DeleteVisits($ids: [ID]!) {
+  delete_visits_items(ids: $ids) {
+    ids
+  }
+}
+    `;
+export type DeleteVisitsMutationFn = ApolloReactCommon.MutationFunction<DeleteVisitsMutation, DeleteVisitsMutationVariables>;
+
+/**
+ * __useDeleteVisitsMutation__
+ *
+ * To run a mutation, you first call `useDeleteVisitsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteVisitsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteVisitsMutation, { data, loading, error }] = useDeleteVisitsMutation({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useDeleteVisitsMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteVisitsMutation, DeleteVisitsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useMutation<DeleteVisitsMutation, DeleteVisitsMutationVariables>(DeleteVisitsDocument, options);
+      }
+export type DeleteVisitsMutationHookResult = ReturnType<typeof useDeleteVisitsMutation>;
+export type DeleteVisitsMutationResult = ApolloReactCommon.MutationResult<DeleteVisitsMutation>;
+export type DeleteVisitsMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteVisitsMutation, DeleteVisitsMutationVariables>;

@@ -1,0 +1,151 @@
+# 店铺访问记录相关的GraphQL操作
+
+# 查询所有访问记录
+query GetVisits($userId: ID) {
+  visits(filter: { user_created: { id: { _eq: $userId } } }) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 查询所有访问记录（管理员用，无权限过滤）
+query GetAllVisits {
+  visits {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 根据客户ID查询访问记录
+query GetVisitsByCustomer($customerId: GraphQLStringOrFloat!) {
+  visits(filter: { customer: { id: { _eq: $customerId } } }) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+    }
+    boutique {
+      id
+      name
+      address
+      city
+      category
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 根据店铺ID查询访问记录
+query GetVisitsByBoutique($boutiqueId: GraphQLStringOrFloat!) {
+  visits(filter: { boutique: { id: { _eq: $boutiqueId } } }) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 获取访问统计（按时间段）
+query GetVisitStats($boutiqueId: GraphQLStringOrFloat, $startDate: String, $endDate: String) {
+  visits_aggregated(
+    filter: {
+      _and: [
+        { boutique: { id: { _eq: $boutiqueId } } },
+        { date_created: { _gte: $startDate } },
+        { date_created: { _lte: $endDate } }
+      ]
+    }
+    groupBy: ["date_created"]
+  ) {
+    group
+    countAll
+  }
+}
+
+# 创建访问记录
+mutation CreateVisit($data: create_visits_input!) {
+  create_visits_item(data: $data) {
+    id
+    customer {
+      id
+      nick_name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+  }
+}
+
+# 更新访问记录
+mutation UpdateVisit($id: ID!, $data: update_visits_input!) {
+  update_visits_item(id: $id, data: $data) {
+    id
+    customer {
+      id
+      nick_name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 删除访问记录
+mutation DeleteVisit($id: ID!) {
+  delete_visits_item(id: $id) {
+    id
+  }
+}
+
+# 批量删除访问记录
+mutation DeleteVisits($ids: [ID]!) {
+  delete_visits_items(ids: $ids) {
+    ids
+  }
+}

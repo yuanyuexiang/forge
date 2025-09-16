@@ -13,7 +13,10 @@ import {
   SettingOutlined,
   TagOutlined,
   DatabaseOutlined,
-  ShopOutlined
+  ShopOutlined,
+  DesktopOutlined,
+  EyeOutlined,
+  BarChartOutlined
 } from '@ant-design/icons';
 import { useRouter, usePathname } from 'next/navigation';
 import { useAuth } from '@providers/AuthProvider';
@@ -54,6 +57,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     if (pathname.startsWith('/orders')) return 'orders';
     if (pathname.startsWith('/customers')) return 'customers';
     if (pathname.startsWith('/categories')) return 'categories';
+    if (pathname.startsWith('/terminals')) return 'terminals';
+    if (pathname.startsWith('/views')) return 'views';
+    if (pathname.startsWith('/visits')) return 'visits';
     if (pathname.startsWith('/profile')) return 'profile';
     return 'dashboard';
   };
@@ -94,6 +100,24 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       icon: <UserOutlined />,
       label: '客户管理',
       onClick: () => router.push('/customers'),
+    },
+    {
+      key: 'terminals',
+      icon: <DesktopOutlined />,
+      label: '终端管理',
+      onClick: () => router.push('/terminals'),
+    },
+    {
+      key: 'views',
+      icon: <EyeOutlined />,
+      label: '浏览分析',
+      onClick: () => router.push('/views'),
+    },
+    {
+      key: 'visits',
+      icon: <BarChartOutlined />,
+      label: '访问统计',
+      onClick: () => router.push('/visits'),
     },
   ];
 

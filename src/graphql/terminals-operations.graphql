@@ -1,0 +1,90 @@
+# 终端设备相关的GraphQL操作
+
+# 查询所有终端设备
+query GetTerminals($userId: ID) {
+  terminals(filter: { user_created: { id: { _eq: $userId } } }) {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 查询所有终端设备（管理员用，无权限过滤）
+query GetAllTerminals {
+  terminals {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 根据ID查询终端设备
+query GetTerminalById($id: ID!) {
+  terminals_by_id(id: $id) {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 创建终端设备
+mutation CreateTerminal($data: create_terminals_input!) {
+  create_terminals_item(data: $data) {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 更新终端设备
+mutation UpdateTerminal($id: ID!, $data: update_terminals_input!) {
+  update_terminals_item(id: $id, data: $data) {
+    id
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 删除终端设备
+mutation DeleteTerminal($id: ID!) {
+  delete_terminals_item(id: $id) {
+    id
+  }
+}
+
+# 批量删除终端设备
+mutation DeleteTerminals($ids: [ID]!) {
+  delete_terminals_items(ids: $ids) {
+    ids
+  }
+}

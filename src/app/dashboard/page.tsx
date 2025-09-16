@@ -87,6 +87,9 @@ function DashboardContent() {
     totalUsers: dashboardData?.customers_aggregated?.[0]?.countAll || dashboardData?.customers?.length || 0,
     totalCategories: dashboardData?.categories_aggregated?.[0]?.countAll || dashboardData?.categories?.length || 0,
     totalBoutiques: dashboardData?.boutiques_aggregated?.[0]?.countAll || dashboardData?.boutiques?.length || 0,
+    totalTerminals: dashboardData?.terminals_aggregated?.[0]?.countAll || dashboardData?.terminals?.length || 0,
+    totalViews: dashboardData?.views_aggregated?.[0]?.countAll || dashboardData?.views?.length || 0,
+    totalVisits: dashboardData?.visits_aggregated?.[0]?.countAll || dashboardData?.visits?.length || 0,
     todayOrders: dashboardData?.today_orders?.length || 0
   };
 
@@ -309,6 +312,90 @@ function DashboardContent() {
         </div>
       </div>
 
+      {/* 第二行统计卡片区域 - 新实体统计 */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
+        <div className="luxury-card p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>终端设备</p>
+              <div style={{ fontSize: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
+                {isLoading ? <Spin size="small" /> : statsData.totalTerminals.toLocaleString()}
+              </div>
+              <p style={{ fontSize: '13px', color: '#10B981', marginTop: '8px', fontWeight: 500 }}>
+                <span className="inline-block mr-1">🖥️</span>
+                智能设备
+              </p>
+            </div>
+            <div style={{ 
+              width: '56px', 
+              height: '56px', 
+              background: 'linear-gradient(135deg, #0F766E 0%, #14B8A6 100%)', 
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(15, 118, 110, 0.3)'
+            }}>
+              <DashboardOutlined style={{ fontSize: '24px', color: '#A7F3D0' }} />
+            </div>
+          </div>
+        </div>
+        
+        <div className="luxury-card p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>浏览记录</p>
+              <div style={{ fontSize: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
+                {isLoading ? <Spin size="small" /> : statsData.totalViews.toLocaleString()}
+              </div>
+              <p style={{ fontSize: '13px', color: '#F59E0B', marginTop: '8px', fontWeight: 500 }}>
+                <span className="inline-block mr-1">👁️</span>
+                商品浏览
+              </p>
+            </div>
+            <div style={{ 
+              width: '56px', 
+              height: '56px', 
+              background: 'linear-gradient(135deg, #D97706 0%, #F59E0B 100%)', 
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(217, 119, 6, 0.3)'
+            }}>
+              <EyeInvisibleOutlined style={{ fontSize: '24px', color: '#FEF3C7', transform: 'scaleX(-1)' }} />
+            </div>
+          </div>
+        </div>
+        
+        <div className="luxury-card p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p style={{ fontSize: '14px', color: '#6B7280', marginBottom: '8px', fontWeight: 500 }}>店铺访问</p>
+              <div style={{ fontSize: '36px', fontWeight: 700, color: '#111827', letterSpacing: '-0.02em' }}>
+                {isLoading ? <Spin size="small" /> : statsData.totalVisits.toLocaleString()}
+              </div>
+              <p style={{ fontSize: '13px', color: '#8B5CF6', marginTop: '8px', fontWeight: 500 }}>
+                <span className="inline-block mr-1">🚶‍♀️</span>
+                客流统计
+              </p>
+            </div>
+            <div style={{ 
+              width: '56px', 
+              height: '56px', 
+              background: 'linear-gradient(135deg, #7C3AED 0%, #8B5CF6 100%)', 
+              borderRadius: '16px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 12px rgba(124, 58, 237, 0.3)'
+            }}>
+              <ClockCircleOutlined style={{ fontSize: '24px', color: '#DDD6FE' }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* 快速操作区域 */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <div className="bg-white p-6 rounded-lg shadow-sm border">
@@ -384,7 +471,7 @@ function DashboardContent() {
                 <div key={order.id} className="flex items-center justify-between py-2 border-b last:border-b-0">
                   <div>
                     <div className="font-medium">#{order.id.substring(0, 8)}</div>
-                    <div className="text-sm text-gray-500">{order.customers_id?.nick_name || '未知用户'}</div>
+                    <div className="text-sm text-gray-500">{order.customer?.nick_name || '未知用户'}</div>
                   </div>
                   <div className="text-right">
                     <div className="font-medium">¥{order.total_price?.toFixed(2)}</div>

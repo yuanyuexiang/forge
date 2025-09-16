@@ -28,7 +28,6 @@ import {
 } from '@ant-design/icons';
 import { 
   useGetOrdersQuery,
-  useGetOrderItemsQuery,
   useUpdateOrderStatusMutation,
   GetOrdersQuery
 } from '../../generated/graphql';
@@ -64,11 +63,11 @@ function OrdersContent() {
     skip: !userId // 如果没有用户 ID 就跳过查询
   });
   
-  // 查询订单项（当选择了订单时）
-  const { data: orderItemsData } = useGetOrderItemsQuery({
-    variables: { orderId: selectedOrder?.id as any },
-    skip: !selectedOrder?.id
-  });
+  // 由于schema中没有order_items表，这里先注释掉相关的查询
+  // const { data: orderItemsData } = useGetOrderItemsQuery({
+  //   variables: { orderId: selectedOrder?.id as any },
+  //   skip: !selectedOrder?.id
+  // });
 
   // 更新订单状态
   const [updateOrderStatus] = useUpdateOrderStatusMutation({
@@ -85,7 +84,8 @@ function OrdersContent() {
   });
 
   const orders = ordersData?.orders || [];
-  const orderItems = orderItemsData?.order_items || [];
+  // 暂时使用空数组，等实现order_items功能时再修复
+  const orderItems: any[] = [];
 
   // 处理错误
   if (error) {
@@ -99,11 +99,11 @@ function OrdersContent() {
     const searchLower = searchText.toLowerCase();
     return (
       order.id.toLowerCase().includes(searchLower) ||
-      order.customers_id?.nick_name?.toLowerCase().includes(searchLower) ||
-      order.customers_id?.id?.toString().includes(searchLower) ||
+      order.customer?.nick_name?.toLowerCase().includes(searchLower) ||
+      order.customer?.id?.toString().includes(searchLower) ||
       order.status?.toLowerCase().includes(searchLower) ||
-      order.boutique_id?.name?.toLowerCase().includes(searchLower) ||
-      order.boutique_id?.address?.toLowerCase().includes(searchLower)
+      order.boutique?.name?.toLowerCase().includes(searchLower) ||
+      order.boutique?.address?.toLowerCase().includes(searchLower)
     );
   });
 
@@ -182,7 +182,7 @@ function OrdersContent() {
       width: 200,
       render: (record: Order) => (
         <div>
-          <div><UserOutlined /> {record.customers_id?.nick_name || `用户ID: ${record.customers_id?.id || '未知'}`}</div>
+          <div><UserOutlined /> {record.customer?.nick_name || `用户ID: ${record.customer?.id || '未知'}`}</div>
           <div style={{ fontSize: '12px', color: '#666' }}>
             客户
           </div>
@@ -194,13 +194,13 @@ function OrdersContent() {
       key: 'boutique',
       width: 180,
       render: (record: Order) => {
-        if (record.boutique_id) {
+        if (record.boutique) {
           return (
             <div>
-              <div style={{ fontWeight: 500 }}>{record.boutique_id.name}</div>
-              {record.boutique_id.address && (
+              <div style={{ fontWeight: 500 }}>{record.boutique.name}</div>
+              {record.boutique.address && (
                 <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
-                  {record.boutique_id.address}
+                  {record.boutique.address}
                 </div>
               )}
             </div>
@@ -363,10 +363,10 @@ function OrdersContent() {
                 </Text>
               </Descriptions.Item>
               <Descriptions.Item label="客户昵称">
-                {selectedOrder.customers_id?.nick_name || '未设置昵称'}
+                {selectedOrder.customer?.nick_name || '未设置昵称'}
               </Descriptions.Item>
               <Descriptions.Item label="客户ID">
-                {selectedOrder.customers_id?.id || '未知用户'}
+                {selectedOrder.customer?.id || '未知用户'}
               </Descriptions.Item>
               <Descriptions.Item label="总金额">
                 <Text strong style={{ color: '#f50' }}>

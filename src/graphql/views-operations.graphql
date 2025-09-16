@@ -1,0 +1,184 @@
+# 商品浏览记录相关的GraphQL操作
+
+# 查询所有浏览记录
+query GetViews($userId: ID) {
+  views(filter: { user_created: { id: { _eq: $userId } } }) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    product {
+      id
+      name
+      main_image
+      price
+      market_price
+    }
+    boutique {
+      id
+      name
+      address
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 查询所有浏览记录（管理员用，无权限过滤）
+query GetAllViews {
+  views {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    product {
+      id
+      name
+      main_image
+      price
+      market_price
+    }
+    boutique {
+      id
+      name
+      address
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 根据客户ID查询浏览记录
+query GetViewsByCustomer($customerId: GraphQLStringOrFloat!) {
+  views(filter: { customer: { id: { _eq: $customerId } } }) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+    }
+    product {
+      id
+      name
+      main_image
+      price
+      market_price
+    }
+    boutique {
+      id
+      name
+      address
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 根据商品ID查询浏览记录
+query GetViewsByProduct($productId: GraphQLStringOrFloat!) {
+  views(filter: { product: { id: { _eq: $productId } } }) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+    }
+    product {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 根据店铺ID查询浏览记录
+query GetViewsByBoutique($boutiqueId: GraphQLStringOrFloat!) {
+  views(filter: { boutique: { id: { _eq: $boutiqueId } } }) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+    }
+    product {
+      id
+      name
+      main_image
+      price
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 创建浏览记录
+mutation CreateView($data: create_views_input!) {
+  create_views_item(data: $data) {
+    id
+    customer {
+      id
+      nick_name
+    }
+    product {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+  }
+}
+
+# 更新浏览记录
+mutation UpdateView($id: ID!, $data: update_views_input!) {
+  update_views_item(id: $id, data: $data) {
+    id
+    customer {
+      id
+      nick_name
+    }
+    product {
+      id
+      name
+    }
+    boutique {
+      id
+      name
+    }
+    date_created
+    date_updated
+  }
+}
+
+# 删除浏览记录
+mutation DeleteView($id: ID!) {
+  delete_views_item(id: $id) {
+    id
+  }
+}
+
+# 批量删除浏览记录
+mutation DeleteViews($ids: [ID]!) {
+  delete_views_items(ids: $ids) {
+    ids
+  }
+}

@@ -15,6 +15,15 @@ query GetDashboardData($today: String, $userId: ID) {
   boutiques(filter: { user_created: { id: { _eq: $userId } } }, limit: 1000) {
     id
   }
+  terminals(filter: { user_created: { id: { _eq: $userId } } }, limit: 1000) {
+    id
+  }
+  views(filter: { user_created: { id: { _eq: $userId } } }, limit: 1000) {
+    id
+  }
+  visits(filter: { user_created: { id: { _eq: $userId } } }, limit: 1000) {
+    id
+  }
   
   # 使用聚合查询获取总数（带权限过滤）
   customers_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
@@ -30,6 +39,15 @@ query GetDashboardData($today: String, $userId: ID) {
     countAll
   }
   boutiques_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
+    countAll
+  }
+  terminals_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
+    countAll
+  }
+  views_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
+    countAll
+  }
+  visits_aggregated(filter: { user_created: { id: { _eq: $userId } } }) {
     countAll
   }
   
@@ -91,7 +109,7 @@ query GetAllDashboardData($today: String) {
 query GetRecentOrders($limit: Int = 5, $userId: ID) {
   orders(filter: { user_created: { id: { _eq: $userId } } }, limit: $limit, sort: ["-date_created"]) {
     id
-    customers_id {
+    customer {
       id
       nick_name
     }
@@ -105,7 +123,7 @@ query GetRecentOrders($limit: Int = 5, $userId: ID) {
 query GetAllRecentOrders($limit: Int = 5) {
   orders(limit: $limit, sort: ["-date_created"]) {
     id
-    customers_id {
+    customer {
       id
       nick_name
     }
