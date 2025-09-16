@@ -14,7 +14,8 @@ import {
   Card,
   message,
   Upload,
-  Spin
+  Spin,
+  Cascader
 } from 'antd';
 import {
   ArrowLeftOutlined,
@@ -35,6 +36,13 @@ import {
 } from '@generated/graphql';
 import { TokenManager } from '@lib/auth';
 import { FILE_CONFIG } from '@lib/api';
+import { 
+  CHINA_PROVINCES, 
+  getFullAddressByCityName, 
+  parseFullAddress,
+  type Province,
+  type City
+} from '@lib/utils/china-regions';
 
 const { Title } = Typography;
 const { Option } = Select;
@@ -57,7 +65,23 @@ function BoutiqueEditContent() {
   const [mainImageUploading, setMainImageUploading] = useState(false);
   const [imagesUploading, setImagesUploading] = useState(false);
 
+  // 省市级联选择器数据
+  const [cascaderOptions, setCascaderOptions] = useState<any[]>([]);
+
   const isEditMode = params.id !== 'new';
+
+  // 初始化级联选择器数据
+  useEffect(() => {
+    const options = CHINA_PROVINCES.map(province => ({
+      value: province.code,
+      label: province.name,
+      children: province.cities.map(city => ({
+        value: city.code,
+        label: city.name
+      }))
+    }));
+    setCascaderOptions(options);
+  }, []);
 
   // 获取当前用户 ID
   const [userId, setUserId] = useState<string | null>(null);
@@ -128,11 +152,20 @@ function BoutiqueEditContent() {
     if (foundBoutique) {
       setBoutique(foundBoutique);
       
+      // 处理省市数据 - 从城市字段解析省市信息
+      let cityCascaderValue: string[] = [];
+      if (foundBoutique.city) {
+        const parsed = parseFullAddress(foundBoutique.city);
+        if (parsed.province && parsed.city) {
+          cityCascaderValue = [parsed.province.code, parsed.city.code];
+        }
+      }
+      
       // 初始化表单数据
       form.setFieldsValue({
         name: foundBoutique.name,
         address: foundBoutique.address,
-        city: foundBoutique.city,
+        city: cityCascaderValue, // 使用级联选择器格式
         code: foundBoutique.code,
         category: foundBoutique.category,
         contact: foundBoutique.contact,
@@ -306,9 +339,25 @@ function BoutiqueEditContent() {
       setSaving(true);
       const values = await form.validateFields();
       
+      // 处理省市级联数据 - 将级联选择的值转换为完整地址
+      let cityValue = values.city;
+      if (Array.isArray(values.city) && values.city.length === 2) {
+        const [provinceCode, cityCode] = values.city;
+        const province = CHINA_PROVINCES.find(p => p.code === provinceCode);
+        const city = province?.cities.find(c => c.code === cityCode);
+        if (province && city) {
+          cityValue = `${province.name} ${city.name}`;
+        }
+      }
+      
       const submitData = {
         name: values.name,
         address: values.address,
+        city: cityValue,
+        code: values.code,
+        category: values.category,
+        contact: values.contact,
+        expire_date: values.expire_date,
         stars: values.stars || 0,
         status: values.status || 'open',
         sort: values.sort || 0,
@@ -425,10 +474,23 @@ function BoutiqueEditContent() {
               </Form.Item>
 
               <Form.Item
-                label="城市"
+                label="所在城市"
                 name="city"
+                tooltip="选择店铺所在的省份和城市"
               >
-                <Input placeholder="请输入所在城市" size="large" />
+                <Cascader
+                  options={cascaderOptions}
+                  placeholder="请选择省份和城市"
+                  size="large"
+                  showSearch={{
+                    filter: (inputValue, path) => {
+                      return path.some(option => 
+                        (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
+                      );
+                    }
+                  }}
+                  style={{ width: '100%' }}
+                />
               </Form.Item>
 
               <Form.Item
