@@ -34,7 +34,7 @@ import {
   useGetViewsByBoutiqueQuery,
   GetViewsQuery
 } from '../../generated/graphql';
-import { ProtectedRoute, AdminLayout } from '@components';
+import { ProtectedRoute, AdminLayout, BoutiqueSelector } from '@components';
 import { TokenManager } from '@lib/auth';
 import { exportViews } from '@lib/utils';
 import dayjs from 'dayjs';
@@ -49,23 +49,12 @@ export default function ViewsPage() {
   const [searchText, setSearchText] = useState('');
   const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>(null);
   const [filterType, setFilterType] = useState<'all' | 'customer' | 'product' | 'boutique'>('all');
-  const [userId, setUserId] = useState<string | null>(null);
+  const [selectedBoutiqueId, setSelectedBoutiqueId] = useState<string | undefined>(undefined);
 
-  // 获取用户ID
-  useEffect(() => {
-    const loadUserId = async () => {
-      const user = await TokenManager.getCurrentUser();
-      if (user?.id) {
-        setUserId(user.id);
-      }
-    };
-    loadUserId();
-  }, []);
-
-  // 查询浏览记录
+  // 查询指定店铺的浏览记录
   const { data: viewsData, loading } = useGetViewsQuery({
-    variables: { userId },
-    skip: !userId
+    variables: selectedBoutiqueId ? { boutiqueId: selectedBoutiqueId } : undefined,
+    skip: !selectedBoutiqueId
   });
   const views = viewsData?.views || [];
 
@@ -423,28 +412,39 @@ export default function ViewsPage() {
           {/* 筛选器 */}
           <Card style={{ marginBottom: 16 }}>
             <Row gutter={16}>
-              <Col span={6}>
+              <Col span={4}>
+                <BoutiqueSelector
+                  value={selectedBoutiqueId}
+                  onChange={setSelectedBoutiqueId}
+                  placeholder="请选择店铺"
+                  style={{ width: '100%' }}
+                />
+              </Col>
+              <Col span={5}>
                 <Input.Search
                   placeholder="搜索客户、商品、店铺..."
                   value={searchText}
                   onChange={(e) => setSearchText(e.target.value)}
                   allowClear
+                  disabled={!selectedBoutiqueId}
                 />
               </Col>
-              <Col span={6}>
+              <Col span={5}>
                 <RangePicker
                   value={dateRange}
                   onChange={(dates) => setDateRange(dates as [dayjs.Dayjs, dayjs.Dayjs] | null)}
                   placeholder={['开始日期', '结束日期']}
                   style={{ width: '100%' }}
+                  disabled={!selectedBoutiqueId}
                 />
               </Col>
-              <Col span={4}>
+              <Col span={5}>
                 <Select
                   value={filterType}
                   onChange={setFilterType}
                   style={{ width: '100%' }}
                   placeholder="筛选类型"
+                  disabled={!selectedBoutiqueId}
                 >
                   <Option value="all">全部</Option>
                   <Option value="customer">按客户</Option>
@@ -456,23 +456,32 @@ export default function ViewsPage() {
           </Card>
 
           {/* 浏览记录表格 */}
-          <Card title="浏览记录详情">
-            <Table
-              columns={columns}
-              dataSource={filteredViews}
-              rowKey="id"
-              loading={loading}
-              pagination={{
-                total: filteredViews.length,
-                showSizeChanger: true,
-                showQuickJumper: true,
-                showTotal: (total, range) => 
-                  `第 ${range[0]}-${range[1]} 条/共 ${total} 条`,
-                pageSizeOptions: ['10', '20', '50', '100'],
-                defaultPageSize: 20
-              }}
-            />
-          </Card>
+          {!selectedBoutiqueId ? (
+            <Card title="浏览记录详情">
+              <div style={{ textAlign: 'center', padding: '60px 0' }}>
+                <EyeOutlined style={{ fontSize: 64, color: '#ccc', marginBottom: 16 }} />
+                <div style={{ fontSize: 16, color: '#666' }}>请先选择一个店铺查看浏览数据</div>
+              </div>
+            </Card>
+          ) : (
+            <Card title="浏览记录详情">
+              <Table
+                columns={columns}
+                dataSource={filteredViews}
+                rowKey="id"
+                loading={loading}
+                pagination={{
+                  total: filteredViews.length,
+                  showSizeChanger: true,
+                  showQuickJumper: true,
+                  showTotal: (total, range) => 
+                    `第 ${range[0]}-${range[1]} 条/共 ${total} 条`,
+                  pageSizeOptions: ['10', '20', '50', '100'],
+                  defaultPageSize: 20
+                }}
+              />
+            </Card>
+          )}
         </div>
       </AdminLayout>
     </ProtectedRoute>

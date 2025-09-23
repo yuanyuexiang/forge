@@ -1,8 +1,8 @@
 # 店铺访问记录相关的GraphQL操作
 
-# 查询所有访问记录
-query GetVisits($userId: ID) {
-  visits(filter: { user_created: { id: { _eq: $userId } } }) {
+# 查询指定店铺的访问记录（基于boutique.id过滤）
+query GetVisits($boutiqueId: GraphQLStringOrFloat) {
+  visits(filter: { boutique: { id: { _eq: $boutiqueId } } }) {
     id
     customer {
       id

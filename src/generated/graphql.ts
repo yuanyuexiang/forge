@@ -4301,11 +4301,11 @@ export type DeleteCategoryMutationVariables = Exact<{
 export type DeleteCategoryMutation = { __typename?: 'Mutation', delete_categories_item?: { __typename?: 'delete_one', id: string } | null };
 
 export type GetCustomersQueryVariables = Exact<{
-  userId?: InputMaybe<Scalars['ID']['input']>;
+  boutiqueId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
 }>;
 
 
-export type GetCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null }> };
 
 export type GetAllCustomersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -4372,7 +4372,7 @@ export type GetAllRecentOrdersQueryVariables = Exact<{
 export type GetAllRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null }> };
 
 export type GetOrdersQueryVariables = Exact<{
-  userId?: InputMaybe<Scalars['ID']['input']>;
+  boutiqueId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
 }>;
 
 
@@ -4510,7 +4510,7 @@ export type DeleteTerminalsMutationVariables = Exact<{
 export type DeleteTerminalsMutation = { __typename?: 'Mutation', delete_terminals_items?: { __typename?: 'delete_many', ids: Array<string | null> } | null };
 
 export type GetViewsQueryVariables = Exact<{
-  userId?: InputMaybe<Scalars['ID']['input']>;
+  boutiqueId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
 }>;
 
 
@@ -4572,7 +4572,7 @@ export type DeleteViewsMutationVariables = Exact<{
 export type DeleteViewsMutation = { __typename?: 'Mutation', delete_views_items?: { __typename?: 'delete_many', ids: Array<string | null> } | null };
 
 export type GetVisitsQueryVariables = Exact<{
-  userId?: InputMaybe<Scalars['ID']['input']>;
+  boutiqueId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
 }>;
 
 
@@ -5355,8 +5355,8 @@ export type DeleteCategoryMutationHookResult = ReturnType<typeof useDeleteCatego
 export type DeleteCategoryMutationResult = ApolloReactCommon.MutationResult<DeleteCategoryMutation>;
 export type DeleteCategoryMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteCategoryMutation, DeleteCategoryMutationVariables>;
 export const GetCustomersDocument = gql`
-    query GetCustomers($userId: ID) {
-  customers(filter: {user_created: {id: {_eq: $userId}}}) {
+    query GetCustomers($boutiqueId: GraphQLStringOrFloat) {
+  customers(filter: {boutique: {id: {_eq: $boutiqueId}}}) {
     id
     nick_name
     open_id
@@ -5379,6 +5379,11 @@ export const GetCustomersDocument = gql`
       last_name
       email
     }
+    boutique {
+      id
+      name
+      address
+    }
   }
 }
     `;
@@ -5395,7 +5400,7 @@ export const GetCustomersDocument = gql`
  * @example
  * const { data, loading, error } = useGetCustomersQuery({
  *   variables: {
- *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *   },
  * });
  */
@@ -5917,8 +5922,8 @@ export type GetAllRecentOrdersLazyQueryHookResult = ReturnType<typeof useGetAllR
 export type GetAllRecentOrdersSuspenseQueryHookResult = ReturnType<typeof useGetAllRecentOrdersSuspenseQuery>;
 export type GetAllRecentOrdersQueryResult = ApolloReactCommon.QueryResult<GetAllRecentOrdersQuery, GetAllRecentOrdersQueryVariables>;
 export const GetOrdersDocument = gql`
-    query GetOrders($userId: ID) {
-  orders(filter: {user_created: {id: {_eq: $userId}}}) {
+    query GetOrders($boutiqueId: GraphQLStringOrFloat) {
+  orders(filter: {boutique: {id: {_eq: $boutiqueId}}}) {
     id
     customer {
       id
@@ -5958,7 +5963,7 @@ export const GetOrdersDocument = gql`
  * @example
  * const { data, loading, error } = useGetOrdersQuery({
  *   variables: {
- *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *   },
  * });
  */
@@ -6925,8 +6930,8 @@ export type DeleteTerminalsMutationHookResult = ReturnType<typeof useDeleteTermi
 export type DeleteTerminalsMutationResult = ApolloReactCommon.MutationResult<DeleteTerminalsMutation>;
 export type DeleteTerminalsMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteTerminalsMutation, DeleteTerminalsMutationVariables>;
 export const GetViewsDocument = gql`
-    query GetViews($userId: ID) {
-  views(filter: {user_created: {id: {_eq: $userId}}}) {
+    query GetViews($boutiqueId: GraphQLStringOrFloat) {
+  views(filter: {boutique: {id: {_eq: $boutiqueId}}}) {
     id
     customer {
       id
@@ -6965,7 +6970,7 @@ export const GetViewsDocument = gql`
  * @example
  * const { data, loading, error } = useGetViewsQuery({
  *   variables: {
- *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *   },
  * });
  */
@@ -7377,8 +7382,8 @@ export type DeleteViewsMutationHookResult = ReturnType<typeof useDeleteViewsMuta
 export type DeleteViewsMutationResult = ApolloReactCommon.MutationResult<DeleteViewsMutation>;
 export type DeleteViewsMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteViewsMutation, DeleteViewsMutationVariables>;
 export const GetVisitsDocument = gql`
-    query GetVisits($userId: ID) {
-  visits(filter: {user_created: {id: {_eq: $userId}}}) {
+    query GetVisits($boutiqueId: GraphQLStringOrFloat) {
+  visits(filter: {boutique: {id: {_eq: $boutiqueId}}}) {
     id
     customer {
       id
@@ -7412,7 +7417,7 @@ export const GetVisitsDocument = gql`
  * @example
  * const { data, loading, error } = useGetVisitsQuery({
  *   variables: {
- *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *   },
  * });
  */

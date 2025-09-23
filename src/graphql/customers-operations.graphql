@@ -1,8 +1,8 @@
 # 客户相关的GraphQL操作
 
-# 查询所有客户（带权限过滤）
-query GetCustomers($userId: ID) {
-  customers(filter: { user_created: { id: { _eq: $userId } } }) {
+# 查询指定店铺的客户（基于boutique.id过滤）
+query GetCustomers($boutiqueId: GraphQLStringOrFloat) {
+  customers(filter: { boutique: { id: { _eq: $boutiqueId } } }) {
     id
     nick_name
     open_id
@@ -24,6 +24,11 @@ query GetCustomers($userId: ID) {
       first_name
       last_name
       email
+    }
+    boutique {
+      id
+      name
+      address
     }
   }
 }

@@ -3,35 +3,40 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { 
   Table, 
-  Card, 
   Button, 
+  Space, 
+  message, 
   Modal, 
-  Descriptions, 
-  Typography, 
-  message,
-  Space,
-  Statistic,
+  Typography,
+  Avatar,
+  Tag,
+  Input,
+  Card,
   Row,
   Col,
-  Input,
-  Alert,
-  Avatar,
-  Tag
+  Statistic,
+  Empty,
+  Descriptions,
+  Alert
 } from 'antd';
 import { 
+  UserOutlined, 
   EyeOutlined, 
-  UserOutlined,
+  WomanOutlined, 
+  ManOutlined,
+  UsergroupAddOutlined,
+  UserSwitchOutlined,
+  UserDeleteOutlined,
+  SearchOutlined,
+  ShopOutlined,
   WechatOutlined,
-  ClockCircleOutlined,
-  EnvironmentOutlined,
-  PhoneOutlined,
   DownloadOutlined
 } from '@ant-design/icons';
+import { ProtectedRoute, AdminLayout, BoutiqueSelector } from '@components';
 import { 
   useGetCustomersQuery,
   GetCustomersQuery
-} from '../../generated/graphql';
-import { ProtectedRoute, AdminLayout } from '@components';
+} from '@generated/graphql';
 import { TokenManager } from '@lib/auth';
 import { exportCustomers } from '@lib/utils';
 
@@ -46,19 +51,12 @@ function CustomersContent() {
   const [modalVisible, setModalVisible] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState<Customer[]>([]);
   const [searchText, setSearchText] = useState<string>('');
+  const [selectedBoutiqueId, setSelectedBoutiqueId] = useState<string | undefined>(undefined);
 
-  // 获取当前用户 ID
-  const [userId, setUserId] = useState<string | null>(null);
-  
-  useEffect(() => {
-    const currentUserId = TokenManager.getCurrentUserId();
-    setUserId(currentUserId);
-  }, []);
-
-  // 使用带权限过滤的 GraphQL 查询
+  // 使用店铺ID过滤的 GraphQL 查询
   const { data, loading, error, refetch } = useGetCustomersQuery({
-    variables: userId ? { userId } : undefined,
-    skip: !userId
+    variables: selectedBoutiqueId ? { boutiqueId: selectedBoutiqueId } : undefined,
+    skip: !selectedBoutiqueId
   });
 
   // 使用useMemo来避免不必要的重新计算
@@ -264,10 +262,18 @@ function CustomersContent() {
         </Col>
       </Row>
 
-      {/* 搜索框 */}
+      {/* 筛选和搜索区域 */}
       <Card style={{ marginBottom: 24 }}>
         <Row gutter={16} align="middle">
-          <Col span={8}>
+          <Col span={6}>
+            <BoutiqueSelector
+              value={selectedBoutiqueId}
+              onChange={setSelectedBoutiqueId}
+              placeholder="请选择店铺"
+              style={{ width: '100%' }}
+            />
+          </Col>
+          <Col span={6}>
             <Search
               placeholder="搜索客户昵称或OpenID"
               allowClear
@@ -276,7 +282,7 @@ function CustomersContent() {
               style={{ width: '100%' }}
             />
           </Col>
-          <Col span={16}>
+          <Col span={12}>
             <Space>
               <Button onClick={() => refetch()}>刷新数据</Button>
               <Button 
@@ -296,19 +302,27 @@ function CustomersContent() {
 
       {/* 用户表格 */}
       <Card>
-        <Table
-          columns={columns}
-          dataSource={filteredUsers}
-          rowKey="id"
-          loading={loading}
-          pagination={{
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共 ${total} 条记录`,
-            size: 'small',
-          }}
-          size="middle"
-        />
+        {!selectedBoutiqueId ? (
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description="请先选择一个店铺查看客户数据"
+            style={{ padding: '60px 0' }}
+          />
+        ) : (
+          <Table
+            columns={columns}
+            dataSource={filteredUsers}
+            rowKey="id"
+            loading={loading}
+            pagination={{
+              showSizeChanger: true,
+              showQuickJumper: true,
+              showTotal: (total) => `共 ${total} 条记录`,
+              size: 'small',
+            }}
+            size="middle"
+          />
+        )}
       </Card>
 
       {/* 用户详情模态框 */}

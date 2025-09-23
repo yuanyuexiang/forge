@@ -36,7 +36,7 @@ import {
   useGetVisitStatsQuery,
   GetVisitsQuery
 } from '../../generated/graphql';
-import { ProtectedRoute, AdminLayout } from '@components';
+import { ProtectedRoute, AdminLayout, BoutiqueSelector } from '@components';
 import { TokenManager } from '@lib/auth';
 import { exportVisits } from '@lib/utils';
 import dayjs from 'dayjs';
@@ -50,24 +50,12 @@ type Visit = NonNullable<GetVisitsQuery['visits'][0]>;
 export default function VisitsPage() {
   const [searchText, setSearchText] = useState('');
   const [dateRange, setDateRange] = useState<[dayjs.Dayjs, dayjs.Dayjs] | null>(null);
-  const [selectedBoutique, setSelectedBoutique] = useState<string | undefined>(undefined);
-  const [userId, setUserId] = useState<string | null>(null);
+  const [selectedBoutiqueId, setSelectedBoutiqueId] = useState<string | undefined>(undefined);
 
-  // 获取用户ID
-  useEffect(() => {
-    const loadUserId = async () => {
-      const user = await TokenManager.getCurrentUser();
-      if (user?.id) {
-        setUserId(user.id);
-      }
-    };
-    loadUserId();
-  }, []);
-
-  // 查询访问记录
+  // 查询指定店铺的访问记录
   const { data: visitsData, loading } = useGetVisitsQuery({
-    variables: { userId },
-    skip: !userId
+    variables: selectedBoutiqueId ? { boutiqueId: selectedBoutiqueId } : undefined,
+    skip: !selectedBoutiqueId
   });
   const visits = visitsData?.visits || [];
 
@@ -95,7 +83,7 @@ export default function VisitsPage() {
     }
 
     let matchesBoutique = true;
-    if (selectedBoutique && visit.boutique?.id !== selectedBoutique) {
+    if (selectedBoutiqueId && visit.boutique?.id !== selectedBoutiqueId) {
       matchesBoutique = false;
     }
 
@@ -480,19 +468,12 @@ export default function VisitsPage() {
                 />
               </Col>
               <Col span={6}>
-                <Select
-                  value={selectedBoutique}
-                  onChange={setSelectedBoutique}
-                  placeholder="筛选店铺"
+                <BoutiqueSelector
+                  value={selectedBoutiqueId}
+                  onChange={setSelectedBoutiqueId}
+                  placeholder="请选择店铺"
                   style={{ width: '100%' }}
-                  allowClear
-                >
-                  {allBoutiques.map(boutique => (
-                    <Option key={boutique!.id} value={boutique!.id}>
-                      {boutique!.name}
-                    </Option>
-                  ))}
-                </Select>
+                />
               </Col>
             </Row>
           </Card>

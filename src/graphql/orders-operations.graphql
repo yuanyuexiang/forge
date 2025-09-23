@@ -1,8 +1,8 @@
 # 订单相关的GraphQL操作
 
-# 查询所有订单（带权限过滤）
-query GetOrders($userId: ID) {
-  orders(filter: { user_created: { id: { _eq: $userId } } }) {
+# 查询指定店铺的订单（基于boutique.id过滤）
+query GetOrders($boutiqueId: GraphQLStringOrFloat) {
+  orders(filter: { boutique: { id: { _eq: $boutiqueId } } }) {
     id
     customer {
       id

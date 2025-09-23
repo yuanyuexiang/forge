@@ -32,7 +32,7 @@ import {
   useUpdateOrderStatusMutation,
   GetOrdersQuery
 } from '../../generated/graphql';
-import { ProtectedRoute, AdminLayout } from '@components';
+import { ProtectedRoute, AdminLayout, BoutiqueSelector } from '@components';
 import { TokenManager } from '@lib/auth';
 import { exportOrders } from '@lib/utils';
 
@@ -50,19 +50,12 @@ function OrdersContent() {
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null);
   const [newStatus, setNewStatus] = useState<string>('');
   const [searchText, setSearchText] = useState('');
+  const [selectedBoutiqueId, setSelectedBoutiqueId] = useState<string | undefined>(undefined);
 
-  // 获取当前用户 ID
-  const [userId, setUserId] = useState<string | null>(null);
-  
-  useEffect(() => {
-    const currentUserId = TokenManager.getCurrentUserId();
-    setUserId(currentUserId);
-  }, []);
-
-  // 查询订单列表
+  // 查询指定店铺的订单列表
   const { data: ordersData, loading, error, refetch } = useGetOrdersQuery({
-    variables: userId ? { userId } : undefined,
-    skip: !userId // 如果没有用户 ID 就跳过查询
+    variables: selectedBoutiqueId ? { boutiqueId: selectedBoutiqueId } : undefined,
+    skip: !selectedBoutiqueId
   });
   
   // 由于schema中没有order_items表，这里先注释掉相关的查询
@@ -333,17 +326,26 @@ function OrdersContent() {
       <div className="mb-6 flex justify-between items-center">
         <Title level={4} className="mb-0">订单管理</Title>
         <Space>
+          <BoutiqueSelector
+            value={selectedBoutiqueId}
+            onChange={setSelectedBoutiqueId}
+            placeholder="请选择店铺"
+            style={{ width: 200 }}
+          />
           <Search
             placeholder="搜索订单ID、用户或状态"
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
             style={{ width: 300 }}
+            disabled={!selectedBoutiqueId}
           />
-          <Button onClick={() => refetch()}>刷新</Button>
+          <Button onClick={() => refetch()} disabled={!selectedBoutiqueId}>
+            刷新
+          </Button>
           <Button 
             icon={<DownloadOutlined />}
             onClick={handleExport}
-            disabled={orders.length === 0}
+            disabled={orders.length === 0 || !selectedBoutiqueId}
           >
             导出数据
           </Button>
@@ -351,22 +353,33 @@ function OrdersContent() {
       </div>
 
       {/* 订单表格 */}
-      <Table
-        columns={columns}
-        dataSource={filteredOrders}
-        rowKey="id"
-        loading={loading}
-        pagination={{
-          pageSize: 10,
-          showSizeChanger: true,
-          showQuickJumper: true,
-          showTotal: (total) => `共 ${total} 条订单记录`,
-          size: 'default',
-          position: ['bottomCenter']
-        }}
-        scroll={{ y: 'calc(100vh - 280px)' }}
-        size="middle"
-      />      {/* 订单详情弹窗 */}
+      {!selectedBoutiqueId ? (
+        <Card>
+          <div style={{ textAlign: 'center', padding: '60px 0' }}>
+            <ShoppingCartOutlined style={{ fontSize: 64, color: '#ccc', marginBottom: 16 }} />
+            <div style={{ fontSize: 16, color: '#666' }}>请先选择一个店铺查看订单数据</div>
+          </div>
+        </Card>
+      ) : (
+        <Table
+          columns={columns}
+          dataSource={filteredOrders}
+          rowKey="id"
+          loading={loading}
+          pagination={{
+            pageSize: 10,
+            showSizeChanger: true,
+            showQuickJumper: true,
+            showTotal: (total) => `共 ${total} 条订单记录`,
+            size: 'default',
+            position: ['bottomCenter']
+          }}
+          scroll={{ y: 'calc(100vh - 280px)' }}
+          size="middle"
+        />
+      )}
+
+      {/* 订单详情弹窗 */}
       <Modal
         title="订单详情"
         open={detailModalVisible}
