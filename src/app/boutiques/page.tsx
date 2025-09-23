@@ -7,7 +7,7 @@ import {
   Button, 
   Space, 
   message, 
-  Popconfirm,
+  // Popconfirm, // 删除功能已屏蔽，不再需要确认弹窗
   Typography,
   Image,
   Input,
@@ -15,9 +15,9 @@ import {
   Tag
 } from 'antd';
 import { 
-  PlusOutlined, 
+  // PlusOutlined, // 新增功能已屏蔽
   EditOutlined, 
-  DeleteOutlined,
+  // DeleteOutlined, // 删除功能已屏蔽
   ShopOutlined,
   EyeOutlined,
   EyeInvisibleOutlined,
@@ -28,7 +28,7 @@ import {
 import { ProtectedRoute, AdminLayout } from '@components';
 import { 
   useGetBoutiquesQuery,
-  useDeleteBoutiqueMutation,
+  // useDeleteBoutiqueMutation, // 已屏蔽删除功能
   GetBoutiquesQuery
 } from '@generated/graphql';
 import { FILE_CONFIG } from '@lib/api';
@@ -100,17 +100,17 @@ function BoutiquesContent() {
     }
   }, [searchParams]);
 
-  // 删除店铺
-  const [deleteBoutique] = useDeleteBoutiqueMutation({
-    onCompleted: () => {
-      message.success('店铺删除成功');
-      refetch();
-    },
-    onError: (error) => {
-      console.error('删除店铺失败:', error);
-      message.error('删除店铺失败');
-    }
-  });
+  // 删除店铺 - 已屏蔽
+  // const [deleteBoutique] = useDeleteBoutiqueMutation({
+  //   onCompleted: () => {
+  //     message.success('店铺删除成功');
+  //     refetch();
+  //   },
+  //   onError: (error) => {
+  //     console.error('删除店铺失败:', error);
+  //     message.error('删除店铺失败');
+  //   }
+  // });
 
   const boutiques = boutiquesData?.boutiques || [];
 
@@ -128,16 +128,16 @@ function BoutiquesContent() {
     message.error('获取店铺列表失败');
   }
 
-  // 删除店铺
-  const handleDeleteBoutique = async (id: string) => {
-    try {
-      await deleteBoutique({
-        variables: { id }
-      });
-    } catch (error) {
-      console.error('删除店铺失败:', error);
-    }
-  };
+  // 删除店铺 - 已屏蔽
+  // const handleDeleteBoutique = async (id: string) => {
+  //   try {
+  //     await deleteBoutique({
+  //       variables: { id }
+  //     });
+  //   } catch (error) {
+  //     console.error('删除店铺失败:', error);
+  //   }
+  // };
 
   // 编辑店铺
   const handleEditBoutique = (id: string) => {
@@ -152,18 +152,18 @@ function BoutiquesContent() {
     router.push(`/boutiques/${id}?return=${encodeURIComponent(params.toString())}`);
   };
 
-  // 新增店铺
-  const handleAddBoutique = () => {
-    // 保存当前状态到 URL 参数，用于新增完成后返回
-    const currentScrollPos = window.scrollY;
-    const params = new URLSearchParams();
-    params.set('page', currentPage.toString());
-    params.set('pageSize', pageSize.toString());
-    params.set('search', searchText);
-    params.set('scrollPos', currentScrollPos.toString());
-    
-    router.push(`/boutiques/new?return=${encodeURIComponent(params.toString())}`);
-  };
+  // 新增店铺 - 已屏蔽
+  // const handleAddBoutique = () => {
+  //   // 保存当前状态到 URL 参数，用于新增完成后返回
+  //   const currentScrollPos = window.scrollY;
+  //   const params = new URLSearchParams();
+  //   params.set('page', currentPage.toString());
+  //   params.set('pageSize', pageSize.toString());
+  //   params.set('search', searchText);
+  //   params.set('scrollPos', currentScrollPos.toString());
+  //   
+  //   router.push(`/boutiques/new?return=${encodeURIComponent(params.toString())}`);
+  // };
 
   // 过滤店铺
   const filteredBoutiques = boutiques.filter((boutique: Boutique) =>
@@ -400,7 +400,7 @@ function BoutiquesContent() {
     {
       title: '操作',
       key: 'action',
-      width: 150,
+      width: 100,
       render: (_: any, record: Boutique) => (
         <Space size="small">
           <Button
@@ -410,6 +410,7 @@ function BoutiquesContent() {
           >
             编辑
           </Button>
+          {/* 删除功能已屏蔽
           <Popconfirm
             title="确定要删除这个店铺吗?"
             onConfirm={() => handleDeleteBoutique(record.id)}
@@ -420,6 +421,7 @@ function BoutiquesContent() {
               删除
             </Button>
           </Popconfirm>
+          */}
         </Space>
       ),
     },
@@ -429,6 +431,7 @@ function BoutiquesContent() {
     <div ref={containerRef} style={{ height: '100%', padding: '24px', backgroundColor: '#F9FAFB' }}>
       <div className="mb-6 flex justify-between items-center">
         <Title level={4} style={{ margin: 0, color: '#111827', fontWeight: 600 }}>店铺管理</Title>
+        {/* 新增店铺按钮已屏蔽
         <Button 
           type="primary" 
           icon={<PlusOutlined />}
@@ -437,6 +440,7 @@ function BoutiquesContent() {
         >
           新增店铺
         </Button>
+        */}
       </div>
 
       <div className="mb-4">
