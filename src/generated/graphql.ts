@@ -1450,6 +1450,7 @@ export type Create_Products_Input = {
   boutique?: InputMaybe<Create_Boutiques_Input>;
   boutique_id?: InputMaybe<Create_Boutiques_Input>;
   brand?: InputMaybe<Scalars['String']['input']>;
+  carousel?: InputMaybe<Scalars['String']['input']>;
   category_id?: InputMaybe<Create_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
@@ -1476,9 +1477,21 @@ export type Create_Products_Input = {
 };
 
 export type Create_Terminals_Input = {
+  android_id?: InputMaybe<Scalars['String']['input']>;
+  authorized_boutique?: InputMaybe<Create_Boutiques_Input>;
+  brand?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
+  device_name?: InputMaybe<Scalars['String']['input']>;
+  device_type?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  model_name?: InputMaybe<Scalars['String']['input']>;
+  os_name?: InputMaybe<Scalars['String']['input']>;
+  os_version?: InputMaybe<Scalars['String']['input']>;
+  purposes?: InputMaybe<Scalars['String']['input']>;
+  supported_cpu_architectures?: InputMaybe<Scalars['String']['input']>;
+  total_memory?: InputMaybe<Scalars['String']['input']>;
   user_created?: InputMaybe<Create_Directus_Users_Input>;
   user_updated?: InputMaybe<Create_Directus_Users_Input>;
 };
@@ -3332,6 +3345,7 @@ export type Products = {
   boutique?: Maybe<Boutiques>;
   boutique_id?: Maybe<Boutiques>;
   brand?: Maybe<Scalars['String']['output']>;
+  carousel?: Maybe<Scalars['String']['output']>;
   category_id?: Maybe<Categories>;
   created_at?: Maybe<Scalars['Date']['output']>;
   created_at_func?: Maybe<Datetime_Functions>;
@@ -3431,6 +3445,7 @@ export type Products_Aggregated_Count = {
   barcode?: Maybe<Scalars['Int']['output']>;
   boutique_id?: Maybe<Scalars['Int']['output']>;
   brand?: Maybe<Scalars['Int']['output']>;
+  carousel?: Maybe<Scalars['Int']['output']>;
   category_id?: Maybe<Scalars['Int']['output']>;
   created_at?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
@@ -3477,6 +3492,7 @@ export type Products_Filter = {
   boutique?: InputMaybe<Boutiques_Filter>;
   boutique_id?: InputMaybe<Boutiques_Filter>;
   brand?: InputMaybe<String_Filter_Operators>;
+  carousel?: InputMaybe<String_Filter_Operators>;
   category_id?: InputMaybe<Categories_Filter>;
   created_at?: InputMaybe<Date_Filter_Operators>;
   created_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
@@ -3538,13 +3554,35 @@ export type String_Filter_Operators = {
 
 export type Terminals = {
   __typename?: 'terminals';
+  android_id?: Maybe<Scalars['String']['output']>;
+  authorized_boutique?: Maybe<Boutiques>;
+  brand?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   date_updated_func?: Maybe<Datetime_Functions>;
+  device_name?: Maybe<Scalars['String']['output']>;
+  device_type?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
+  manufacturer?: Maybe<Scalars['String']['output']>;
+  model_name?: Maybe<Scalars['String']['output']>;
+  os_name?: Maybe<Scalars['String']['output']>;
+  os_version?: Maybe<Scalars['String']['output']>;
+  purposes?: Maybe<Scalars['String']['output']>;
+  supported_cpu_architectures?: Maybe<Scalars['String']['output']>;
+  total_memory?: Maybe<Scalars['String']['output']>;
   user_created?: Maybe<Directus_Users>;
   user_updated?: Maybe<Directus_Users>;
+};
+
+
+export type TerminalsAuthorized_BoutiqueArgs = {
+  filter?: InputMaybe<Boutiques_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
 
@@ -3583,26 +3621,51 @@ export type Terminals_Aggregated = {
 
 export type Terminals_Aggregated_Count = {
   __typename?: 'terminals_aggregated_count';
+  android_id?: Maybe<Scalars['Int']['output']>;
+  authorized_boutique?: Maybe<Scalars['Int']['output']>;
+  brand?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
+  device_name?: Maybe<Scalars['Int']['output']>;
+  device_type?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
+  manufacturer?: Maybe<Scalars['Int']['output']>;
+  model_name?: Maybe<Scalars['Int']['output']>;
+  os_name?: Maybe<Scalars['Int']['output']>;
+  os_version?: Maybe<Scalars['Int']['output']>;
+  purposes?: Maybe<Scalars['Int']['output']>;
+  supported_cpu_architectures?: Maybe<Scalars['Int']['output']>;
+  total_memory?: Maybe<Scalars['Int']['output']>;
   user_created?: Maybe<Scalars['Int']['output']>;
   user_updated?: Maybe<Scalars['Int']['output']>;
 };
 
 export type Terminals_Aggregated_Fields = {
   __typename?: 'terminals_aggregated_fields';
+  authorized_boutique?: Maybe<Scalars['Float']['output']>;
   id?: Maybe<Scalars['Float']['output']>;
 };
 
 export type Terminals_Filter = {
   _and?: InputMaybe<Array<InputMaybe<Terminals_Filter>>>;
   _or?: InputMaybe<Array<InputMaybe<Terminals_Filter>>>;
+  android_id?: InputMaybe<String_Filter_Operators>;
+  authorized_boutique?: InputMaybe<Boutiques_Filter>;
+  brand?: InputMaybe<String_Filter_Operators>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
   date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  device_name?: InputMaybe<String_Filter_Operators>;
+  device_type?: InputMaybe<String_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
+  manufacturer?: InputMaybe<String_Filter_Operators>;
+  model_name?: InputMaybe<String_Filter_Operators>;
+  os_name?: InputMaybe<String_Filter_Operators>;
+  os_version?: InputMaybe<String_Filter_Operators>;
+  purposes?: InputMaybe<String_Filter_Operators>;
+  supported_cpu_architectures?: InputMaybe<String_Filter_Operators>;
+  total_memory?: InputMaybe<String_Filter_Operators>;
   user_created?: InputMaybe<Directus_Users_Filter>;
   user_updated?: InputMaybe<Directus_Users_Filter>;
 };
@@ -3791,6 +3854,7 @@ export type Update_Products_Input = {
   boutique?: InputMaybe<Update_Boutiques_Input>;
   boutique_id?: InputMaybe<Update_Boutiques_Input>;
   brand?: InputMaybe<Scalars['String']['input']>;
+  carousel?: InputMaybe<Scalars['String']['input']>;
   category_id?: InputMaybe<Update_Categories_Input>;
   created_at?: InputMaybe<Scalars['Date']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
@@ -3817,9 +3881,21 @@ export type Update_Products_Input = {
 };
 
 export type Update_Terminals_Input = {
+  android_id?: InputMaybe<Scalars['String']['input']>;
+  authorized_boutique?: InputMaybe<Update_Boutiques_Input>;
+  brand?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
+  device_name?: InputMaybe<Scalars['String']['input']>;
+  device_type?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
+  manufacturer?: InputMaybe<Scalars['String']['input']>;
+  model_name?: InputMaybe<Scalars['String']['input']>;
+  os_name?: InputMaybe<Scalars['String']['input']>;
+  os_version?: InputMaybe<Scalars['String']['input']>;
+  purposes?: InputMaybe<Scalars['String']['input']>;
+  supported_cpu_architectures?: InputMaybe<Scalars['String']['input']>;
+  total_memory?: InputMaybe<Scalars['String']['input']>;
   user_created?: InputMaybe<Update_Directus_Users_Input>;
   user_updated?: InputMaybe<Update_Directus_Users_Input>;
 };
@@ -3916,6 +3992,7 @@ export type Version_Products = {
   boutique?: Maybe<Scalars['JSON']['output']>;
   boutique_id?: Maybe<Scalars['JSON']['output']>;
   brand?: Maybe<Scalars['String']['output']>;
+  carousel?: Maybe<Scalars['String']['output']>;
   category_id?: Maybe<Scalars['JSON']['output']>;
   created_at?: Maybe<Scalars['Date']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
@@ -3943,9 +4020,21 @@ export type Version_Products = {
 
 export type Version_Terminals = {
   __typename?: 'version_terminals';
+  android_id?: Maybe<Scalars['String']['output']>;
+  authorized_boutique?: Maybe<Scalars['JSON']['output']>;
+  brand?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
+  device_name?: Maybe<Scalars['String']['output']>;
+  device_type?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
+  manufacturer?: Maybe<Scalars['String']['output']>;
+  model_name?: Maybe<Scalars['String']['output']>;
+  os_name?: Maybe<Scalars['String']['output']>;
+  os_version?: Maybe<Scalars['String']['output']>;
+  purposes?: Maybe<Scalars['String']['output']>;
+  supported_cpu_architectures?: Maybe<Scalars['String']['output']>;
+  total_memory?: Maybe<Scalars['String']['output']>;
   user_created?: Maybe<Scalars['JSON']['output']>;
   user_updated?: Maybe<Scalars['JSON']['output']>;
 };
@@ -4462,11 +4551,11 @@ export type DeleteProductMutationVariables = Exact<{
 export type DeleteProductMutation = { __typename?: 'Mutation', delete_products_item?: { __typename?: 'delete_one', id: string } | null };
 
 export type GetTerminalsQueryVariables = Exact<{
-  userId?: InputMaybe<Scalars['ID']['input']>;
+  boutiqueId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
 }>;
 
 
-export type GetTerminalsQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetTerminalsQuery = { __typename?: 'Query', terminals: Array<{ __typename?: 'terminals', id: string, android_id?: string | null, brand?: string | null, device_name?: string | null, device_type?: string | null, manufacturer?: string | null, model_name?: string | null, os_name?: string | null, os_version?: string | null, purposes?: string | null, supported_cpu_architectures?: string | null, total_memory?: string | null, date_created?: any | null, date_updated?: any | null, authorized_boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetAllTerminalsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -6638,9 +6727,25 @@ export type DeleteProductMutationHookResult = ReturnType<typeof useDeleteProduct
 export type DeleteProductMutationResult = ApolloReactCommon.MutationResult<DeleteProductMutation>;
 export type DeleteProductMutationOptions = ApolloReactCommon.BaseMutationOptions<DeleteProductMutation, DeleteProductMutationVariables>;
 export const GetTerminalsDocument = gql`
-    query GetTerminals($userId: ID) {
-  terminals(filter: {user_created: {id: {_eq: $userId}}}) {
+    query GetTerminals($boutiqueId: GraphQLStringOrFloat) {
+  terminals(filter: {authorized_boutique: {id: {_eq: $boutiqueId}}}) {
     id
+    android_id
+    authorized_boutique {
+      id
+      name
+      address
+    }
+    brand
+    device_name
+    device_type
+    manufacturer
+    model_name
+    os_name
+    os_version
+    purposes
+    supported_cpu_architectures
+    total_memory
     user_created {
       id
       first_name
@@ -6665,7 +6770,7 @@ export const GetTerminalsDocument = gql`
  * @example
  * const { data, loading, error } = useGetTerminalsQuery({
  *   variables: {
- *      userId: // value for 'userId'
+ *      boutiqueId: // value for 'boutiqueId'
  *   },
  * });
  */

@@ -1,9 +1,25 @@
 # 终端设备相关的GraphQL操作
 
-# 查询所有终端设备
-query GetTerminals($userId: ID) {
-  terminals(filter: { user_created: { id: { _eq: $userId } } }) {
+# 查询指定店铺的终端设备（基于authorized_boutique.id过滤）
+query GetTerminals($boutiqueId: GraphQLStringOrFloat) {
+  terminals(filter: { authorized_boutique: { id: { _eq: $boutiqueId } } }) {
     id
+    android_id
+    authorized_boutique {
+      id
+      name
+      address
+    }
+    brand
+    device_name
+    device_type
+    manufacturer
+    model_name
+    os_name
+    os_version
+    purposes
+    supported_cpu_architectures
+    total_memory
     user_created {
       id
       first_name
