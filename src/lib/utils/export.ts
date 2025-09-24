@@ -108,10 +108,10 @@ export const EXPORT_CONFIGS = {
       { key: 'customer.open_id', label: '微信OpenID' },
       { key: 'boutique.name', label: '店铺名称' },
       { key: 'boutique.address', label: '店铺地址' },
-      { key: 'total_price', label: '订单金额', transform: (value) => `¥${value || 0}` },
+      { key: 'total_price', label: '订单金额', transform: (value: any) => `¥${value || 0}` },
       { key: 'status', label: '订单状态' },
-      { key: 'date_created', label: '创建时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
-      { key: 'date_updated', label: '更新时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
+      { key: 'date_created', label: '创建时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
+      { key: 'date_updated', label: '更新时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
     ]
   },
   
@@ -122,9 +122,9 @@ export const EXPORT_CONFIGS = {
       { key: 'id', label: '客户ID' },
       { key: 'nick_name', label: '微信昵称' },
       { key: 'open_id', label: '微信OpenID' },
-      { key: 'sex', label: '性别', transform: (value) => value === 1 ? '男' : value === 2 ? '女' : '未知' },
-      { key: 'date_created', label: '注册时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
-      { key: 'date_updated', label: '更新时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
+      { key: 'sex', label: '性别', transform: (value: any) => value === 1 ? '男' : value === 2 ? '女' : '未知' },
+      { key: 'date_created', label: '注册时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
+      { key: 'date_updated', label: '更新时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
     ]
   },
   
@@ -136,15 +136,15 @@ export const EXPORT_CONFIGS = {
       { key: 'name', label: '商品名称' },
       { key: 'subtitle', label: '副标题' },
       { key: 'description', label: '商品描述' },
-      { key: 'price', label: '售价', transform: (value) => `¥${value || 0}` },
-      { key: 'market_price', label: '市场价', transform: (value) => `¥${value || 0}` },
+      { key: 'price', label: '售价', transform: (value: any) => `¥${value || 0}` },
+      { key: 'market_price', label: '市场价', transform: (value: any) => `¥${value || 0}` },
       { key: 'stock', label: '库存' },
       { key: 'barcode', label: '条码' },
       { key: 'brand', label: '品牌' },
       { key: 'boutique_id.name', label: '所属店铺' },
       { key: 'category_id.name', label: '商品分类' },
       { key: 'status', label: '状态' },
-      { key: 'date_created', label: '创建时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
+      { key: 'date_created', label: '创建时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
     ]
   },
   
@@ -159,12 +159,12 @@ export const EXPORT_CONFIGS = {
       { key: 'code', label: '店铺代码' },
       { key: 'category', label: '店铺类别' },
       { key: 'contact', label: '联系方式' },
-      { key: 'expire_date', label: '过期时间', transform: (value) => value ? dayjs(value).format('YYYY-MM-DD') : '' },
+      { key: 'expire_date', label: '过期时间', transform: (value: any) => value ? dayjs(value).format('YYYY-MM-DD') : '' },
       { key: 'stars', label: '评分' },
       { key: 'status', label: '状态' },
       { key: 'sort', label: '排序' },
-      { key: 'date_created', label: '创建时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
-      { key: 'date_updated', label: '更新时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
+      { key: 'date_created', label: '创建时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
+      { key: 'date_updated', label: '更新时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
       { key: 'user_created.first_name', label: '创建者姓' },
       { key: 'user_created.last_name', label: '创建者名' },
       { key: 'user_created.email', label: '创建者邮箱' }
@@ -176,8 +176,8 @@ export const EXPORT_CONFIGS = {
     filename: '终端设备数据',
     headers: [
       { key: 'id', label: '设备ID' },
-      { key: 'date_created', label: '添加时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
-      { key: 'date_updated', label: '更新时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
+      { key: 'date_created', label: '添加时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
+      { key: 'date_updated', label: '更新时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') },
       { key: 'user_created.first_name', label: '创建者姓' },
       { key: 'user_created.last_name', label: '创建者名' },
       { key: 'user_created.email', label: '创建者邮箱' }
@@ -192,11 +192,11 @@ export const EXPORT_CONFIGS = {
       { key: 'customer.nick_name', label: '客户昵称' },
       { key: 'customer.open_id', label: '微信OpenID' },
       { key: 'product.name', label: '商品名称' },
-      { key: 'product.price', label: '商品价格', transform: (value) => `¥${value || 0}` },
-      { key: 'product.market_price', label: '市场价', transform: (value) => `¥${value || 0}` },
+      { key: 'product.price', label: '商品价格', transform: (value: any) => `¥${value || 0}` },
+      { key: 'product.market_price', label: '市场价', transform: (value: any) => `¥${value || 0}` },
       { key: 'boutique.name', label: '店铺名称' },
       { key: 'boutique.address', label: '店铺地址' },
-      { key: 'date_created', label: '浏览时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
+      { key: 'date_created', label: '浏览时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
     ]
   },
   
@@ -211,7 +211,7 @@ export const EXPORT_CONFIGS = {
       { key: 'boutique.address', label: '店铺地址' },
       { key: 'boutique.city', label: '店铺城市' },
       { key: 'boutique.category', label: '店铺类型' },
-      { key: 'date_created', label: '访问时间', transform: (value) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
+      { key: 'date_created', label: '访问时间', transform: (value: any) => dayjs(value).format('YYYY-MM-DD HH:mm:ss') }
     ]
   }
 };
