@@ -143,10 +143,62 @@ function ProfileContent() {
     
     setLoading(true);
     try {
-      // 这里可以调用GraphQL mutation更新用户信息
-      console.log('更新用户信息:', values);
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        message.error('请重新登录');
+        return;
+      }
+
+      const response = await fetch('/api/graphql/system', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          query: `
+            mutation UpdateUserProfile(
+              $first_name: String
+              $last_name: String
+              $email: String
+              $location: String
+              $title: String
+              $description: String
+            ) {
+              update_users_me(data: {
+                first_name: $first_name
+                last_name: $last_name
+                email: $email
+                location: $location
+                title: $title
+                description: $description
+              }) {
+                id
+                first_name
+                last_name
+                email
+                location
+                title
+                description
+              }
+            }
+          `,
+          variables: values,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('网络请求失败');
+      }
+
+      const result = await response.json();
+      if (result.errors) {
+        throw new Error(result.errors[0].message);
+      }
+
       message.success('用户信息更新成功');
       setEditing(false);
+      // 可以考虑更新本地用户数据或刷新页面
     } catch (error) {
       console.error('保存失败:', error);
       message.error('保存失败，请稍后重试');
@@ -160,7 +212,56 @@ function ProfileContent() {
     
     setLoading(true);
     try {
-      console.log('更新用户偏好:', values);
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        message.error('请重新登录');
+        return;
+      }
+
+      const response = await fetch('/api/graphql/system', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          query: `
+            mutation UpdateUserPreferences(
+              $language: String
+              $appearance: String
+              $theme_light: String
+              $theme_dark: String
+              $email_notifications: Boolean
+            ) {
+              update_users_me(data: {
+                language: $language
+                appearance: $appearance
+                theme_light: $theme_light
+                theme_dark: $theme_dark
+                email_notifications: $email_notifications
+              }) {
+                id
+                language
+                appearance
+                theme_light
+                theme_dark
+                email_notifications
+              }
+            }
+          `,
+          variables: values,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('网络请求失败');
+      }
+
+      const result = await response.json();
+      if (result.errors) {
+        throw new Error(result.errors[0].message);
+      }
+
       message.success('偏好设置更新成功');
     } catch (error) {
       console.error('保存偏好失败:', error);
@@ -170,20 +271,141 @@ function ProfileContent() {
     }
   };
 
-  // 处理密码修改
+  // 处理头像上传
+  const handleAvatarUpload = async (file: File) => {
+    setLoading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // 从localStorage获取token
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        message.error('请重新登录');
+        return;
+      }
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || '上传失败');
+      }
+
+      const result = await response.json();
+      console.log('头像上传成功:', result);
+
+      // 更新用户头像
+      if (result.data?.id) {
+        await updateUserAvatar(result.data.id);
+        message.success('头像更新成功');
+        // 这里可能需要刷新用户信息或重新获取用户数据
+        window.location.reload(); // 临时解决方案，刷新页面
+      }
+    } catch (error) {
+      console.error('头像上传失败:', error);
+      message.error('头像上传失败: ' + (error as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 更新用户头像API调用
+  const updateUserAvatar = async (avatarId: string) => {
+    const token = localStorage.getItem('access_token');
+    if (!token) {
+      throw new Error('未找到认证令牌');
+    }
+
+      const response = await fetch('/api/graphql/system', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          query: `
+            mutation UpdateUserAvatar($avatar: String!) {
+              update_users_me(data: { avatar: $avatar }) {
+                id
+                avatar
+              }
+            }
+          `,
+          variables: {
+            avatar: avatarId,
+          },
+        }),
+      });
+
+    if (!response.ok) {
+      throw new Error('更新用户头像失败');
+    }
+
+    const result = await response.json();
+    if (result.errors) {
+      throw new Error(result.errors[0].message);
+    }
+
+    return result.data;
+  };
   const handlePasswordChange = async (values: any) => {
     if (values.newPassword !== values.confirmPassword) {
       message.error('两次输入的密码不一致');
       return;
     }
     
+    setLoading(true);
     try {
-      console.log('修改密码:', values);
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        message.error('请重新登录');
+        return;
+      }
+
+      const response = await fetch('/api/graphql/system', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          query: `
+            mutation UpdateUserPassword($password: String!) {
+              update_users_me(data: { password: $password }) {
+                id
+              }
+            }
+          `,
+          variables: {
+            password: values.newPassword,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('网络请求失败');
+      }
+
+      const result = await response.json();
+      if (result.errors) {
+        throw new Error(result.errors[0].message);
+      }
+
       message.success('密码修改成功');
       setPasswordModalVisible(false);
       passwordForm.resetFields();
     } catch (error) {
-      message.error('密码修改失败');
+      console.error('密码修改失败:', error);
+      message.error('密码修改失败: ' + (error as Error).message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -581,13 +803,28 @@ function ProfileContent() {
             <div style={{ marginTop: '24px' }}>
               <Upload
                 showUploadList={false}
-                beforeUpload={() => false}
-                onChange={(info) => {
-                  console.log('上传头像:', info);
-                  message.info('头像上传功能开发中...');
+                accept="image/*"
+                beforeUpload={(file) => {
+                  // 文件大小检查 (最大 10MB)
+                  const isLt10M = file.size / 1024 / 1024 < 10;
+                  if (!isLt10M) {
+                    message.error('图片大小不能超过 10MB!');
+                    return false;
+                  }
+                  
+                  // 文件类型检查
+                  const isImage = file.type.startsWith('image/');
+                  if (!isImage) {
+                    message.error('只能上传图片文件!');
+                    return false;
+                  }
+
+                  // 直接处理上传
+                  handleAvatarUpload(file);
+                  return false; // 阻止默认上传行为
                 }}
               >
-                <Button icon={<UploadOutlined />} block>
+                <Button icon={<UploadOutlined />} block loading={loading}>
                   更换头像
                 </Button>
               </Upload>
