@@ -257,6 +257,16 @@ export default function LoginPage() {
             style={{ color: '#6B7280' }}
           >
             <p>© 2025 Matrix Net Tech. 保留所有权利</p>
+            <p className="mt-2">
+              <a 
+                href="https://beian.miit.gov.cn/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                style={{ color: '#6B7280', textDecoration: 'none' }}
+              >
+                苏ICP备2025210300号-1
+              </a>
+            </p>
           </div>
         </div>
       </div>

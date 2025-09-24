@@ -225,9 +225,32 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <Content style={{ 
           height: 'calc(100vh - 64px)', 
           overflowY: 'auto', 
-          backgroundColor: '#F9FAFB' 
+          backgroundColor: '#F9FAFB',
+          display: 'flex',
+          flexDirection: 'column'
         }}>
-          {children}
+          <div style={{ flex: 1 }}>
+            {children}
+          </div>
+          <div 
+            style={{ 
+              padding: '8px 16px',
+              textAlign: 'center',
+              fontSize: '12px',
+              color: '#9CA3AF',
+              backgroundColor: '#F9FAFB',
+              borderTop: '1px solid #E5E7EB'
+            }}
+          >
+            <a 
+              href="https://beian.miit.gov.cn/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              style={{ color: '#9CA3AF', textDecoration: 'none' }}
+            >
+              苏ICP备2025210300号-1
+            </a>
+          </div>
         </Content>
       </Layout>
     </Layout>
