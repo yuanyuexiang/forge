@@ -176,7 +176,8 @@ function ProductEditContent() {
         main_image: foundProduct.main_image,
         images: foundProduct.images,
         video_url: foundProduct.video_url,
-        is_on_sale: foundProduct.is_on_sale
+        is_on_sale: foundProduct.is_on_sale,
+        carousel: foundProduct.carousel || 'out'
       });
 
       // 初始化主图
@@ -387,7 +388,8 @@ function ProductEditContent() {
           main_image: values.main_image || '',
           images: values.images || [],
           video_url: values.video_url || '',
-          is_on_sale: Boolean(values.is_on_sale)
+          is_on_sale: Boolean(values.is_on_sale),
+          carousel: values.carousel || 'out'
         };
 
         await updateProduct({
@@ -437,7 +439,8 @@ function ProductEditContent() {
           main_image: values.main_image || '',
           images: values.images || [],
           video_url: values.video_url || '',
-          is_on_sale: Boolean(values.is_on_sale)
+          is_on_sale: Boolean(values.is_on_sale),
+          carousel: values.carousel || 'out'
         };
 
         await createProduct({
@@ -782,6 +785,28 @@ function ProductEditContent() {
                 initialValue={false}
               >
                 <Switch />
+              </Form.Item>
+
+              <Form.Item
+                label="轮播设置"
+                name="carousel"
+                tooltip="控制商品图片是否在App端参与轮播展示"
+                initialValue="out"
+              >
+                <Select placeholder="请选择轮播设置" size="large">
+                  <Option value="in">
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <CheckCircleOutlined style={{ marginRight: '6px', color: '#10B981' }} />
+                      参与轮播
+                    </span>
+                  </Option>
+                  <Option value="out">
+                    <span style={{ display: 'flex', alignItems: 'center' }}>
+                      <EyeInvisibleOutlined style={{ marginRight: '6px', color: '#666' }} />
+                      不参与轮播
+                    </span>
+                  </Option>
+                </Select>
               </Form.Item>
             </Form>
           </Card>

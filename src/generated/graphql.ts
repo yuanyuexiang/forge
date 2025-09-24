@@ -4514,26 +4514,26 @@ export type GetProductsQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, date_created?: any | null, updated_at?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, carousel?: string | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, date_created?: any | null, updated_at?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetAllProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, date_created?: any | null, updated_at?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetAllProductsQuery = { __typename?: 'Query', products: Array<{ __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, carousel?: string | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, date_created?: any | null, updated_at?: any | null, date_updated?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetProductByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetProductByIdQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
+export type GetProductByIdQuery = { __typename?: 'Query', products_by_id?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, carousel?: string | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
 
 export type CreateProductMutationVariables = Exact<{
   data: Create_Products_Input;
 }>;
 
 
-export type CreateProductMutation = { __typename?: 'Mutation', create_products_item?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
+export type CreateProductMutation = { __typename?: 'Mutation', create_products_item?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, carousel?: string | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
 
 export type UpdateProductMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4541,7 +4541,7 @@ export type UpdateProductMutationVariables = Exact<{
 }>;
 
 
-export type UpdateProductMutation = { __typename?: 'Mutation', update_products_item?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
+export type UpdateProductMutation = { __typename?: 'Mutation', update_products_item?: { __typename?: 'products', id: string, name: string, subtitle?: string | null, description?: string | null, price: number, market_price?: number | null, stock?: number | null, barcode?: string | null, brand?: string | null, seller_id?: number | null, main_image?: string | null, images?: any | null, video_url?: string | null, is_on_sale?: boolean | null, carousel?: string | null, status?: string | null, total_sales_volume?: number | null, rating_avg?: number | null, total_reviews?: number | null, created_at?: any | null, updated_at?: any | null, boutique_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, category_id?: { __typename?: 'categories', id: string, name: string } | null } | null };
 
 export type DeleteProductMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -6377,6 +6377,7 @@ export const GetProductsDocument = gql`
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg
@@ -6453,6 +6454,7 @@ export const GetAllProductsDocument = gql`
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg
@@ -6528,6 +6530,7 @@ export const GetProductByIdDocument = gql`
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg
@@ -6596,6 +6599,7 @@ export const CreateProductDocument = gql`
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg
@@ -6657,6 +6661,7 @@ export const UpdateProductDocument = gql`
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg

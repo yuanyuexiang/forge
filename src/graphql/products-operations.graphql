@@ -26,6 +26,7 @@ query GetProducts($userId: ID) {
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg
@@ -69,6 +70,7 @@ query GetAllProducts {
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg
@@ -112,6 +114,7 @@ query GetProductById($id: ID!) {
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg
@@ -147,6 +150,7 @@ mutation CreateProduct($data: create_products_input!) {
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg
@@ -182,6 +186,7 @@ mutation UpdateProduct($id: ID!, $data: update_products_input!) {
     images
     video_url
     is_on_sale
+    carousel
     status
     total_sales_volume
     rating_avg
