@@ -46,7 +46,7 @@ export const DIRECTUS_CONFIG = {
   // 获取当前环境应该使用的 GraphQL 端点
   getGraphQLEndpoint: () => {
     // 无论在哪个环境，都统一使用代理端点
-    // 本地开发：代理到 forge.matrix-net.tech
+    // 本地开发：代理到 forge.kcbaotech.com
     // 云端部署：代理到本地的 Directus 实例
     return '/api/graphql';
   },

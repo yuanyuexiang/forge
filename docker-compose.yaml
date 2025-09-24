@@ -9,7 +9,7 @@ services:
       - matrix-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.forge.rule=Host(`forge.matrix-net.tech`)" # 替换为你的域名
+      - "traefik.http.routers.forge.rule=Host(`forge.kcbaotech.com`)" # 替换为你的域名
       - "traefik.http.routers.forge.entrypoints=websecure"
       - "traefik.http.routers.forge.service=forge"
       - "traefik.http.routers.forge.tls.certresolver=aliyunresolver"

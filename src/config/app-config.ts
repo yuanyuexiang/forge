@@ -14,7 +14,7 @@ export const APP_CONFIG = {
   // API 配置
   API: {
     DIRECTUS: {
-      DEFAULT_URL: 'https://forge.matrix-net.tech',
+      DEFAULT_URL: 'https://forge.kcbaotech.com',
       GRAPHQL_ENDPOINT: '/graphql',
       ASSETS_ENDPOINT: '/assets',
     },
@@ -52,7 +52,7 @@ export const APP_CONFIG = {
   ENVIRONMENT: {
     DEVELOPMENT_HOSTS: ['localhost', '127.0.0.1', 'dev.', 'development.'],
     STAGING_HOSTS: ['staging.', 'test.'],
-    PRODUCTION_HOSTS: ['matrix-net.tech', 'production.'],
+    PRODUCTION_HOSTS: ['kcbaotech.com', 'production.'],
   },
 
   // 日志配置

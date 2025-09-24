@@ -48,7 +48,7 @@ interface ApiConfig {
 NEXT_PUBLIC_GRAPHQL_ENDPOINT=https://your-directus-instance.com/graphql
 NEXT_PUBLIC_API_TIMEOUT=30000
 NEXT_PUBLIC_API_RETRY_COUNT=3
-NEXT_PUBLIC_DIRECTUS_URL=https://forge.matrix-net.tech
+NEXT_PUBLIC_DIRECTUS_URL=https://forge.kcbaotech.com
 ```
 
 ### `api-config-examples.ts`

@@ -263,7 +263,7 @@ function ProfileContent() {
   // 获取用户头像URL
   const getAvatarUrl = () => {
     if (user.avatar) {
-      return `https://forge.matrix-net.tech/assets/${user.avatar}`;
+      return `https://forge.kcbaotech.com/assets/${user.avatar}`;
     }
     return null;
   };

@@ -15,7 +15,7 @@ const refreshAccessToken = async (): Promise<string | null> => {
     }
 
     // 直接使用GraphQL system端点刷新token
-    const response = await fetch('https://forge.matrix-net.tech/graphql/system', {
+    const response = await fetch('https://forge.kcbaotech.com/graphql/system', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

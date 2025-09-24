@@ -226,7 +226,7 @@ export default function LoginPage() {
               • 代理端点：/api/graphql/system
             </p>
             <p style={{ color: '#374151', marginBottom: '4px' }}>
-              • 目标服务器：forge.matrix-net.tech
+              • 目标服务器：forge.kcbaotech.com
             </p>
             <p style={{ color: '#F59E0B', marginBottom: '8px' }}>
               • 请使用有效的Directus用户凭据登录
