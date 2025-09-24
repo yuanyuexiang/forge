@@ -12,7 +12,7 @@ services:
       - "traefik.http.routers.forge.rule=Host(`forge.kcbaotech.com`)" # 替换为你的域名
       - "traefik.http.routers.forge.entrypoints=websecure"
       - "traefik.http.routers.forge.service=forge"
-      - "traefik.http.routers.forge.tls.certresolver=aliyunresolver"
+      - "traefik.http.routers.forge.tls.certresolver=dnspodresolver"
       - "traefik.http.services.forge.loadbalancer.server.port=3000"
 
 networks:
