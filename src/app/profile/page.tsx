@@ -44,6 +44,7 @@ import {
 } from '@ant-design/icons';
 import { ProtectedRoute, AdminLayout } from '@components';
 import { useAuth } from '@providers/AuthProvider';
+import { TokenManager } from '@lib/auth/token-manager';
 
 const { Title, Text, Paragraph } = Typography;
 const { TextArea } = Input;
@@ -54,7 +55,10 @@ interface DirectusUser {
   email?: string;
   first_name?: string;
   last_name?: string;
-  avatar?: string;
+  avatar?: {
+    id: string;
+    filename_download: string;
+  } | string; // 兼容字符串格式
   role?: any;
   status?: string;
   language?: string;
@@ -72,7 +76,7 @@ interface DirectusUser {
 }
 
 function ProfileContent() {
-  const { user: authUser, loading: authLoading } = useAuth();
+  const { user: authUser, loading: authLoading, refreshUserData } = useAuth();
   const [editing, setEditing] = useState(false);
   const [form] = Form.useForm();
   const [passwordForm] = Form.useForm();
@@ -80,6 +84,9 @@ function ProfileContent() {
   const [loading, setLoading] = useState(false);
   const [passwordModalVisible, setPasswordModalVisible] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
+  
+  // 头像上传状态
+  const [avatarUploading, setAvatarUploading] = useState(false);
 
   const user = authUser as DirectusUser;
 
@@ -143,9 +150,9 @@ function ProfileContent() {
     
     setLoading(true);
     try {
-      const token = localStorage.getItem('access_token');
-      if (!token) {
-        message.error('请重新登录');
+      const authToken = await TokenManager.getValidToken();
+      if (!authToken) {
+        message.error('未找到认证令牌，请重新登录');
         return;
       }
 
@@ -153,7 +160,7 @@ function ProfileContent() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({
           query: `
@@ -198,7 +205,9 @@ function ProfileContent() {
 
       message.success('用户信息更新成功');
       setEditing(false);
-      // 可以考虑更新本地用户数据或刷新页面
+      
+      // 刷新用户数据，避免页面刷新
+      await refreshUserData();
     } catch (error) {
       console.error('保存失败:', error);
       message.error('保存失败，请稍后重试');
@@ -212,9 +221,9 @@ function ProfileContent() {
     
     setLoading(true);
     try {
-      const token = localStorage.getItem('access_token');
-      if (!token) {
-        message.error('请重新登录');
+      const authToken = await TokenManager.getValidToken();
+      if (!authToken) {
+        message.error('未找到认证令牌，请重新登录');
         return;
       }
 
@@ -222,7 +231,7 @@ function ProfileContent() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({
           query: `
@@ -271,24 +280,24 @@ function ProfileContent() {
     }
   };
 
-  // 处理头像上传
+  // 处理头像上传并立即更新用户配置
   const handleAvatarUpload = async (file: File) => {
-    setLoading(true);
+    setAvatarUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-
-      // 从localStorage获取token
-      const token = localStorage.getItem('access_token');
-      if (!token) {
-        message.error('请重新登录');
+      // 使用TokenManager获取有效令牌，自动处理token刷新
+      const authToken = await TokenManager.getValidToken();
+      if (!authToken) {
+        message.error('未找到认证令牌，请重新登录');
         return;
       }
+
+      const formData = new FormData();
+      formData.append('file', file);
 
       const response = await fetch('/api/upload', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${authToken}`,
         },
         body: formData,
       });
@@ -301,45 +310,49 @@ function ProfileContent() {
       const result = await response.json();
       console.log('头像上传成功:', result);
 
-      // 更新用户头像
+      // 立即更新用户头像配置
       if (result.data?.id) {
         await updateUserAvatar(result.data.id);
         message.success('头像更新成功');
-        // 这里可能需要刷新用户信息或重新获取用户数据
-        window.location.reload(); // 临时解决方案，刷新页面
+        
+        // 刷新用户数据，避免页面刷新
+        await refreshUserData();
       }
     } catch (error) {
       console.error('头像上传失败:', error);
       message.error('头像上传失败: ' + (error as Error).message);
     } finally {
-      setLoading(false);
+      setAvatarUploading(false);
     }
   };
 
   // 更新用户头像API调用
   const updateUserAvatar = async (avatarId: string) => {
-    const token = localStorage.getItem('access_token');
-    if (!token) {
-      throw new Error('未找到认证令牌');
+    const authToken = await TokenManager.getValidToken();
+    if (!authToken) {
+      throw new Error('未找到认证令牌，请重新登录');
     }
 
       const response = await fetch('/api/graphql/system', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({
           query: `
-            mutation UpdateUserAvatar($avatar: String!) {
+            mutation UpdateUserAvatar($avatar: update_directus_files_input!) {
               update_users_me(data: { avatar: $avatar }) {
                 id
-                avatar
+                avatar {
+                  id
+                  filename_download
+                }
               }
             }
           `,
           variables: {
-            avatar: avatarId,
+            avatar: { id: avatarId },
           },
         }),
       });
@@ -363,9 +376,9 @@ function ProfileContent() {
     
     setLoading(true);
     try {
-      const token = localStorage.getItem('access_token');
-      if (!token) {
-        message.error('请重新登录');
+      const authToken = await TokenManager.getValidToken();
+      if (!authToken) {
+        message.error('未找到认证令牌，请重新登录');
         return;
       }
 
@@ -373,11 +386,11 @@ function ProfileContent() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          'Authorization': `Bearer ${authToken}`,
         },
         body: JSON.stringify({
           query: `
-            mutation UpdateUserPassword($password: String!) {
+            mutation UpdateUserPassword($password: Hash!) {
               update_users_me(data: { password: $password }) {
                 id
               }
@@ -485,7 +498,14 @@ function ProfileContent() {
   // 获取用户头像URL
   const getAvatarUrl = () => {
     if (user.avatar) {
-      return `https://forge.kcbaotech.com/assets/${user.avatar}`;
+      // 如果avatar是对象（包含id字段），使用id
+      if (typeof user.avatar === 'object' && user.avatar.id) {
+        return `https://forge.kcbaotech.com/assets/${user.avatar.id}`;
+      }
+      // 如果avatar是字符串ID（兼容旧版本）
+      if (typeof user.avatar === 'string') {
+        return `https://forge.kcbaotech.com/assets/${user.avatar}`;
+      }
     }
     return null;
   };
@@ -824,8 +844,12 @@ function ProfileContent() {
                   return false; // 阻止默认上传行为
                 }}
               >
-                <Button icon={<UploadOutlined />} block loading={loading}>
-                  更换头像
+                <Button 
+                  icon={<UploadOutlined />} 
+                  block 
+                  loading={avatarUploading}
+                >
+                  {avatarUploading ? '上传中...' : '更换头像'}
                 </Button>
               </Upload>
             </div>

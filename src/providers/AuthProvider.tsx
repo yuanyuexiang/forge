@@ -25,6 +25,7 @@ interface AuthContextType {
   loading: boolean;
   isLoading: boolean;  // 添加 isLoading 别名
   refreshToken: () => Promise<boolean>;
+  refreshUserData: () => Promise<void>;  // 添加刷新用户数据功能
   isAuthenticated: boolean;
 }
 
@@ -218,9 +219,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                   avatar {
                     id
                     filename_download
-                    title
                   }
-                  text_direction
                 }
               }
             `
@@ -299,6 +298,67 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem('user_info');
       setUser(null);
       router.push('/login');
+    }
+  };
+
+  // 刷新用户数据
+  const refreshUserData = async () => {
+    try {
+      const accessToken = await TokenManager.getValidToken();
+      if (!accessToken) {
+        return;
+      }
+
+      const userResponse = await fetch('/api/graphql/system', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          query: `
+            query {
+              users_me {
+                id
+                email
+                first_name
+                last_name
+                status
+                role {
+                  id
+                  name
+                  description
+                }
+                language
+                theme_light
+                theme_dark
+                appearance
+                email_notifications
+                last_access
+                last_page
+                location
+                title
+                description
+                avatar {
+                  id
+                  filename_download
+                }
+              }
+            }
+          `
+        }),
+      });
+
+      const userResult = await userResponse.json();
+      
+      if (userResult.data?.users_me) {
+        const userData = userResult.data.users_me;
+        setUser(userData);
+        localStorage.setItem('user_info', JSON.stringify(userData));
+        authLogger.info('用户数据刷新成功');
+      }
+    } catch (error) {
+      authLogger.error('刷新用户数据失败', error);
     }
   };
 
@@ -429,6 +489,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => clearInterval(interval);
   }, [user]);
 
+  // 监听用户数据刷新事件
+  useEffect(() => {
+    const handleRefreshUserData = () => {
+      refreshUserData();
+    };
+
+    window.addEventListener('refreshUserData', handleRefreshUserData);
+    
+    return () => {
+      window.removeEventListener('refreshUserData', handleRefreshUserData);
+    };
+  }, []);
+
   const value: AuthContextType = {
     user,
     login,
@@ -436,6 +509,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     loading,
     isLoading: loading,  // 添加 isLoading 别名
     refreshToken,
+    refreshUserData,  // 添加刷新用户数据功能
     isAuthenticated: !!user,
   };
 
