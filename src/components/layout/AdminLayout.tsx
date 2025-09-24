@@ -68,7 +68,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     {
       key: 'dashboard',
       icon: <DashboardOutlined />,
-      label: '仪表盘',
+      label: '数据概览',
       onClick: () => router.push('/dashboard'),
     },
     {

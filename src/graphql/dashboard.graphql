@@ -61,7 +61,7 @@ query GetDashboardData($today: String, $userId: ID) {
   }
 }
 
-# 管理员仪表盘数据（无权限过滤）
+# 管理员数据概览（无权限过滤）
 query GetAllDashboardData($today: String) {
   # 直接查询各个表的记录数 - 使用较小的限制以验证数据存在
   customers(limit: 1000) {

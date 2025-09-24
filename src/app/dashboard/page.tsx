@@ -159,7 +159,7 @@ function DashboardContent() {
     <div style={{ height: '100%', padding: '24px', backgroundColor: 'white' }}>
       {/* 页面标题区域 */}
       <div className="mb-6">
-        <Title level={4} className="mb-2">仪表盘概览</Title>
+        <Title level={4} className="mb-2">数据概览</Title>
         <p className="text-gray-600">
           查看您的服装店平台关键数据和业务指标
         </p>
