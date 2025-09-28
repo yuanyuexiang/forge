@@ -379,14 +379,6 @@ function CustomersContent() {
               onChange={(e) => setSearchText(e.target.value)}
             />
           </div>
-          <Button 
-            type="primary" 
-            icon={<DownloadOutlined />}
-            onClick={handleExport}
-            disabled={filteredUsers.length === 0}
-          >
-            导出数据
-          </Button>
         </div>
 
         {!selectedBoutiqueId && (
