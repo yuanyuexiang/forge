@@ -5,6 +5,8 @@ query GetCustomers($boutiqueId: GraphQLStringOrFloat) {
   customers(filter: { boutique: { id: { _eq: $boutiqueId } } }) {
     id
     nick_name
+    full_name
+    contact
     open_id
     avatar
     sex
@@ -38,6 +40,8 @@ query GetAllCustomers {
   customers {
     id
     nick_name
+    full_name
+    contact
     open_id
     avatar
     sex
@@ -110,6 +114,8 @@ mutation UpdateCustomer($id: ID!, $data: update_customers_input!) {
   update_customers_item(id: $id, data: $data) {
     id
     nick_name
+    full_name
+    contact
     open_id
     avatar
     sex

@@ -52,6 +52,8 @@ export type Mutation = {
   create_views_items: Array<Views>;
   create_visits_item?: Maybe<Visits>;
   create_visits_items: Array<Visits>;
+  create_wechat_users_item?: Maybe<Wechat_Users>;
+  create_wechat_users_items: Array<Wechat_Users>;
   delete_boutiques_item?: Maybe<Delete_One>;
   delete_boutiques_items?: Maybe<Delete_Many>;
   delete_categories_item?: Maybe<Delete_One>;
@@ -68,6 +70,8 @@ export type Mutation = {
   delete_views_items?: Maybe<Delete_Many>;
   delete_visits_item?: Maybe<Delete_One>;
   delete_visits_items?: Maybe<Delete_Many>;
+  delete_wechat_users_item?: Maybe<Delete_One>;
+  delete_wechat_users_items?: Maybe<Delete_Many>;
   update_boutiques_batch: Array<Boutiques>;
   update_boutiques_item?: Maybe<Boutiques>;
   update_boutiques_items: Array<Boutiques>;
@@ -92,6 +96,9 @@ export type Mutation = {
   update_visits_batch: Array<Visits>;
   update_visits_item?: Maybe<Visits>;
   update_visits_items: Array<Visits>;
+  update_wechat_users_batch: Array<Wechat_Users>;
+  update_wechat_users_item?: Maybe<Wechat_Users>;
+  update_wechat_users_items: Array<Wechat_Users>;
 };
 
 
@@ -223,6 +230,22 @@ export type MutationCreate_Visits_ItemsArgs = {
 };
 
 
+export type MutationCreate_Wechat_Users_ItemArgs = {
+  data: Create_Wechat_Users_Input;
+};
+
+
+export type MutationCreate_Wechat_Users_ItemsArgs = {
+  data?: InputMaybe<Array<Create_Wechat_Users_Input>>;
+  filter?: InputMaybe<Wechat_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
 export type MutationDelete_Boutiques_ItemArgs = {
   id: Scalars['ID']['input'];
 };
@@ -299,6 +322,16 @@ export type MutationDelete_Visits_ItemArgs = {
 
 
 export type MutationDelete_Visits_ItemsArgs = {
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+};
+
+
+export type MutationDelete_Wechat_Users_ItemArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationDelete_Wechat_Users_ItemsArgs = {
   ids: Array<InputMaybe<Scalars['ID']['input']>>;
 };
 
@@ -534,6 +567,35 @@ export type MutationUpdate_Visits_ItemsArgs = {
   sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
 };
 
+
+export type MutationUpdate_Wechat_Users_BatchArgs = {
+  data?: InputMaybe<Array<Update_Wechat_Users_Input>>;
+  filter?: InputMaybe<Wechat_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type MutationUpdate_Wechat_Users_ItemArgs = {
+  data: Update_Wechat_Users_Input;
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdate_Wechat_Users_ItemsArgs = {
+  data: Update_Wechat_Users_Input;
+  filter?: InputMaybe<Wechat_Users_Filter>;
+  ids: Array<InputMaybe<Scalars['ID']['input']>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
 export type Query = {
   __typename?: 'Query';
   boutiques: Array<Boutiques>;
@@ -568,6 +630,10 @@ export type Query = {
   visits_aggregated: Array<Visits_Aggregated>;
   visits_by_id?: Maybe<Visits>;
   visits_by_version?: Maybe<Version_Visits>;
+  wechat_users: Array<Wechat_Users>;
+  wechat_users_aggregated: Array<Wechat_Users_Aggregated>;
+  wechat_users_by_id?: Maybe<Wechat_Users>;
+  wechat_users_by_version?: Maybe<Version_Wechat_Users>;
 };
 
 
@@ -834,6 +900,39 @@ export type QueryVisits_By_VersionArgs = {
   version: Scalars['String']['input'];
 };
 
+
+export type QueryWechat_UsersArgs = {
+  filter?: InputMaybe<Wechat_Users_Filter>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryWechat_Users_AggregatedArgs = {
+  filter?: InputMaybe<Wechat_Users_Filter>;
+  groupBy?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  page?: InputMaybe<Scalars['Int']['input']>;
+  search?: InputMaybe<Scalars['String']['input']>;
+  sort?: InputMaybe<Array<InputMaybe<Scalars['String']['input']>>>;
+};
+
+
+export type QueryWechat_Users_By_IdArgs = {
+  id: Scalars['ID']['input'];
+  version?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryWechat_Users_By_VersionArgs = {
+  id: Scalars['ID']['input'];
+  version: Scalars['String']['input'];
+};
+
 export type Subscription = {
   __typename?: 'Subscription';
   boutiques_mutated?: Maybe<Boutiques_Mutated>;
@@ -865,6 +964,7 @@ export type Subscription = {
   terminals_mutated?: Maybe<Terminals_Mutated>;
   views_mutated?: Maybe<Views_Mutated>;
   visits_mutated?: Maybe<Visits_Mutated>;
+  wechat_users_mutated?: Maybe<Wechat_Users_Mutated>;
 };
 
 
@@ -1009,6 +1109,11 @@ export type SubscriptionViews_MutatedArgs = {
 
 
 export type SubscriptionVisits_MutatedArgs = {
+  event?: InputMaybe<EventEnum>;
+};
+
+
+export type SubscriptionWechat_Users_MutatedArgs = {
   event?: InputMaybe<EventEnum>;
 };
 
@@ -1308,8 +1413,10 @@ export type Create_Categories_Input = {
 export type Create_Customers_Input = {
   avatar?: InputMaybe<Scalars['String']['input']>;
   boutique?: InputMaybe<Create_Boutiques_Input>;
+  contact?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
+  full_name?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   nick_name?: InputMaybe<Scalars['String']['input']>;
   open_id: Scalars['String']['input'];
@@ -1517,14 +1624,37 @@ export type Create_Visits_Input = {
   user_updated?: InputMaybe<Create_Directus_Users_Input>;
 };
 
+export type Create_Wechat_Users_Input = {
+  access_token?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['Date']['input']>;
+  expires_at?: InputMaybe<Scalars['Date']['input']>;
+  headimgurl?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  is_active?: InputMaybe<Scalars['Boolean']['input']>;
+  language?: InputMaybe<Scalars['String']['input']>;
+  nickname?: InputMaybe<Scalars['String']['input']>;
+  openid: Scalars['String']['input'];
+  privilege?: InputMaybe<Scalars['JSON']['input']>;
+  province?: InputMaybe<Scalars['String']['input']>;
+  refresh_token?: InputMaybe<Scalars['String']['input']>;
+  scope?: InputMaybe<Scalars['String']['input']>;
+  sex?: InputMaybe<Scalars['Int']['input']>;
+  unionid?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['Date']['input']>;
+};
+
 export type Customers = {
   __typename?: 'customers';
   avatar?: Maybe<Scalars['String']['output']>;
   boutique?: Maybe<Boutiques>;
+  contact?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_created_func?: Maybe<Datetime_Functions>;
   date_updated?: Maybe<Scalars['Date']['output']>;
   date_updated_func?: Maybe<Datetime_Functions>;
+  full_name?: Maybe<Scalars['String']['output']>;
   id: Scalars['ID']['output'];
   nick_name?: Maybe<Scalars['String']['output']>;
   open_id: Scalars['String']['output'];
@@ -1584,8 +1714,10 @@ export type Customers_Aggregated_Count = {
   __typename?: 'customers_aggregated_count';
   avatar?: Maybe<Scalars['Int']['output']>;
   boutique?: Maybe<Scalars['Int']['output']>;
+  contact?: Maybe<Scalars['Int']['output']>;
   date_created?: Maybe<Scalars['Int']['output']>;
   date_updated?: Maybe<Scalars['Int']['output']>;
+  full_name?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   nick_name?: Maybe<Scalars['Int']['output']>;
   open_id?: Maybe<Scalars['Int']['output']>;
@@ -1610,10 +1742,12 @@ export type Customers_Filter = {
   _or?: InputMaybe<Array<InputMaybe<Customers_Filter>>>;
   avatar?: InputMaybe<String_Filter_Operators>;
   boutique?: InputMaybe<Boutiques_Filter>;
+  contact?: InputMaybe<String_Filter_Operators>;
   date_created?: InputMaybe<Date_Filter_Operators>;
   date_created_func?: InputMaybe<Datetime_Function_Filter_Operators>;
   date_updated?: InputMaybe<Date_Filter_Operators>;
   date_updated_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  full_name?: InputMaybe<String_Filter_Operators>;
   id?: InputMaybe<Number_Filter_Operators>;
   nick_name?: InputMaybe<String_Filter_Operators>;
   open_id?: InputMaybe<String_Filter_Operators>;
@@ -3712,8 +3846,10 @@ export type Update_Categories_Input = {
 export type Update_Customers_Input = {
   avatar?: InputMaybe<Scalars['String']['input']>;
   boutique?: InputMaybe<Update_Boutiques_Input>;
+  contact?: InputMaybe<Scalars['String']['input']>;
   date_created?: InputMaybe<Scalars['Date']['input']>;
   date_updated?: InputMaybe<Scalars['Date']['input']>;
+  full_name?: InputMaybe<Scalars['String']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   nick_name?: InputMaybe<Scalars['String']['input']>;
   open_id?: InputMaybe<Scalars['String']['input']>;
@@ -3921,6 +4057,27 @@ export type Update_Visits_Input = {
   user_updated?: InputMaybe<Update_Directus_Users_Input>;
 };
 
+export type Update_Wechat_Users_Input = {
+  access_token?: InputMaybe<Scalars['String']['input']>;
+  city?: InputMaybe<Scalars['String']['input']>;
+  country?: InputMaybe<Scalars['String']['input']>;
+  created_at?: InputMaybe<Scalars['Date']['input']>;
+  expires_at?: InputMaybe<Scalars['Date']['input']>;
+  headimgurl?: InputMaybe<Scalars['String']['input']>;
+  id?: InputMaybe<Scalars['ID']['input']>;
+  is_active?: InputMaybe<Scalars['Boolean']['input']>;
+  language?: InputMaybe<Scalars['String']['input']>;
+  nickname?: InputMaybe<Scalars['String']['input']>;
+  openid?: InputMaybe<Scalars['String']['input']>;
+  privilege?: InputMaybe<Scalars['JSON']['input']>;
+  province?: InputMaybe<Scalars['String']['input']>;
+  refresh_token?: InputMaybe<Scalars['String']['input']>;
+  scope?: InputMaybe<Scalars['String']['input']>;
+  sex?: InputMaybe<Scalars['Int']['input']>;
+  unionid?: InputMaybe<Scalars['String']['input']>;
+  updated_at?: InputMaybe<Scalars['Date']['input']>;
+};
+
 export type Version_Boutiques = {
   __typename?: 'version_boutiques';
   address?: Maybe<Scalars['String']['output']>;
@@ -3959,8 +4116,10 @@ export type Version_Customers = {
   __typename?: 'version_customers';
   avatar?: Maybe<Scalars['String']['output']>;
   boutique?: Maybe<Scalars['JSON']['output']>;
+  contact?: Maybe<Scalars['String']['output']>;
   date_created?: Maybe<Scalars['Date']['output']>;
   date_updated?: Maybe<Scalars['Date']['output']>;
+  full_name?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   nick_name?: Maybe<Scalars['String']['output']>;
   open_id?: Maybe<Scalars['String']['output']>;
@@ -4060,6 +4219,28 @@ export type Version_Visits = {
   id?: Maybe<Scalars['ID']['output']>;
   user_created?: Maybe<Scalars['JSON']['output']>;
   user_updated?: Maybe<Scalars['JSON']['output']>;
+};
+
+export type Version_Wechat_Users = {
+  __typename?: 'version_wechat_users';
+  access_token?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['Date']['output']>;
+  expires_at?: Maybe<Scalars['Date']['output']>;
+  headimgurl?: Maybe<Scalars['String']['output']>;
+  id?: Maybe<Scalars['ID']['output']>;
+  is_active?: Maybe<Scalars['Boolean']['output']>;
+  language?: Maybe<Scalars['String']['output']>;
+  nickname?: Maybe<Scalars['String']['output']>;
+  openid?: Maybe<Scalars['String']['output']>;
+  privilege?: Maybe<Scalars['JSON']['output']>;
+  province?: Maybe<Scalars['String']['output']>;
+  refresh_token?: Maybe<Scalars['String']['output']>;
+  scope?: Maybe<Scalars['String']['output']>;
+  sex?: Maybe<Scalars['Int']['output']>;
+  unionid?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['Date']['output']>;
 };
 
 export type Views = {
@@ -4288,6 +4469,108 @@ export type Visits_Mutated = {
   key: Scalars['ID']['output'];
 };
 
+export type Wechat_Users = {
+  __typename?: 'wechat_users';
+  access_token?: Maybe<Scalars['String']['output']>;
+  city?: Maybe<Scalars['String']['output']>;
+  country?: Maybe<Scalars['String']['output']>;
+  created_at?: Maybe<Scalars['Date']['output']>;
+  created_at_func?: Maybe<Datetime_Functions>;
+  expires_at?: Maybe<Scalars['Date']['output']>;
+  expires_at_func?: Maybe<Datetime_Functions>;
+  headimgurl?: Maybe<Scalars['String']['output']>;
+  id: Scalars['ID']['output'];
+  is_active?: Maybe<Scalars['Boolean']['output']>;
+  language?: Maybe<Scalars['String']['output']>;
+  nickname?: Maybe<Scalars['String']['output']>;
+  openid: Scalars['String']['output'];
+  privilege?: Maybe<Scalars['JSON']['output']>;
+  privilege_func?: Maybe<Count_Functions>;
+  province?: Maybe<Scalars['String']['output']>;
+  refresh_token?: Maybe<Scalars['String']['output']>;
+  scope?: Maybe<Scalars['String']['output']>;
+  sex?: Maybe<Scalars['Int']['output']>;
+  unionid?: Maybe<Scalars['String']['output']>;
+  updated_at?: Maybe<Scalars['Date']['output']>;
+  updated_at_func?: Maybe<Datetime_Functions>;
+};
+
+export type Wechat_Users_Aggregated = {
+  __typename?: 'wechat_users_aggregated';
+  avg?: Maybe<Wechat_Users_Aggregated_Fields>;
+  avgDistinct?: Maybe<Wechat_Users_Aggregated_Fields>;
+  count?: Maybe<Wechat_Users_Aggregated_Count>;
+  countAll?: Maybe<Scalars['Int']['output']>;
+  countDistinct?: Maybe<Wechat_Users_Aggregated_Count>;
+  group?: Maybe<Scalars['JSON']['output']>;
+  max?: Maybe<Wechat_Users_Aggregated_Fields>;
+  min?: Maybe<Wechat_Users_Aggregated_Fields>;
+  sum?: Maybe<Wechat_Users_Aggregated_Fields>;
+  sumDistinct?: Maybe<Wechat_Users_Aggregated_Fields>;
+};
+
+export type Wechat_Users_Aggregated_Count = {
+  __typename?: 'wechat_users_aggregated_count';
+  access_token?: Maybe<Scalars['Int']['output']>;
+  city?: Maybe<Scalars['Int']['output']>;
+  country?: Maybe<Scalars['Int']['output']>;
+  created_at?: Maybe<Scalars['Int']['output']>;
+  expires_at?: Maybe<Scalars['Int']['output']>;
+  headimgurl?: Maybe<Scalars['Int']['output']>;
+  id?: Maybe<Scalars['Int']['output']>;
+  is_active?: Maybe<Scalars['Int']['output']>;
+  language?: Maybe<Scalars['Int']['output']>;
+  nickname?: Maybe<Scalars['Int']['output']>;
+  openid?: Maybe<Scalars['Int']['output']>;
+  privilege?: Maybe<Scalars['Int']['output']>;
+  province?: Maybe<Scalars['Int']['output']>;
+  refresh_token?: Maybe<Scalars['Int']['output']>;
+  scope?: Maybe<Scalars['Int']['output']>;
+  sex?: Maybe<Scalars['Int']['output']>;
+  unionid?: Maybe<Scalars['Int']['output']>;
+  updated_at?: Maybe<Scalars['Int']['output']>;
+};
+
+export type Wechat_Users_Aggregated_Fields = {
+  __typename?: 'wechat_users_aggregated_fields';
+  id?: Maybe<Scalars['Float']['output']>;
+  sex?: Maybe<Scalars['Float']['output']>;
+};
+
+export type Wechat_Users_Filter = {
+  _and?: InputMaybe<Array<InputMaybe<Wechat_Users_Filter>>>;
+  _or?: InputMaybe<Array<InputMaybe<Wechat_Users_Filter>>>;
+  access_token?: InputMaybe<String_Filter_Operators>;
+  city?: InputMaybe<String_Filter_Operators>;
+  country?: InputMaybe<String_Filter_Operators>;
+  created_at?: InputMaybe<Date_Filter_Operators>;
+  created_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  expires_at?: InputMaybe<Date_Filter_Operators>;
+  expires_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+  headimgurl?: InputMaybe<String_Filter_Operators>;
+  id?: InputMaybe<Number_Filter_Operators>;
+  is_active?: InputMaybe<Boolean_Filter_Operators>;
+  language?: InputMaybe<String_Filter_Operators>;
+  nickname?: InputMaybe<String_Filter_Operators>;
+  openid?: InputMaybe<String_Filter_Operators>;
+  privilege?: InputMaybe<String_Filter_Operators>;
+  privilege_func?: InputMaybe<Count_Function_Filter_Operators>;
+  province?: InputMaybe<String_Filter_Operators>;
+  refresh_token?: InputMaybe<String_Filter_Operators>;
+  scope?: InputMaybe<String_Filter_Operators>;
+  sex?: InputMaybe<Number_Filter_Operators>;
+  unionid?: InputMaybe<String_Filter_Operators>;
+  updated_at?: InputMaybe<Date_Filter_Operators>;
+  updated_at_func?: InputMaybe<Datetime_Function_Filter_Operators>;
+};
+
+export type Wechat_Users_Mutated = {
+  __typename?: 'wechat_users_mutated';
+  data?: Maybe<Wechat_Users>;
+  event?: Maybe<EventEnum>;
+  key: Scalars['ID']['output'];
+};
+
 export type LoginUserQueryVariables = Exact<{
   openid: Scalars['String']['input'];
 }>;
@@ -4394,12 +4677,12 @@ export type GetCustomersQueryVariables = Exact<{
 }>;
 
 
-export type GetCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null }> };
+export type GetCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null }> };
 
 export type GetAllCustomersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetAllCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetCustomerByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4421,7 +4704,7 @@ export type UpdateCustomerMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCustomerMutation = { __typename?: 'Mutation', update_customers_item?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+export type UpdateCustomerMutation = { __typename?: 'Mutation', update_customers_item?: { __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
 
 export type DeleteCustomerMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -5448,6 +5731,8 @@ export const GetCustomersDocument = gql`
   customers(filter: {boutique: {id: {_eq: $boutiqueId}}}) {
     id
     nick_name
+    full_name
+    contact
     open_id
     avatar
     sex
@@ -5514,6 +5799,8 @@ export const GetAllCustomersDocument = gql`
   customers {
     id
     nick_name
+    full_name
+    contact
     open_id
     avatar
     sex
@@ -5677,6 +5964,8 @@ export const UpdateCustomerDocument = gql`
   update_customers_item(id: $id, data: $data) {
     id
     nick_name
+    full_name
+    contact
     open_id
     avatar
     sex
