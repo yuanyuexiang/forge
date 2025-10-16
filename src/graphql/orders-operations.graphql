@@ -1,6 +1,35 @@
 # 订单相关的GraphQL操作
 
-# 查询指定店铺的订单（基于boutique.id过滤）
+# 查询当前用户有权限的所有订单（通过用户ID过滤其创建的店铺的订单）
+query GetUserOrders($userId: ID!) {
+  orders(filter: { boutique: { user_created: { id: { _eq: $userId } } } }) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    boutique {
+      id
+      name
+      address
+    }
+    total_price
+    status
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+
+# 查询指定店铺的订单（基于boutique.id过滤）- 保留用于特殊需求
 query GetOrders($boutiqueId: GraphQLStringOrFloat) {
   orders(filter: { boutique: { id: { _eq: $boutiqueId } } }) {
     id
@@ -151,5 +180,33 @@ mutation UpdateOrderStatus($id: ID!, $status: String!) {
     id
     status
     date_updated
+  }
+}
+
+# 实时订阅所有订单变化（用户有权限的所有店铺）
+# 注意：Directus 的订阅会自动应用权限过滤，只返回用户有权访问的订单
+subscription OrdersRealtime {
+  orders_mutated {
+    key
+    event
+    data {
+      id
+      customer {
+        id
+        nick_name
+        open_id
+        avatar
+        sex
+      }
+      boutique {
+        id
+        name
+        address
+      }
+      total_price
+      status
+      date_created
+      date_updated
+    }
   }
 }

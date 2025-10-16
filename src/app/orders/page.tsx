@@ -1,47 +1,25 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useMemo } from 'react';
 import { 
-  Table, 
-  Card, 
-  Tag, 
-  Button, 
-  Modal, 
-  Descriptions, 
-  Typography, 
-  Select, 
-  message,
-  Space,
-  Statistic,
-  Row,
-  Col,
-  Divider,
-  Input
+  Table, Card, Tag, Button, Modal, Descriptions, Typography, Select, 
+  message, Space, Statistic, Row, Col, Input, Alert, Skeleton, Empty
 } from 'antd';
 import { 
-  EyeOutlined, 
-  EditOutlined, 
-  ShoppingCartOutlined,
-  DollarOutlined,
-  UserOutlined,
-  ClockCircleOutlined,
-  DownloadOutlined
+  EyeOutlined, EditOutlined, ShoppingCartOutlined, DollarOutlined,
+  ClockCircleOutlined, DownloadOutlined, SyncOutlined, ThunderboltOutlined,
+  FilterOutlined, ShopOutlined
 } from '@ant-design/icons';
-import { 
-  useGetOrdersQuery,
-  useUpdateOrderStatusMutation,
-  GetOrdersQuery
-} from '../../generated/graphql';
-import { ProtectedRoute, AdminLayout, BoutiqueSelector } from '@components';
-import { TokenManager } from '@lib/auth';
+import { useUpdateOrderStatusMutation, GetUserOrdersQuery } from '../../generated/graphql';
+import { ProtectedRoute, AdminLayout, BoutiqueSelector, RealtimeIndicator } from '@components';
+import { useRealtimeOrders } from '../../hooks/useRealtimeOrders';
 import { exportOrders } from '@lib/utils';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 const { Option } = Select;
 const { Search } = Input;
 
-// 使用生成的类型
-type Order = GetOrdersQuery['orders'][0];
+type Order = GetUserOrdersQuery['orders'][0];
 
 function OrdersContent() {
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -51,20 +29,10 @@ function OrdersContent() {
   const [newStatus, setNewStatus] = useState<string>('');
   const [searchText, setSearchText] = useState('');
   const [selectedBoutiqueId, setSelectedBoutiqueId] = useState<string | undefined>(undefined);
+  const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined);
 
-  // 查询指定店铺的订单列表
-  const { data: ordersData, loading, error, refetch } = useGetOrdersQuery({
-    variables: selectedBoutiqueId ? { boutiqueId: selectedBoutiqueId } : undefined,
-    skip: !selectedBoutiqueId
-  });
-  
-  // 由于schema中没有order_items表，这里先注释掉相关的查询
-  // const { data: orderItemsData } = useGetOrderItemsQuery({
-  //   variables: { orderId: selectedOrder?.id as any },
-  //   skip: !selectedOrder?.id
-  // });
+  const { orders, loading, error, statistics, refetch, connected } = useRealtimeOrders(true);
 
-  // 更新订单状态
   const [updateOrderStatus] = useUpdateOrderStatusMutation({
     onCompleted: () => {
       message.success('订单状态更新成功');
@@ -78,39 +46,39 @@ function OrdersContent() {
     }
   });
 
-  const orders = ordersData?.orders || [];
-  // 暂时使用空数组，等实现order_items功能时再修复
-  const orderItems: any[] = [];
+  const filteredOrders = useMemo(() => {
+    return orders.filter(order => {
+      if (selectedBoutiqueId && order.boutique?.id !== selectedBoutiqueId) return false;
+      if (selectedStatus && order.status !== selectedStatus) return false;
+      if (searchText) {
+        const s = searchText.toLowerCase();
+        return (
+          order.id.toLowerCase().includes(s) ||
+          order.customer?.nick_name?.toLowerCase().includes(s) ||
+          order.boutique?.name?.toLowerCase().includes(s)
+        );
+      }
+      return true;
+    });
+  }, [orders, selectedBoutiqueId, selectedStatus, searchText]);
 
-  // 处理错误
-  if (error) {
-    console.error('获取订单列表失败:', error);
-    message.error('获取订单列表失败');
-  }
-
-  // 过滤订单
-  const filteredOrders = orders.filter(order => {
-    if (!searchText) return true;
-    const searchLower = searchText.toLowerCase();
-    return (
-      order.id.toLowerCase().includes(searchLower) ||
-      order.customer?.nick_name?.toLowerCase().includes(searchLower) ||
-      order.customer?.id?.toString().includes(searchLower) ||
-      order.status?.toLowerCase().includes(searchLower) ||
-      order.boutique?.name?.toLowerCase().includes(searchLower) ||
-      order.boutique?.address?.toLowerCase().includes(searchLower)
+  const filteredStatistics = useMemo(() => {
+    const total = filteredOrders.length;
+    const amount = filteredOrders.reduce((sum, o) => sum + (o.total_price || 0), 0);
+    const pending = filteredOrders.filter(o => o.status === 'pending' || o.status === 'processing').length;
+    const today = new Date().toISOString().split('T')[0];
+    const todayOrders = filteredOrders.filter(o => 
+      new Date(o.date_created).toISOString().split('T')[0] === today
     );
-  });
+    return {
+      totalOrders: total,
+      totalAmount: amount,
+      pendingOrders: pending,
+      todayOrders: todayOrders.length,
+      todayAmount: todayOrders.reduce((sum, o) => sum + (o.total_price || 0), 0)
+    };
+  }, [filteredOrders]);
 
-  // 计算统计数据
-  const totalOrders = orders.length;
-  const pendingOrders = orders.filter(order => order.status === 'pending').length;
-  const completedOrders = orders.filter(order => order.status === 'completed').length;
-  const totalRevenue = orders
-    .filter(order => order.status === 'completed')
-    .reduce((sum, order) => sum + (order.total_price || 0), 0);
-
-  // 状态标签颜色
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'pending': return 'orange';
@@ -121,22 +89,6 @@ function OrdersContent() {
     }
   };
 
-  // 处理导出功能
-  const handleExport = () => {
-    try {
-      if (orders.length === 0) {
-        message.warning('暂无数据可导出');
-        return;
-      }
-      exportOrders(orders);
-      message.success('数据导出成功');
-    } catch (error) {
-      console.error('导出失败:', error);
-      message.error('导出失败，请重试');
-    }
-  };
-
-  // 状态显示文本
   const getStatusText = (status: string) => {
     switch (status) {
       case 'pending': return '待处理';
@@ -147,346 +99,245 @@ function OrdersContent() {
     }
   };
 
-  // 查看订单详情
-  const viewOrderDetails = (order: Order) => {
-    setSelectedOrder(order);
-    setDetailModalVisible(true);
-  };
+  if (loading && orders.length === 0) {
+    return (
+      <div style={{ padding: '24px', backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
+        <Row gutter={16} style={{ marginBottom: 24 }}>
+          {[1, 2, 3, 4].map(i => (
+            <Col xs={24} sm={12} md={6} key={i}>
+              <Card><Skeleton active paragraph={{ rows: 1 }} /></Card>
+            </Col>
+          ))}
+        </Row>
+        <Card><Skeleton active paragraph={{ rows: 10 }} /></Card>
+      </div>
+    );
+  }
 
-  // 更新状态
-  const handleUpdateStatus = (orderId: string) => {
-    setUpdatingOrderId(orderId);
-    const order = orders.find(o => o.id === orderId);
-    setNewStatus(order?.status || '');
-    setStatusModalVisible(true);
-  };
+  if (error) {
+    return (
+      <div style={{ padding: '24px' }}>
+        <Alert message="加载失败" description="无法加载订单数据，请检查网络连接或稍后重试。" type="error" showIcon
+          action={<Button size="small" danger onClick={() => refetch()}>重试</Button>}
+        />
+      </div>
+    );
+  }
 
-  // 确认更新状态
-  const confirmUpdateStatus = () => {
-    if (updatingOrderId && newStatus) {
-      updateOrderStatus({
-        variables: {
-          id: updatingOrderId,
-          status: newStatus
-        }
-      });
-    }
-  };
-
-  // 表格列定义
   const columns = [
     {
-      title: '订单ID',
-      dataIndex: 'id',
-      key: 'id',
-      width: 120,
-      render: (id: string) => (
-        <Text code copyable={{ text: id }}>
-          {id.substring(0, 8)}...
-        </Text>
-      ),
+      title: '订单ID', dataIndex: 'id', key: 'id', width: 120,
+      render: (id: string) => <Text code copyable={{ text: id }}>{id.substring(0, 8)}...</Text>
     },
     {
-      title: '客户',
-      key: 'customer',
-      width: 200,
+      title: '店铺', key: 'boutique', width: 180,
       render: (record: Order) => (
         <div>
-          <div><UserOutlined /> {record.customer?.nick_name || `用户ID: ${record.customer?.id || '未知'}`}</div>
-          <div style={{ fontSize: '12px', color: '#666' }}>
-            客户
-          </div>
+          <div><ShopOutlined /> {record.boutique?.name || '未知'}</div>
+          <div style={{ fontSize: '12px', color: '#666' }}>{record.boutique?.address || '-'}</div>
         </div>
-      ),
+      )
     },
     {
-      title: '所属店铺',
-      key: 'boutique',
-      width: 180,
-      render: (record: Order) => {
-        if (record.boutique) {
-          return (
-            <div>
-              <div style={{ fontWeight: 500 }}>{record.boutique.name}</div>
-              {record.boutique.address && (
-                <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
-                  {record.boutique.address}
-                </div>
-              )}
-            </div>
-          );
-        }
-        return <Tag>未分配店铺</Tag>;
-      },
+      title: '客户', key: 'customer', width: 150,
+      render: (record: Order) => (
+        <div>
+          <div>{record.customer?.nick_name || `用户${record.customer?.id || '未知'}`}</div>
+          <div style={{ fontSize: '12px', color: '#666' }}>ID: {record.customer?.id || '-'}</div>
+        </div>
+      )
     },
     {
-      title: '总金额',
-      dataIndex: 'total_price',
-      key: 'total_price',
-      width: 120,
-      render: (price: number) => (
-        <Text strong>¥{price?.toFixed(2) || '0.00'}</Text>
-      ),
+      title: '订单金额', dataIndex: 'total_price', key: 'total_price', width: 120,
+      sorter: (a: Order, b: Order) => (a.total_price || 0) - (b.total_price || 0),
+      render: (price: number) => <Text strong style={{ color: '#ff4d4f' }}>¥{price?.toFixed(2) || '0.00'}</Text>
     },
     {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'status',
-      width: 100,
-      render: (status: string) => (
-        <Tag color={getStatusColor(status)}>
-          {getStatusText(status)}
-        </Tag>
-      ),
+      title: '状态', dataIndex: 'status', key: 'status', width: 100,
+      render: (status: string) => <Tag color={getStatusColor(status)}>{getStatusText(status)}</Tag>
     },
     {
-      title: '创建时间',
-      dataIndex: 'date_created',
-      key: 'date_created',
-      width: 150,
+      title: '创建时间', dataIndex: 'date_created', key: 'date_created', width: 180,
+      sorter: (a: Order, b: Order) => new Date(a.date_created).getTime() - new Date(b.date_created).getTime(),
       render: (date: string) => (
         <div>
-          <ClockCircleOutlined /> {new Date(date).toLocaleDateString()}
+          <div>{new Date(date).toLocaleDateString('zh-CN')}</div>
+          <div style={{ fontSize: '12px', color: '#666' }}>{new Date(date).toLocaleTimeString('zh-CN')}</div>
         </div>
-      ),
+      )
     },
     {
-      title: '操作',
-      key: 'actions',
-      width: 150,
+      title: '操作', key: 'actions', width: 200, fixed: 'right' as const,
       render: (record: Order) => (
-        <Space>
-          <Button
-            type="primary"
-            size="small"
-            icon={<EyeOutlined />}
-            onClick={() => viewOrderDetails(record)}
-          >
-            详情
-          </Button>
-          <Button
-            size="small"
-            icon={<EditOutlined />}
-            onClick={() => handleUpdateStatus(record.id)}
-          >
-            状态
-          </Button>
+        <Space size="small">
+          <Button type="link" size="small" icon={<EyeOutlined />}
+            onClick={() => { setSelectedOrder(record); setDetailModalVisible(true); }}>详情</Button>
+          <Button type="link" size="small" icon={<EditOutlined />}
+            onClick={() => { 
+              setUpdatingOrderId(record.id); 
+              setNewStatus(record.status || ''); 
+              setStatusModalVisible(true); 
+            }}>更新状态</Button>
         </Space>
-      ),
-    },
+      )
+    }
   ];
 
   return (
-    <div style={{ height: '100%', padding: '24px', backgroundColor: '#F9FAFB' }}>
-      {/* 统计卡片 */}
-      <Row gutter={16} style={{ marginBottom: 16 }}>
-        <Col span={6}>
+    <div style={{ padding: '24px', backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
+      {/* 加载骨架屏 */}
+      {loading ? (
+        <>
+          <Row gutter={16} style={{ marginBottom: 24 }}>
+            {[1, 2, 3, 4].map(i => (
+              <Col xs={24} sm={12} md={6} key={i}>
+                <Card><Skeleton active paragraph={{ rows: 1 }} /></Card>
+              </Col>
+            ))}
+          </Row>
           <Card>
-            <Statistic
-              title="总订单数"
-              value={totalOrders}
-              prefix={<ShoppingCartOutlined />}
-            />
+            <Skeleton active paragraph={{ rows: 10 }} />
           </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="待处理订单"
-              value={pendingOrders}
-              prefix={<ClockCircleOutlined />}
-              valueStyle={{ color: '#faad14' }}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="已完成订单"
-              value={completedOrders}
-              prefix={<ShoppingCartOutlined />}
-              valueStyle={{ color: '#52c41a' }}
-            />
-          </Card>
-        </Col>
-        <Col span={6}>
-          <Card>
-            <Statistic
-              title="总收入"
-              value={totalRevenue}
-              prefix={<DollarOutlined />}
-              precision={2}
-              valueStyle={{ color: '#3f8600' }}
-            />
-          </Card>
-        </Col>
-      </Row>
-
-      {/* 搜索和操作栏 */}
-      <div className="mb-6 flex justify-between items-center">
-        <Title level={4} className="mb-0">订单管理</Title>
-        <Space>
-          <BoutiqueSelector
-            value={selectedBoutiqueId}
-            onChange={setSelectedBoutiqueId}
-            placeholder="请选择店铺"
-            style={{ width: 200 }}
-          />
-          <Search
-            placeholder="搜索订单ID、用户或状态"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            style={{ width: 300 }}
-            disabled={!selectedBoutiqueId}
-          />
-          <Button onClick={() => refetch()} disabled={!selectedBoutiqueId}>
-            刷新
-          </Button>
-          <Button 
-            icon={<DownloadOutlined />}
-            onClick={handleExport}
-            disabled={orders.length === 0 || !selectedBoutiqueId}
-          >
-            导出数据
-          </Button>
-        </Space>
-      </div>
-
-      {/* 订单表格 */}
-      {!selectedBoutiqueId ? (
-        <Card>
-          <div style={{ textAlign: 'center', padding: '60px 0' }}>
-            <ShoppingCartOutlined style={{ fontSize: 64, color: '#ccc', marginBottom: 16 }} />
-            <div style={{ fontSize: 16, color: '#666' }}>请先选择一个店铺查看订单数据</div>
-          </div>
-        </Card>
-      ) : (
-        <Table
-          columns={columns}
-          dataSource={filteredOrders}
-          rowKey="id"
-          loading={loading}
-          pagination={{
-            pageSize: 10,
-            showSizeChanger: true,
-            showQuickJumper: true,
-            showTotal: (total) => `共 ${total} 条订单记录`,
-            size: 'default',
-            position: ['bottomCenter']
-          }}
-          scroll={{ y: 'calc(100vh - 280px)' }}
-          size="middle"
+        </>
+      ) : error ? (
+        <Alert message="加载失败" 
+          description={error.message || '获取订单数据失败，请稍后重试'}
+          type="error" showIcon 
+          action={<Button size="small" onClick={() => refetch()}>重试</Button>}
         />
+      ) : (
+        <>
+          <Row gutter={16} style={{ marginBottom: 24 }}>
+            <Col xs={24} sm={12} md={6}>
+              <Card>
+                <Statistic 
+                  title={selectedBoutiqueId || selectedStatus ? "筛选结果" : "总订单数"} 
+                  value={filteredStatistics.totalOrders}
+                  prefix={<ShoppingCartOutlined />}
+                  suffix={selectedBoutiqueId || selectedStatus ? `/ ${statistics.totalOrders}` : ''}
+                  valueStyle={{ color: '#3f8600' }}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Card>
+                <Statistic title="总金额" value={filteredStatistics.totalAmount} precision={2}
+                  prefix={<DollarOutlined />} suffix="元" valueStyle={{ color: '#cf1322' }}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Card>
+                <Statistic title="待处理" value={filteredStatistics.pendingOrders}
+                  prefix={<ClockCircleOutlined />} valueStyle={{ color: '#faad14' }}
+                />
+              </Card>
+            </Col>
+            <Col xs={24} sm={12} md={6}>
+              <Card>
+                <Statistic title="今日订单" value={filteredStatistics.todayOrders}
+                  prefix={<ThunderboltOutlined />} suffix={`/ ¥${filteredStatistics.todayAmount.toFixed(2)}`}
+                  valueStyle={{ color: '#1890ff' }}
+                />
+              </Card>
+            </Col>
+              </Row>
+
+          {connected && (
+            <Alert
+              message={<Space><ThunderboltOutlined style={{ color: '#52c41a' }} /><span>实时监控已启用 - 所有授权店铺的新订单将自动显示并播放提示音</span></Space>}
+              type="success" showIcon={false} closable style={{ marginBottom: 16 }}
+            />
+          )}
+
+          <Card>
+            <div style={{ marginBottom: 16 }}>
+              <Row gutter={16} align="middle">
+                <Col flex="auto">
+                  <Space size="middle" wrap>
+                    <BoutiqueSelector value={selectedBoutiqueId} onChange={setSelectedBoutiqueId} placeholder="全部店铺" style={{ width: 200 }} />
+                    <Select value={selectedStatus} onChange={setSelectedStatus} placeholder="全部状态" style={{ width: 150 }} allowClear>
+                      <Option value="pending">待处理</Option>
+                      <Option value="processing">处理中</Option>
+                      <Option value="completed">已完成</Option>
+                      <Option value="cancelled">已取消</Option>
+                    </Select>
+                    <Search placeholder="搜索订单ID、客户、店铺..." value={searchText} 
+                      onChange={(e) => setSearchText(e.target.value)} style={{ width: 300 }} allowClear />
+                    {(selectedBoutiqueId || selectedStatus || searchText) && (
+                      <Button icon={<FilterOutlined />} onClick={() => { 
+                        setSelectedBoutiqueId(undefined); 
+                        setSelectedStatus(undefined); 
+                        setSearchText(''); 
+                      }}>清除筛选</Button>
+                    )}
+                  </Space>
+                </Col>
+                <Col>
+                  <Space>
+                    <RealtimeIndicator connected={connected} />
+                    <Button icon={<SyncOutlined />} onClick={() => refetch()} loading={loading}>刷新</Button>
+                    <Button type="primary" icon={<DownloadOutlined />} disabled={filteredOrders.length === 0}
+                      onClick={() => { 
+                        if (filteredOrders.length === 0) { message.warning('暂无数据可导出'); return; }
+                        exportOrders(filteredOrders); 
+                        message.success('数据导出成功'); 
+                      }}>导出</Button>
+                  </Space>
+                </Col>
+              </Row>
+            </div>
+
+            {filteredOrders.length === 0 ? (
+              <Empty image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={<span>{orders.length === 0 ? "暂无订单数据" : "没有符合筛选条件的订单"}</span>}>
+                {orders.length === 0 && <Button type="primary" onClick={() => refetch()}>刷新数据</Button>}
+              </Empty>
+            ) : (
+              <Table columns={columns} dataSource={filteredOrders} rowKey="id" loading={false} scroll={{ x: 1300 }}
+                pagination={{ total: filteredOrders.length, pageSize: 10, showSizeChanger: true, 
+                  showQuickJumper: true, showTotal: (total) => `共 ${total} 条记录` }}
+              />
+            )}
+          </Card>
+        </>
       )}
 
-      {/* 订单详情弹窗 */}
-      <Modal
-        title="订单详情"
-        open={detailModalVisible}
-        onCancel={() => setDetailModalVisible(false)}
-        footer={[
-          <Button key="close" onClick={() => setDetailModalVisible(false)}>
-            关闭
-          </Button>,
-        ]}
-        width={800}
-      >
+      <Modal title="订单详情" open={detailModalVisible} onCancel={() => setDetailModalVisible(false)}
+        footer={[<Button key="close" onClick={() => setDetailModalVisible(false)}>关闭</Button>]} width={800}>
         {selectedOrder && (
-          <div>
-            <Descriptions bordered column={2} style={{ marginBottom: 16 }}>
-              <Descriptions.Item label="订单ID" span={2}>
-                <Text code copyable={{ text: selectedOrder.id }}>
-                  {selectedOrder.id}
-                </Text>
-              </Descriptions.Item>
-              <Descriptions.Item label="客户昵称">
-                {selectedOrder.customer?.nick_name || '未设置昵称'}
-              </Descriptions.Item>
-              <Descriptions.Item label="客户ID">
-                {selectedOrder.customer?.id || '未知用户'}
-              </Descriptions.Item>
-              <Descriptions.Item label="总金额">
-                <Text strong style={{ color: '#f50' }}>
-                  ¥{selectedOrder.total_price?.toFixed(2) || '0.00'}
-                </Text>
-              </Descriptions.Item>
-              <Descriptions.Item label="订单状态">
-                <Tag color={getStatusColor(selectedOrder.status || '')}>
-                  {getStatusText(selectedOrder.status || '')}
-                </Tag>
-              </Descriptions.Item>
-              <Descriptions.Item label="创建时间">
-                {selectedOrder.date_created ? new Date(selectedOrder.date_created).toLocaleString() : ''}
-              </Descriptions.Item>
-              <Descriptions.Item label="更新时间">
-                {selectedOrder.date_updated ? new Date(selectedOrder.date_updated).toLocaleString() : ''}
-              </Descriptions.Item>
-            </Descriptions>
-
-            <Divider>订单商品</Divider>
-            <Table
-              columns={[
-                {
-                  title: '商品名称',
-                  key: 'product_name',
-                  render: (record: any) => record.product_id?.name || '未知商品',
-                },
-                {
-                  title: '商品描述',
-                  key: 'product_description',
-                  render: (record: any) => record.product_id?.description || '-',
-                },
-                {
-                  title: '数量',
-                  dataIndex: 'quantity',
-                  key: 'quantity',
-                },
-                {
-                  title: '单价',
-                  dataIndex: 'price',
-                  key: 'price',
-                  render: (price: number) => `¥${price?.toFixed(2) || '0.00'}`,
-                },
-                {
-                  title: '小计',
-                  key: 'subtotal',
-                  render: (record: any) => {
-                    const subtotal = (record.quantity || 0) * (record.price || 0);
-                    return `¥${subtotal.toFixed(2)}`;
-                  },
-                },
-              ]}
-              dataSource={orderItems}
-              rowKey="id"
-              pagination={false}
-              size="small"
-            />
-          </div>
+          <Descriptions bordered column={2}>
+            <Descriptions.Item label="订单ID" span={2}><Text code copyable>{selectedOrder.id}</Text></Descriptions.Item>
+            <Descriptions.Item label="店铺名称">{selectedOrder.boutique?.name || '未知'}</Descriptions.Item>
+            <Descriptions.Item label="店铺地址">{selectedOrder.boutique?.address || '未知'}</Descriptions.Item>
+            <Descriptions.Item label="客户昵称">{selectedOrder.customer?.nick_name || '未知'}</Descriptions.Item>
+            <Descriptions.Item label="客户OpenID"><Text code>{selectedOrder.customer?.open_id || '未知'}</Text></Descriptions.Item>
+            <Descriptions.Item label="订单金额" span={2}>
+              <Text strong style={{ color: '#ff4d4f', fontSize: '18px' }}>¥{selectedOrder.total_price?.toFixed(2) || '0.00'}</Text>
+            </Descriptions.Item>
+            <Descriptions.Item label="订单状态">
+              <Tag color={getStatusColor(selectedOrder.status || '')}>{getStatusText(selectedOrder.status || '')}</Tag>
+            </Descriptions.Item>
+            <Descriptions.Item label="创建时间">{new Date(selectedOrder.date_created).toLocaleString('zh-CN')}</Descriptions.Item>
+            <Descriptions.Item label="更新时间" span={2}>{new Date(selectedOrder.date_updated).toLocaleString('zh-CN')}</Descriptions.Item>
+          </Descriptions>
         )}
       </Modal>
 
-      {/* 更新状态弹窗 */}
-      <Modal
-        title="更新订单状态"
-        open={statusModalVisible}
-        onOk={confirmUpdateStatus}
-        onCancel={() => setStatusModalVisible(false)}
-        okText="确认更新"
-        cancelText="取消"
-      >
-        <div style={{ marginBottom: 16 }}>
-          <label>新状态：</label>
-          <Select
-            value={newStatus}
-            onChange={setNewStatus}
-            style={{ width: '100%', marginTop: 8 }}
-          >
-            <Option value="pending">待处理</Option>
-            <Option value="processing">处理中</Option>
-            <Option value="completed">已完成</Option>
-            <Option value="cancelled">已取消</Option>
-          </Select>
-        </div>
+      <Modal title="更新订单状态" open={statusModalVisible} 
+        onOk={() => {
+          if (updatingOrderId && newStatus) {
+            updateOrderStatus({ variables: { id: updatingOrderId, status: newStatus } });
+          }
+        }}
+        onCancel={() => setStatusModalVisible(false)} okText="确认更新" cancelText="取消">
+        <div style={{ marginBottom: 16 }}><Text>选择新状态：</Text></div>
+        <Select value={newStatus} onChange={setNewStatus} style={{ width: '100%' }}>
+          <Option value="pending">待处理</Option>
+          <Option value="processing">处理中</Option>
+          <Option value="completed">已完成</Option>
+          <Option value="cancelled">已取消</Option>
+        </Select>
       </Modal>
     </div>
   );

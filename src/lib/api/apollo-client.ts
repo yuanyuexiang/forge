@@ -1,10 +1,14 @@
-import { ApolloClient, InMemoryCache, HttpLink, from, fromPromise } from "@apollo/client";
+import { ApolloClient, InMemoryCache, HttpLink, from, fromPromise, split } from "@apollo/client";
 import { setContext } from '@apollo/client/link/context';
 import { onError } from '@apollo/client/link/error';
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { getMainDefinition } from '@apollo/client/utilities';
+import { createClient } from 'graphql-ws';
 import { DIRECTUS_CONFIG } from './directus-config';
 import { TokenManager } from '../auth/token-manager';
 import { getEnvironmentInfo } from '../utils/environment';
 import { authLogger, apiLogger } from '../utils/logger';
+import { wsStatus } from './websocket-status';
 
 // 刷新 token 的函数
 const refreshAccessToken = async (): Promise<string | null> => {
@@ -143,8 +147,80 @@ const createApolloClient = () => {
     }
   });
 
+  // 创建 WebSocket Link（仅在浏览器环境）
+  let wsLink: GraphQLWsLink | null = null;
+  const env = getEnvironmentInfo();
+  
+  if (env.isBrowser) {
+    // 获取 WebSocket URL
+    const getWsUrl = () => {
+      // 本地开发：直接连接到远程 Directus WebSocket (需要支持 CORS)
+      // 生产环境：使用当前域名的 WebSocket
+      if (env.isLocal) {
+        // 本地开发时直接连接到远程服务器
+        return 'wss://forge.kcbaotech.com/graphql';
+      } else {
+        // 生产环境使用相对路径
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        return `${protocol}//${window.location.host}/graphql`;
+      }
+    };
+
+    const wsUrl = getWsUrl();
+    console.log('🔌 初始化 WebSocket 连接:', wsUrl);
+    wsStatus.setStatus('connecting');
+
+    wsLink = new GraphQLWsLink(
+      createClient({
+        url: wsUrl,
+        connectionParams: async () => {
+          const token = TokenManager.getCurrentToken();
+          console.log('🔑 WebSocket 认证:', token ? '已提供 token' : '无 token');
+          return token ? { access_token: token } : {};
+        },
+        // 保持连接活跃
+        keepAlive: 30000,
+        // 自动重连配置
+        retryAttempts: 5,
+        shouldRetry: () => true,
+        on: {
+          connected: () => {
+            console.log('✅ WebSocket 已连接');
+            wsStatus.setStatus('connected');
+            apiLogger.info('WebSocket connected');
+          },
+          closed: () => {
+            console.log('⚠️ WebSocket 已断开');
+            wsStatus.setStatus('disconnected');
+            apiLogger.info('WebSocket closed');
+          },
+          error: (error) => {
+            console.error('❌ WebSocket 错误:', error);
+            wsStatus.setStatus('error');
+            apiLogger.error('WebSocket error', error);
+          },
+        },
+      })
+    );
+  }
+
+  // 使用 split 根据操作类型选择链接
+  const splitLink = wsLink
+    ? split(
+        ({ query }) => {
+          const definition = getMainDefinition(query);
+          return (
+            definition.kind === 'OperationDefinition' &&
+            definition.operation === 'subscription'
+          );
+        },
+        wsLink,
+        from([errorLink, authLink, httpLink])
+      )
+    : from([errorLink, authLink, httpLink]);
+
   return new ApolloClient({
-    link: from([errorLink, authLink, httpLink]),
+    link: splitLink,
     cache: new InMemoryCache({
       typePolicies: {
         // 可以在这里定义缓存策略

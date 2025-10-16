@@ -4743,6 +4743,13 @@ export type GetAllRecentOrdersQueryVariables = Exact<{
 
 export type GetAllRecentOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null } | null }> };
 
+export type GetUserOrdersQueryVariables = Exact<{
+  userId: Scalars['ID']['input'];
+}>;
+
+
+export type GetUserOrdersQuery = { __typename?: 'Query', orders: Array<{ __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+
 export type GetOrdersQueryVariables = Exact<{
   boutiqueId?: InputMaybe<Scalars['GraphQLStringOrFloat']['input']>;
 }>;
@@ -4791,6 +4798,11 @@ export type UpdateOrderStatusMutationVariables = Exact<{
 
 
 export type UpdateOrderStatusMutation = { __typename?: 'Mutation', update_orders_item?: { __typename?: 'orders', id: string, status?: string | null, date_updated?: any | null } | null };
+
+export type OrdersRealtimeSubscriptionVariables = Exact<{ [key: string]: never; }>;
+
+
+export type OrdersRealtimeSubscription = { __typename?: 'Subscription', orders_mutated?: { __typename?: 'orders_mutated', key: string, event?: EventEnum | null, data?: { __typename?: 'orders', id: string, total_price?: number | null, status?: string | null, date_created?: any | null, date_updated?: any | null, customer?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null } | null } | null };
 
 export type GetProductsQueryVariables = Exact<{
   userId?: InputMaybe<Scalars['ID']['input']>;
@@ -6299,6 +6311,68 @@ export type GetAllRecentOrdersQueryHookResult = ReturnType<typeof useGetAllRecen
 export type GetAllRecentOrdersLazyQueryHookResult = ReturnType<typeof useGetAllRecentOrdersLazyQuery>;
 export type GetAllRecentOrdersSuspenseQueryHookResult = ReturnType<typeof useGetAllRecentOrdersSuspenseQuery>;
 export type GetAllRecentOrdersQueryResult = ApolloReactCommon.QueryResult<GetAllRecentOrdersQuery, GetAllRecentOrdersQueryVariables>;
+export const GetUserOrdersDocument = gql`
+    query GetUserOrders($userId: ID!) {
+  orders(filter: {boutique: {user_created: {id: {_eq: $userId}}}}) {
+    id
+    customer {
+      id
+      nick_name
+      open_id
+      avatar
+      sex
+    }
+    boutique {
+      id
+      name
+      address
+    }
+    total_price
+    status
+    date_created
+    date_updated
+    user_created {
+      id
+      first_name
+      last_name
+      email
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetUserOrdersQuery__
+ *
+ * To run a query within a React component, call `useGetUserOrdersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserOrdersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserOrdersQuery({
+ *   variables: {
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useGetUserOrdersQuery(baseOptions: ApolloReactHooks.QueryHookOptions<GetUserOrdersQuery, GetUserOrdersQueryVariables> & ({ variables: GetUserOrdersQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useQuery<GetUserOrdersQuery, GetUserOrdersQueryVariables>(GetUserOrdersDocument, options);
+      }
+export function useGetUserOrdersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GetUserOrdersQuery, GetUserOrdersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useLazyQuery<GetUserOrdersQuery, GetUserOrdersQueryVariables>(GetUserOrdersDocument, options);
+        }
+export function useGetUserOrdersSuspenseQuery(baseOptions?: ApolloReactHooks.SkipToken | ApolloReactHooks.SuspenseQueryHookOptions<GetUserOrdersQuery, GetUserOrdersQueryVariables>) {
+          const options = baseOptions === ApolloReactHooks.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return ApolloReactHooks.useSuspenseQuery<GetUserOrdersQuery, GetUserOrdersQueryVariables>(GetUserOrdersDocument, options);
+        }
+export type GetUserOrdersQueryHookResult = ReturnType<typeof useGetUserOrdersQuery>;
+export type GetUserOrdersLazyQueryHookResult = ReturnType<typeof useGetUserOrdersLazyQuery>;
+export type GetUserOrdersSuspenseQueryHookResult = ReturnType<typeof useGetUserOrdersSuspenseQuery>;
+export type GetUserOrdersQueryResult = ApolloReactCommon.QueryResult<GetUserOrdersQuery, GetUserOrdersQueryVariables>;
 export const GetOrdersDocument = gql`
     query GetOrders($boutiqueId: GraphQLStringOrFloat) {
   orders(filter: {boutique: {id: {_eq: $boutiqueId}}}) {
@@ -6640,6 +6714,55 @@ export function useUpdateOrderStatusMutation(baseOptions?: ApolloReactHooks.Muta
 export type UpdateOrderStatusMutationHookResult = ReturnType<typeof useUpdateOrderStatusMutation>;
 export type UpdateOrderStatusMutationResult = ApolloReactCommon.MutationResult<UpdateOrderStatusMutation>;
 export type UpdateOrderStatusMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdateOrderStatusMutation, UpdateOrderStatusMutationVariables>;
+export const OrdersRealtimeDocument = gql`
+    subscription OrdersRealtime {
+  orders_mutated {
+    key
+    event
+    data {
+      id
+      customer {
+        id
+        nick_name
+        open_id
+        avatar
+        sex
+      }
+      boutique {
+        id
+        name
+        address
+      }
+      total_price
+      status
+      date_created
+      date_updated
+    }
+  }
+}
+    `;
+
+/**
+ * __useOrdersRealtimeSubscription__
+ *
+ * To run a query within a React component, call `useOrdersRealtimeSubscription` and pass it any options that fit your needs.
+ * When your component renders, `useOrdersRealtimeSubscription` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the subscription, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useOrdersRealtimeSubscription({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useOrdersRealtimeSubscription(baseOptions?: ApolloReactHooks.SubscriptionHookOptions<OrdersRealtimeSubscription, OrdersRealtimeSubscriptionVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return ApolloReactHooks.useSubscription<OrdersRealtimeSubscription, OrdersRealtimeSubscriptionVariables>(OrdersRealtimeDocument, options);
+      }
+export type OrdersRealtimeSubscriptionHookResult = ReturnType<typeof useOrdersRealtimeSubscription>;
+export type OrdersRealtimeSubscriptionResult = ApolloReactCommon.SubscriptionResult<OrdersRealtimeSubscription>;
 export const GetProductsDocument = gql`
     query GetProducts($userId: ID) {
   products(filter: {user_created: {id: {_eq: $userId}}}) {
