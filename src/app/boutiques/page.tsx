@@ -12,7 +12,10 @@ import {
   Image,
   Input,
   Rate,
-  Tag
+  Tag,
+  Modal,
+  QRCode,
+  Tooltip
 } from 'antd';
 import { 
   // PlusOutlined, // 新增功能已屏蔽
@@ -23,7 +26,10 @@ import {
   EyeInvisibleOutlined,
   ClockCircleOutlined,
   FileTextOutlined,
-  CheckCircleOutlined
+  CheckCircleOutlined,
+  QrcodeOutlined,
+  CopyOutlined,
+  DownloadOutlined
 } from '@ant-design/icons';
 import { ProtectedRoute, AdminLayout } from '@components';
 import { 
@@ -66,6 +72,11 @@ function BoutiquesContent() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const containerRef = useRef<HTMLDivElement>(null);
+  const qrCanvasContainerRef = useRef<HTMLDivElement>(null);
+
+  // 二维码弹窗状态
+  const [qrVisible, setQrVisible] = useState(false);
+  const [qrBoutique, setQrBoutique] = useState<Boutique | null>(null);
 
   // 获取当前用户 ID
   const [userId, setUserId] = useState<string | null>(null);
@@ -150,6 +161,74 @@ function BoutiquesContent() {
     params.set('scrollPos', currentScrollPos.toString());
     
     router.push(`/boutiques/${id}?return=${encodeURIComponent(params.toString())}`);
+  };
+
+  // 生成店铺二维码链接
+  const buildBoutiqueUrl = (id: string) => {
+    return `https://carture.kcbaotech.com/?boutique_id=${encodeURIComponent(id)}`;
+  };
+
+  // 打开二维码弹窗
+  const handleOpenQr = (record: Boutique) => {
+    if (!record?.id) {
+      message.warning('店铺数据不完整，缺少 ID，无法生成二维码');
+      return;
+    }
+    setQrBoutique(record);
+    setQrVisible(true);
+  };
+
+  // 复制链接
+  const handleCopyLink = async () => {
+    if (!qrBoutique?.id) return;
+    const url = buildBoutiqueUrl(qrBoutique.id);
+    try {
+      await navigator.clipboard.writeText(url);
+      message.success('链接已复制');
+    } catch (e) {
+      message.error('复制失败，请手动复制');
+    }
+  };
+
+  // 下载二维码（尝试读取弹窗内 canvas 导出为图片）
+  const handleDownloadQr = () => {
+    if (!qrCanvasContainerRef.current) return;
+    // 查找容器中的 canvas 或 svg
+    const canvas = qrCanvasContainerRef.current.querySelector('canvas') as HTMLCanvasElement | null;
+    const svg = qrCanvasContainerRef.current.querySelector('svg') as SVGSVGElement | null;
+    if (canvas) {
+      try {
+        const dataUrl = canvas.toDataURL('image/png');
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        a.download = `${qrBoutique?.name || 'boutique'}-qrcode.png`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      } catch (e) {
+        message.warning('无法直接下载，请右键保存二维码');
+      }
+      return;
+    }
+    if (svg) {
+      try {
+        const serializer = new XMLSerializer();
+        const svgString = serializer.serializeToString(svg);
+        const blob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${qrBoutique?.name || 'boutique'}-qrcode.svg`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      } catch (e) {
+        message.warning('无法直接下载，请右键保存二维码');
+      }
+      return;
+    }
+    message.info('未检测到可下载的二维码节点，可尝试截图保存');
   };
 
   // 新增店铺 - 已屏蔽
@@ -400,7 +479,7 @@ function BoutiquesContent() {
     {
       title: '操作',
       key: 'action',
-      width: 100,
+      width: 180,
       render: (_: any, record: Boutique) => (
         <Space size="small">
           <Button
@@ -409,6 +488,13 @@ function BoutiquesContent() {
             onClick={() => handleEditBoutique(record.id)}
           >
             编辑
+          </Button>
+          <Button
+            type="link"
+            icon={<QrcodeOutlined />}
+            onClick={() => handleOpenQr(record)}
+          >
+            二维码
           </Button>
           {/* 删除功能已屏蔽
           <Popconfirm
@@ -476,6 +562,46 @@ function BoutiquesContent() {
           size="middle"
         />
       </div>
+
+      {/* 二维码弹窗 */}
+      <Modal
+        title={
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <QrcodeOutlined />
+            <span>店铺二维码{qrBoutique?.name ? ` - ${qrBoutique?.name}` : ''}</span>
+          </div>
+        }
+        open={qrVisible}
+        onCancel={() => setQrVisible(false)}
+        footer={[
+          <Button key="copy" icon={<CopyOutlined />} onClick={handleCopyLink}>复制链接</Button>,
+          <Button key="download" icon={<DownloadOutlined />} onClick={handleDownloadQr}>下载二维码</Button>,
+          <Button key="close" onClick={() => setQrVisible(false)}>关闭</Button>,
+        ]}
+        destroyOnClose
+      >
+        {qrBoutique?.id ? (
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
+            <div ref={qrCanvasContainerRef}>
+              <QRCode
+                value={buildBoutiqueUrl(qrBoutique.id)}
+                size={220}
+                // color 与 bgColor 可按需求定制
+                // color="#000000"
+                // bgColor="#ffffff"
+              />
+            </div>
+            <Tooltip title="点击复制链接">
+              <Button type="link" onClick={handleCopyLink} style={{ padding: 0 }}>
+                {buildBoutiqueUrl(qrBoutique.id)}
+              </Button>
+            </Tooltip>
+            <div style={{ color: '#999' }}>提示：若无法下载，请右键/长按保存二维码图片</div>
+          </div>
+        ) : (
+          <div>无法生成二维码，缺少店铺 ID</div>
+        )}
+      </Modal>
     </div>
   );
 }
