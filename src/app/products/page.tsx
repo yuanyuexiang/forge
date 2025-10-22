@@ -304,6 +304,13 @@ function ProductsContent() {
       sorter: (a: Product, b: Product) => (a.stock || 0) - (b.stock || 0),
     },
     {
+      title: '摆放位置',
+      dataIndex: 'location',
+      key: 'location',
+      width: 150,
+      render: (location: string) => location || '-',
+    },
+    {
       title: '状态',
       dataIndex: 'status',
       key: 'status',

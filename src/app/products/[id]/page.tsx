@@ -170,6 +170,7 @@ function ProductEditContent() {
         market_price: foundProduct.market_price,
         stock: foundProduct.stock,
         barcode: foundProduct.barcode,
+        location: foundProduct.location,
         category_id: foundProduct.category_id?.id,
         boutique_id: foundProduct.boutique_id?.id,
         status: foundProduct.status,
@@ -433,6 +434,7 @@ function ProductEditContent() {
           market_price: values.market_price ? Number(values.market_price) : null,
           stock: Number(values.stock),
           barcode: values.barcode || '',
+          location: values.location || '',
           category_id: categoryData,
           boutique_id: boutiqueData,
           status: values.status,
@@ -561,7 +563,6 @@ function ProductEditContent() {
                     label="价格"
                     name="price"
                     rules={[
-                      { required: true, message: '请输入价格' },
                       { type: 'number', min: 0, message: '价格不能为负数' }
                     ]}
                   >
@@ -601,7 +602,6 @@ function ProductEditContent() {
                     label="库存"
                     name="stock"
                     rules={[
-                      { required: true, message: '请输入库存数量' },
                       { type: 'number', min: 0, message: '库存不能为负数' }
                     ]}
                   >
@@ -623,6 +623,13 @@ function ProductEditContent() {
                   </Form.Item>
                 </Col>
               </Row>
+
+              <Form.Item
+                label="摆放位置"
+                name="location"
+              >
+                <Input placeholder="请输入商品摆放位置（如：A区货架3层）" size="large" />
+              </Form.Item>
 
               <Form.Item
                 label="商品视频"
