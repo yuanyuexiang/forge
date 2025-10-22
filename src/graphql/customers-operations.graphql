@@ -7,6 +7,7 @@ query GetCustomers($boutiqueId: GraphQLStringOrFloat) {
     nick_name
     full_name
     contact
+    address
     open_id
     avatar
     sex
@@ -42,6 +43,7 @@ query GetAllCustomers {
     nick_name
     full_name
     contact
+    address
     open_id
     avatar
     sex
@@ -70,6 +72,9 @@ query GetCustomerById($id: ID!) {
   customers_by_id(id: $id) {
     id
     nick_name
+    full_name
+    contact
+    address
     open_id
     avatar
     sex
@@ -98,6 +103,9 @@ mutation CreateCustomer($data: create_customers_input!) {
   create_customers_item(data: $data) {
     id
     nick_name
+    full_name
+    contact
+    address
     open_id
     avatar
     sex
@@ -116,6 +124,7 @@ mutation UpdateCustomer($id: ID!, $data: update_customers_input!) {
     nick_name
     full_name
     contact
+    address
     open_id
     avatar
     sex

@@ -4706,26 +4706,26 @@ export type GetCustomersQueryVariables = Exact<{
 }>;
 
 
-export type GetCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null }> };
+export type GetCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, address?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, boutique?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null } | null }> };
 
 export type GetAllCustomersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetAllCustomersQuery = { __typename?: 'Query', customers: Array<{ __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, address?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetCustomerByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetCustomerByIdQuery = { __typename?: 'Query', customers_by_id?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
+export type GetCustomerByIdQuery = { __typename?: 'Query', customers_by_id?: { __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, address?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null, user_updated?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null } | null };
 
 export type CreateCustomerMutationVariables = Exact<{
   data: Create_Customers_Input;
 }>;
 
 
-export type CreateCustomerMutation = { __typename?: 'Mutation', create_customers_item?: { __typename?: 'customers', id: string, nick_name?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+export type CreateCustomerMutation = { __typename?: 'Mutation', create_customers_item?: { __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, address?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
 
 export type UpdateCustomerMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4733,7 +4733,7 @@ export type UpdateCustomerMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCustomerMutation = { __typename?: 'Mutation', update_customers_item?: { __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+export type UpdateCustomerMutation = { __typename?: 'Mutation', update_customers_item?: { __typename?: 'customers', id: string, nick_name?: string | null, full_name?: string | null, contact?: string | null, address?: string | null, open_id: string, avatar?: string | null, sex?: number | null, status?: string | null, type?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
 
 export type DeleteCustomerMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -5774,6 +5774,7 @@ export const GetCustomersDocument = gql`
     nick_name
     full_name
     contact
+    address
     open_id
     avatar
     sex
@@ -5842,6 +5843,7 @@ export const GetAllCustomersDocument = gql`
     nick_name
     full_name
     contact
+    address
     open_id
     avatar
     sex
@@ -5902,6 +5904,9 @@ export const GetCustomerByIdDocument = gql`
   customers_by_id(id: $id) {
     id
     nick_name
+    full_name
+    contact
+    address
     open_id
     avatar
     sex
@@ -5963,6 +5968,9 @@ export const CreateCustomerDocument = gql`
   create_customers_item(data: $data) {
     id
     nick_name
+    full_name
+    contact
+    address
     open_id
     avatar
     sex
@@ -6007,6 +6015,7 @@ export const UpdateCustomerDocument = gql`
     nick_name
     full_name
     contact
+    address
     open_id
     avatar
     sex

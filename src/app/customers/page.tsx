@@ -82,6 +82,7 @@ function CustomersContent() {
         user.nick_name?.toLowerCase().includes(searchText.toLowerCase()) ||
         user.full_name?.toLowerCase().includes(searchText.toLowerCase()) ||
         user.contact?.toLowerCase().includes(searchText.toLowerCase()) ||
+        user.address?.toLowerCase().includes(searchText.toLowerCase()) ||
         user.open_id?.toLowerCase().includes(searchText.toLowerCase())
       );
     }
@@ -134,12 +135,13 @@ function CustomersContent() {
     }
   };
 
-  // 编辑客户
+    // 编辑客户
   const handleEdit = (customer: Customer) => {
     setEditingCustomer(customer);
     form.setFieldsValue({
       full_name: customer.full_name || '',
       contact: customer.contact || '',
+      address: customer.address || '',
     });
     setEditModalVisible(true);
   };
@@ -155,6 +157,7 @@ function CustomersContent() {
           data: {
             full_name: values.full_name,
             contact: values.contact,
+            address: values.address || '',
           },
         },
       });
@@ -166,7 +169,7 @@ function CustomersContent() {
       refetch();
     } catch (error) {
       console.error('更新失败:', error);
-      message.error('更新失败，请稍后重试');
+      message.error('更新失败,请稍后重试');
     }
   };
 
@@ -181,6 +184,7 @@ function CustomersContent() {
       '微信昵称': user.nick_name || '',
       '真实姓名': user.full_name || '',
       '联系方式': user.contact || '',
+      '邮寄地址': user.address || '',
       'OpenID': user.open_id || '',
       '性别': getSexText(user.sex),
       '状态': getStatusText(user.status),
@@ -227,6 +231,22 @@ function CustomersContent() {
       render: (contact: string) => (
         contact ? (
           <Text>{contact}</Text>
+        ) : (
+          <Text type="secondary">未填写</Text>
+        )
+      ),
+    },
+    {
+      title: '邮寄地址',
+      dataIndex: 'address',
+      key: 'address',
+      width: 250,
+      ellipsis: {
+        showTitle: false,
+      },
+      render: (address: string) => (
+        address ? (
+          <Text ellipsis={{ tooltip: address }}>{address}</Text>
         ) : (
           <Text type="secondary">未填写</Text>
         )
@@ -372,9 +392,9 @@ function CustomersContent() {
               style={{ width: 200 }}
             />
             <Search
-              placeholder="搜索昵称、姓名、联系方式或OpenID"
+              placeholder="搜索昵称、姓名、联系方式、地址或OpenID"
               allowClear
-              style={{ width: 300 }}
+              style={{ width: 350 }}
               onSearch={setSearchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
@@ -446,6 +466,9 @@ function CustomersContent() {
               </Descriptions.Item>
               <Descriptions.Item label="联系方式">
                 {selectedUser.contact || '未填写'}
+              </Descriptions.Item>
+              <Descriptions.Item label="邮寄地址" span={2}>
+                {selectedUser.address || '未填写'}
               </Descriptions.Item>
               <Descriptions.Item label="OpenID">
                 <Text code style={{ fontSize: '12px' }}>
@@ -533,7 +556,7 @@ function CustomersContent() {
               <Form.Item
                 label="真实姓名"
                 name="full_name"
-                extra="客户的真实姓名，便于管理"
+                extra="客户的真实姓名,便于管理"
               >
                 <Input placeholder="请输入客户真实姓名" />
               </Form.Item>
@@ -548,6 +571,17 @@ function CustomersContent() {
               </Form.Item>
             </Col>
           </Row>
+
+          <Form.Item
+            label="邮寄地址"
+            name="address"
+            extra="用于邮寄商品的详细地址"
+          >
+            <Input.TextArea 
+              placeholder="请输入客户邮寄地址(如:XX省XX市XX区XX街道XX号)" 
+              rows={3}
+            />
+          </Form.Item>
 
           <Form.Item>
             <Space>
