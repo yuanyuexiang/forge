@@ -54,6 +54,7 @@ type boutiques {
   contact: String
   expire_date: Date
   expire_date_func: datetime_functions
+  official_account_image: String
 }
 
 input boutiques_filter {
@@ -78,6 +79,7 @@ input boutiques_filter {
   contact: string_filter_operators
   expire_date: date_filter_operators
   expire_date_func: datetime_function_filter_operators
+  official_account_image: string_filter_operators
   _and: [boutiques_filter]
   _or: [boutiques_filter]
 }

@@ -42,6 +42,7 @@ type boutiques {
   contact: String
   expire_date: Date
   expire_date_func: datetime_functions
+  official_account_image: String
 }
 
 type boutiques_aggregated {
@@ -75,6 +76,7 @@ type boutiques_aggregated_count {
   category: Int
   contact: Int
   expire_date: Int
+  official_account_image: Int
 }
 
 type boutiques_aggregated_fields {
@@ -105,6 +107,7 @@ input boutiques_filter {
   contact: string_filter_operators
   expire_date: date_filter_operators
   expire_date_func: datetime_function_filter_operators
+  official_account_image: string_filter_operators
   _and: [boutiques_filter]
   _or: [boutiques_filter]
 }
@@ -206,6 +209,7 @@ input create_boutiques_input {
   category: String
   contact: String
   expire_date: Date
+  official_account_image: String
 }
 
 input create_categories_input {
@@ -2103,6 +2107,7 @@ input update_boutiques_input {
   category: String
   contact: String
   expire_date: Date
+  official_account_image: String
 }
 
 input update_categories_input {
@@ -2374,6 +2379,7 @@ type version_boutiques {
   category: String
   contact: String
   expire_date: Date
+  official_account_image: String
 }
 
 type version_categories {

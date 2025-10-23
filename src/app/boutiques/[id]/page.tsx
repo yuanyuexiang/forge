@@ -62,8 +62,10 @@ function BoutiqueEditContent() {
   // 图片上传相关状态
   const [mainImageList, setMainImageList] = useState<any[]>([]);
   const [imageList, setImageList] = useState<any[]>([]);
+  const [officialAccountImageList, setOfficialAccountImageList] = useState<any[]>([]);
   const [mainImageUploading, setMainImageUploading] = useState(false);
   const [imagesUploading, setImagesUploading] = useState(false);
+  const [officialAccountImageUploading, setOfficialAccountImageUploading] = useState(false);
 
   // 省市级联选择器数据
   const [cascaderOptions, setCascaderOptions] = useState<any[]>([]);
@@ -174,6 +176,7 @@ function BoutiqueEditContent() {
         status: foundBoutique.status,
         sort: foundBoutique.sort,
         main_image: foundBoutique.main_image || '',
+        official_account_image: foundBoutique.official_account_image || '',
         images: foundBoutique.images || []
       });
 
@@ -184,6 +187,16 @@ function BoutiqueEditContent() {
           name: '主图',
           status: 'done',
           url: getImageUrl(foundBoutique.main_image)
+        }]);
+      }
+
+      // 初始化公众号二维码图片
+      if (foundBoutique.official_account_image) {
+        setOfficialAccountImageList([{
+          uid: foundBoutique.official_account_image,
+          name: '公众号二维码',
+          status: 'done',
+          url: getImageUrl(foundBoutique.official_account_image)
         }]);
       }
 
@@ -258,6 +271,56 @@ function BoutiqueEditContent() {
     return false;
   }, [form, getImageUrl]);
 
+  // 公众号二维码图片上传处理
+  const handleOfficialAccountImageUpload = useCallback(async (file: File) => {
+    setOfficialAccountImageUploading(true);
+    try {
+      // 使用TokenManager获取有效令牌
+      const authToken = await TokenManager.getValidToken();
+
+      if (!authToken) {
+        throw new Error('未找到认证令牌，请重新登录');
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('上传失败');
+      }
+
+      const result = await response.json();
+      const fileId = result.data.id;
+
+      // 更新表单值
+      form.setFieldValue('official_account_image', fileId);
+
+      // 更新上传列表
+      setOfficialAccountImageList([{
+        uid: fileId,
+        name: file.name,
+        status: 'done',
+        url: getImageUrl(fileId)
+      }]);
+
+      message.success('公众号二维码上传成功');
+    } catch (error) {
+      console.error('公众号二维码上传失败:', error);
+      message.error('公众号二维码上传失败');
+    } finally {
+      setOfficialAccountImageUploading(false);
+    }
+    return false;
+  }, [form, getImageUrl]);
+
   // 店铺图片上传处理
   const handleImagesUpload = useCallback(async (file: File) => {
     setImagesUploading(true);
@@ -311,10 +374,13 @@ function BoutiqueEditContent() {
   }, [form, getImageUrl, imageList]);
 
   // 删除图片处理
-  const handleRemoveImage = useCallback((file: any, isMainImage: boolean) => {
-    if (isMainImage) {
+  const handleRemoveImage = useCallback((file: any, imageType: 'main' | 'gallery' | 'officialAccount') => {
+    if (imageType === 'main') {
       setMainImageList([]);
       form.setFieldValue('main_image', '');
+    } else if (imageType === 'officialAccount') {
+      setOfficialAccountImageList([]);
+      form.setFieldValue('official_account_image', '');
     } else {
       const newImageList = imageList.filter(item => item.uid !== file.uid);
       setImageList(newImageList);
@@ -326,6 +392,11 @@ function BoutiqueEditContent() {
   // 主图变化处理
   const handleMainImageChange = useCallback(({ fileList }: any) => {
     setMainImageList(fileList);
+  }, []);
+
+  // 公众号二维码图片变化处理
+  const handleOfficialAccountImageChange = useCallback(({ fileList }: any) => {
+    setOfficialAccountImageList(fileList);
   }, []);
 
   // 店铺图片变化处理
@@ -362,6 +433,7 @@ function BoutiqueEditContent() {
         status: values.status || 'open',
         sort: values.sort || 0,
         main_image: values.main_image || null,
+        official_account_image: values.official_account_image || null,
         images: values.images && values.images.length > 0 ? values.images : null,
       };
 
@@ -560,7 +632,7 @@ function BoutiqueEditContent() {
                   listType="picture-card"
                   fileList={mainImageList}
                   beforeUpload={handleMainImageUpload}
-                  onRemove={(file) => handleRemoveImage(file, true)}
+                  onRemove={(file) => handleRemoveImage(file, 'main')}
                   onChange={handleMainImageChange}
                   maxCount={1}
                   accept="image/*"
@@ -580,6 +652,36 @@ function BoutiqueEditContent() {
               </Form.Item>
 
               <Form.Item
+                label="公众号二维码"
+                tooltip="店铺公众号的二维码图片"
+              >
+                <Form.Item name="official_account_image" hidden>
+                  <Input />
+                </Form.Item>
+                <Upload
+                  listType="picture-card"
+                  fileList={officialAccountImageList}
+                  beforeUpload={handleOfficialAccountImageUpload}
+                  onRemove={(file) => handleRemoveImage(file, 'officialAccount')}
+                  onChange={handleOfficialAccountImageChange}
+                  maxCount={1}
+                  accept="image/*"
+                  showUploadList={{
+                    showPreviewIcon: true,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false
+                  }}
+                >
+                  {officialAccountImageList.length < 1 && (
+                    <div>
+                      {officialAccountImageUploading ? <LoadingOutlined /> : <UploadOutlined />}
+                      <div style={{ marginTop: 8 }}>上传二维码</div>
+                    </div>
+                  )}
+                </Upload>
+              </Form.Item>
+
+              <Form.Item
                 label="店铺图片"
                 tooltip="店铺的详细图片，支持多张"
               >
@@ -590,7 +692,7 @@ function BoutiqueEditContent() {
                   listType="picture-card"
                   fileList={imageList}
                   beforeUpload={handleImagesUpload}
-                  onRemove={(file) => handleRemoveImage(file, false)}
+                  onRemove={(file) => handleRemoveImage(file, 'gallery')}
                   onChange={handleImagesChange}
                   maxCount={10}
                   accept="image/*"

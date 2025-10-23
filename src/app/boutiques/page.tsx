@@ -288,7 +288,7 @@ function BoutiquesContent() {
       title: '店铺图片',
       dataIndex: 'main_image',
       key: 'main_image',
-      width: 80,
+      width: 100,
       render: (main_image: string, record: Boutique) => {
         // 开发环境调试日志
         if (process.env.NODE_ENV === 'development') {
