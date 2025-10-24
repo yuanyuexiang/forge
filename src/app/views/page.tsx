@@ -269,7 +269,6 @@ export default function ViewsPage() {
         const dateB = b.date_created ? new Date(b.date_created).getTime() : 0;
         return dateB - dateA; // 降序排列，最新的在前面
       },
-      defaultSortOrder: 'descend' as const,
     },
   ];
 
