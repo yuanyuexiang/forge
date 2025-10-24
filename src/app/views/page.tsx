@@ -83,6 +83,13 @@ export default function ViewsPage() {
     return matchesSearch && matchesDate;
   });
 
+  // 对过滤后的记录按时间倒序排序（最新的在最前面）
+  const sortedViews = [...filteredViews].sort((a, b) => {
+    const dateA = a.date_created ? new Date(a.date_created).getTime() : 0;
+    const dateB = b.date_created ? new Date(b.date_created).getTime() : 0;
+    return dateB - dateA; // 降序：最新的记录在最前面
+  });
+
   // 计算统计数据
   const totalViews = views.length;
   const uniqueCustomers = new Set(views.map(v => v.customer?.id).filter(Boolean)).size;
@@ -467,11 +474,11 @@ export default function ViewsPage() {
             <Card title="浏览记录详情">
               <Table
                 columns={columns}
-                dataSource={filteredViews}
+                dataSource={sortedViews}
                 rowKey="id"
                 loading={loading}
                 pagination={{
-                  total: filteredViews.length,
+                  total: sortedViews.length,
                   showSizeChanger: true,
                   showQuickJumper: true,
                   showTotal: (total, range) => 

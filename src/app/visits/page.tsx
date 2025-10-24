@@ -90,6 +90,13 @@ export default function VisitsPage() {
     return matchesSearch && matchesDate && matchesBoutique;
   });
 
+  // 对过滤后的记录按时间倒序排序（最新的在最前面）
+  const sortedVisits = [...filteredVisits].sort((a, b) => {
+    const dateA = a.date_created ? new Date(a.date_created).getTime() : 0;
+    const dateB = b.date_created ? new Date(b.date_created).getTime() : 0;
+    return dateB - dateA; // 降序：最新的记录在最前面
+  });
+
   // 计算统计数据
   const totalVisits = visits.length;
   const uniqueCustomers = new Set(visits.map(v => v.customer?.id).filter(Boolean)).size;
@@ -482,11 +489,11 @@ export default function VisitsPage() {
           <Card title="访问记录详情">
             <Table
               columns={columns}
-              dataSource={filteredVisits}
+              dataSource={sortedVisits}
               rowKey="id"
               loading={loading}
               pagination={{
-                total: filteredVisits.length,
+                total: sortedVisits.length,
                 showSizeChanger: true,
                 showQuickJumper: true,
                 showTotal: (total, range) => 
