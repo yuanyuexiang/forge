@@ -201,6 +201,7 @@ function CustomersContent() {
     {
       title: '用户信息',
       key: 'userInfo',
+      width: 250,
       render: (record: Customer) => (
         <Space>
           <Avatar 
@@ -228,6 +229,7 @@ function CustomersContent() {
       title: '联系方式',
       dataIndex: 'contact',
       key: 'contact',
+      width: 150,
       render: (contact: string) => (
         contact ? (
           <Text>{contact}</Text>
@@ -256,6 +258,7 @@ function CustomersContent() {
       title: 'OpenID',
       dataIndex: 'open_id',
       key: 'open_id',
+      width: 180,
       render: (openId: string) => (
         <Text code style={{ fontSize: '12px' }}>
           {openId ? openId.substring(0, 20) + '...' : '未设置'}
@@ -266,6 +269,8 @@ function CustomersContent() {
       title: '性别',
       dataIndex: 'sex',
       key: 'sex',
+      width: 80,
+      align: 'center' as const,
       render: (sex: number) => (
         <div>
           {sex === 1 ? (
@@ -282,6 +287,8 @@ function CustomersContent() {
       title: '状态',
       dataIndex: 'status',
       key: 'status',
+      width: 90,
+      align: 'center' as const,
       render: (status: string) => {
         const color = status === 'active' ? 'success' : 
                      status === 'inactive' ? 'warning' : 
@@ -293,11 +300,13 @@ function CustomersContent() {
       title: '注册时间',
       dataIndex: 'date_created',
       key: 'date_created',
+      width: 120,
       render: (date: string) => new Date(date).toLocaleDateString('zh-CN'),
     },
     {
       title: '店铺',
       key: 'boutique',
+      width: 150,
       render: (record: Customer) => (
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <ShopOutlined />
@@ -308,6 +317,8 @@ function CustomersContent() {
     {
       title: '操作',
       key: 'actions',
+      width: 150,
+      fixed: 'right' as const,
       render: (record: Customer) => (
         <Space size="middle">
           <Button 
