@@ -30,6 +30,7 @@ function OrdersContent() {
   const [searchText, setSearchText] = useState('');
   const [selectedBoutiqueId, setSelectedBoutiqueId] = useState<string | undefined>(undefined);
   const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined);
+  const [processingOrderId, setProcessingOrderId] = useState<string | null>(null);
 
   const { orders, loading, error, statistics, refetch, connected } = useRealtimeOrders(true);
 
@@ -96,6 +97,28 @@ function OrdersContent() {
       case 'completed': return '已完成';
       case 'cancelled': return '已取消';
       default: return status;
+    }
+  };
+
+  // 快速处理订单（将状态改为已完成）
+  const handleProcessOrder = async (orderId: string) => {
+    try {
+      setProcessingOrderId(orderId);
+      
+      await updateOrderStatus({
+        variables: {
+          id: orderId,
+          status: 'completed'
+        }
+      });
+      
+      message.success('订单已处理完成');
+      refetch();
+    } catch (error) {
+      console.error('处理订单失败:', error);
+      message.error('处理订单失败');
+    } finally {
+      setProcessingOrderId(null);
     }
   };
 
@@ -167,7 +190,7 @@ function OrdersContent() {
       )
     },
     {
-      title: '操作', key: 'actions', width: 200, fixed: 'right' as const,
+      title: '操作', key: 'actions', width: 240, fixed: 'right' as const,
       render: (record: Order) => (
         <Space size="small">
           <Button type="link" size="small" icon={<EyeOutlined />}
@@ -178,6 +201,20 @@ function OrdersContent() {
               setNewStatus(record.status || ''); 
               setStatusModalVisible(true); 
             }}>更新状态</Button>
+          
+          {/* 处理按钮 */}
+          {record.status !== 'completed' ? (
+            <Button 
+              type="primary" 
+              size="small"
+              onClick={() => handleProcessOrder(record.id)}
+              loading={processingOrderId === record.id}
+            >
+              处理
+            </Button>
+          ) : (
+            <Tag color="green">已处理</Tag>
+          )}
         </Space>
       )
     }
