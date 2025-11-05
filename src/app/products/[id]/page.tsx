@@ -64,6 +64,10 @@ function ProductEditContent() {
   const [mainImageUploading, setMainImageUploading] = useState(false);
   const [imagesUploading, setImagesUploading] = useState(false);
 
+  // 视频上传相关状态
+  const [videoList, setVideoList] = useState<any[]>([]);
+  const [videoUploading, setVideoUploading] = useState(false);
+
   const isEditMode = params.id !== 'new';
 
   // 获取当前用户 ID
@@ -152,6 +156,12 @@ function ProductEditContent() {
     return FILE_CONFIG.getAssetUrl(imageId);
   }, []);
 
+  // 获取视频 URL
+  const getVideoUrl = useCallback((fileId: string) => {
+    if (!fileId) return '';
+    return FILE_CONFIG.getFileUrl(fileId);
+  }, []);
+
   // 获取商品数据
   const fetchProduct = () => {
     if (!isEditMode || !productsData) return;
@@ -208,6 +218,16 @@ function ProductEditContent() {
           }
         }));
         setImageList(imagesList);
+      }
+
+      // 初始化商品视频
+      if (foundProduct.video_url) {
+        setVideoList([{
+          uid: foundProduct.video_url,
+          name: '商品视频',
+          status: 'done',
+          url: getVideoUrl(foundProduct.video_url),
+        }]);
       }
     } else if (isEditMode) {
       message.error('商品不存在');
@@ -355,6 +375,84 @@ function ProductEditContent() {
   // 商品图片变化处理
   const handleImagesChange = useCallback(({ fileList }: any) => {
     setImageList(fileList);
+  }, []);
+
+  // 视频上传处理
+  const handleVideoUpload = useCallback(async (file: File) => {
+    // 验证文件类型
+    if (!file.type.startsWith('video/')) {
+      message.error('请上传视频文件');
+      return false;
+    }
+
+    // 验证文件大小（100MB）
+    const maxSize = 100 * 1024 * 1024;
+    if (file.size > maxSize) {
+      message.error('视频文件不能超过 100MB');
+      return false;
+    }
+
+    setVideoUploading(true);
+    try {
+      const authToken = await TokenManager.getValidToken();
+
+      if (!authToken) {
+        throw new Error('未找到认证令牌，请重新登录');
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('上传失败');
+      }
+
+      const result = await response.json();
+      const fileId = result.data.id;
+
+      // 更新表单值
+      form.setFieldValue('video_url', fileId);
+
+      // 更新上传列表
+      setVideoList([{
+        uid: fileId,
+        name: file.name,
+        status: 'done',
+        url: getVideoUrl(fileId),
+      }]);
+
+      message.success('视频上传成功');
+    } catch (error) {
+      console.error('视频上传失败:', error);
+      message.error('视频上传失败');
+    } finally {
+      setVideoUploading(false);
+    }
+    return false;
+  }, [form, getVideoUrl]);
+
+  // 视频移除处理
+  const handleRemoveVideo = useCallback(() => {
+    setVideoList([]);
+    form.setFieldValue('video_url', '');
+    message.success('视频已移除');
+    return true;
+  }, [form]);
+
+  // 视频列表变化处理
+  const handleVideoChange = useCallback((info: any) => {
+    let newFileList = [...info.fileList];
+    // 只保留最新的一个文件
+    newFileList = newFileList.slice(-1);
+    setVideoList(newFileList);
   }, []);
 
   // 预览处理 - 使用原图
@@ -633,9 +731,53 @@ function ProductEditContent() {
 
               <Form.Item
                 label="商品视频"
-                name="video_url"
+                tooltip="上传商品展示视频，支持 MP4、MOV、AVI 等格式，最大 100MB"
               >
-                <Input placeholder="请输入视频URL" size="large" />
+                <Form.Item name="video_url" hidden>
+                  <Input />
+                </Form.Item>
+                <Upload
+                  listType="picture-card"
+                  fileList={videoList}
+                  beforeUpload={handleVideoUpload}
+                  onRemove={handleRemoveVideo}
+                  onChange={handleVideoChange}
+                  maxCount={1}
+                  accept="video/*"
+                  showUploadList={{
+                    showPreviewIcon: false,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false
+                  }}
+                >
+                  {videoList.length < 1 && (
+                    <div>
+                      {videoUploading ? <LoadingOutlined /> : <UploadOutlined />}
+                      <div style={{ marginTop: 8 }}>上传视频</div>
+                      <div style={{ fontSize: 12, color: '#999', marginTop: 4 }}>
+                        最大 100MB
+                      </div>
+                    </div>
+                  )}
+                </Upload>
+                
+                {/* 视频预览 */}
+                {videoList.length > 0 && videoList[0].url && (
+                  <div style={{ marginTop: 16 }}>
+                    <video 
+                      src={videoList[0].url} 
+                      controls
+                      style={{ 
+                        width: '100%', 
+                        maxWidth: 500,
+                        borderRadius: 8,
+                        border: '1px solid #d9d9d9'
+                      }}
+                    >
+                      您的浏览器不支持视频播放
+                    </video>
+                  </div>
+                )}
               </Form.Item>
             </Form>
           </Card>

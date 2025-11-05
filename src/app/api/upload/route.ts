@@ -14,19 +14,24 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 验证文件类型
-    if (!file.type.startsWith('image/')) {
+    // 验证文件类型（支持图片和视频）
+    const isImage = file.type.startsWith('image/');
+    const isVideo = file.type.startsWith('video/');
+
+    if (!isImage && !isVideo) {
       return NextResponse.json(
-        { error: '只支持图片文件' },
+        { error: '只支持图片和视频文件' },
         { status: 400 }
       );
     }
 
-    // 验证文件大小 (最大 10MB)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    // 验证文件大小（图片最大 10MB，视频最大 100MB）
+    const maxSize = isVideo ? 100 * 1024 * 1024 : 10 * 1024 * 1024;
+    const maxSizeText = isVideo ? '100MB' : '10MB';
+    
     if (file.size > maxSize) {
       return NextResponse.json(
-        { error: '文件大小不能超过 10MB' },
+        { error: `文件大小不能超过 ${maxSizeText}` },
         { status: 400 }
       );
     }
