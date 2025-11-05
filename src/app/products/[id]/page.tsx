@@ -162,6 +162,46 @@ function ProductEditContent() {
     return FILE_CONFIG.getFileUrl(fileId);
   }, []);
 
+  // 提取视频第一帧作为缩略图
+  const extractVideoThumbnail = useCallback((videoUrl: string): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const video = document.createElement('video');
+      video.crossOrigin = 'anonymous';
+      video.src = videoUrl;
+      video.preload = 'metadata';
+      
+      video.onloadedmetadata = () => {
+        // 跳到第1秒（避免第0秒可能是黑屏）
+        video.currentTime = Math.min(1, video.duration);
+      };
+      
+      video.onseeked = () => {
+        try {
+          const canvas = document.createElement('canvas');
+          canvas.width = video.videoWidth;
+          canvas.height = video.videoHeight;
+          
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            
+            // 转为 base64 图片（JPEG 格式，质量 0.8）
+            const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
+            resolve(thumbnailUrl);
+          } else {
+            reject(new Error('无法创建 Canvas 上下文'));
+          }
+        } catch (error) {
+          reject(error);
+        }
+      };
+      
+      video.onerror = () => {
+        reject(new Error('视频加载失败'));
+      };
+    });
+  }, []);
+
   // 获取商品数据
   const fetchProduct = () => {
     if (!isEditMode || !productsData) return;
@@ -222,12 +262,31 @@ function ProductEditContent() {
 
       // 初始化商品视频
       if (foundProduct.video_url) {
+        const videoUrl = getVideoUrl(foundProduct.video_url);
+        
+        // 先设置基本信息
         setVideoList([{
           uid: foundProduct.video_url,
           name: '商品视频',
           status: 'done',
-          url: getVideoUrl(foundProduct.video_url),
+          url: videoUrl,
         }]);
+        
+        // 异步提取缩略图
+        extractVideoThumbnail(videoUrl)
+          .then(thumbnailUrl => {
+            setVideoList([{
+              uid: foundProduct.video_url,
+              name: '商品视频',
+              status: 'done',
+              url: videoUrl,
+              thumbUrl: thumbnailUrl, // 添加缩略图
+            }]);
+          })
+          .catch(error => {
+            console.warn('提取视频缩略图失败:', error);
+            // 保持原有视频列表不变
+          });
       }
     } else if (isEditMode) {
       message.error('商品不存在');
@@ -421,13 +480,31 @@ function ProductEditContent() {
       // 更新表单值
       form.setFieldValue('video_url', fileId);
 
-      // 更新上传列表
-      setVideoList([{
-        uid: fileId,
-        name: file.name,
-        status: 'done',
-        url: getVideoUrl(fileId),
-      }]);
+      const videoUrl = getVideoUrl(fileId);
+
+      // 提取视频第一帧作为缩略图
+      try {
+        const thumbnailUrl = await extractVideoThumbnail(videoUrl);
+        
+        // 更新上传列表（带缩略图）
+        setVideoList([{
+          uid: fileId,
+          name: file.name,
+          status: 'done',
+          url: videoUrl,
+          thumbUrl: thumbnailUrl, // 使用提取的缩略图
+        }]);
+      } catch (thumbnailError) {
+        console.warn('提取视频缩略图失败，使用默认显示:', thumbnailError);
+        
+        // 如果提取失败，仍然添加视频但没有缩略图
+        setVideoList([{
+          uid: fileId,
+          name: file.name,
+          status: 'done',
+          url: videoUrl,
+        }]);
+      }
 
       message.success('视频上传成功');
     } catch (error) {
@@ -437,7 +514,7 @@ function ProductEditContent() {
       setVideoUploading(false);
     }
     return false;
-  }, [form, getVideoUrl]);
+  }, [form, getVideoUrl, extractVideoThumbnail]);
 
   // 视频移除处理
   const handleRemoveVideo = useCallback(() => {
@@ -453,6 +530,15 @@ function ProductEditContent() {
     // 只保留最新的一个文件
     newFileList = newFileList.slice(-1);
     setVideoList(newFileList);
+  }, []);
+
+  // 视频预览处理 - 在新窗口播放视频
+  const handleVideoPreview = useCallback((file: any) => {
+    const videoUrl = file.url;
+    if (videoUrl) {
+      // 在新窗口中打开视频
+      window.open(videoUrl, '_blank');
+    }
   }, []);
 
   // 预览处理 - 使用原图
@@ -742,10 +828,11 @@ function ProductEditContent() {
                   beforeUpload={handleVideoUpload}
                   onRemove={handleRemoveVideo}
                   onChange={handleVideoChange}
+                  onPreview={handleVideoPreview}
                   maxCount={1}
                   accept="video/*"
                   showUploadList={{
-                    showPreviewIcon: false,
+                    showPreviewIcon: true, // 启用预览图标
                     showRemoveIcon: true,
                     showDownloadIcon: false
                   }}
