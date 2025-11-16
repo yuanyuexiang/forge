@@ -162,6 +162,50 @@ function ProductEditContent() {
     return FILE_CONFIG.getFileUrl(fileId);
   }, []);
 
+  // 规范化 images 字段 - 处理 JSON 字段的各种可能格式
+  const normalizeImages = useCallback((raw: any): string[] => {
+    if (!raw) return [];
+    
+    // 已经是数组
+    if (Array.isArray(raw)) {
+      return raw.filter(id => typeof id === 'string' && id.trim());
+    }
+    
+    // 字符串类型
+    if (typeof raw === 'string') {
+      const trimmed = raw.trim();
+      if (!trimmed) return [];
+      
+      // JSON 字符串数组: "[\"id1\",\"id2\"]"
+      if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          if (Array.isArray(parsed)) {
+            return parsed.filter(id => typeof id === 'string' && id.trim());
+          }
+        } catch (e) {
+          console.warn('解析 JSON 数组失败:', e);
+        }
+      }
+      
+      // 逗号分隔字符串: "id1,id2,id3"
+      if (trimmed.includes(',')) {
+        return trimmed.split(',').map(s => s.trim()).filter(Boolean);
+      }
+      
+      // 单个 ID
+      return [trimmed];
+    }
+    
+    // 对象形式: {0: "id1", 1: "id2"}
+    if (typeof raw === 'object' && raw !== null) {
+      const values = Object.values(raw);
+      return values.filter(v => typeof v === 'string' && v.trim()) as string[];
+    }
+    
+    return [];
+  }, []);
+
   // 提取视频第一帧作为缩略图
   const extractVideoThumbnail = useCallback((videoUrl: string): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -246,8 +290,13 @@ function ProductEditContent() {
       }
 
       // 初始化商品图片
-      if (foundProduct.images && Array.isArray(foundProduct.images)) {
-        const imagesList = foundProduct.images.map((imageId: string, index: number) => ({
+      console.log('🔍 DEBUG: foundProduct.images =>', foundProduct.images, 'typeof =>', typeof foundProduct.images);
+      
+      const imageIds = normalizeImages(foundProduct.images);
+      console.log('📦 规范化后的图片 IDs:', imageIds);
+      
+      if (imageIds.length > 0) {
+        const imagesList = imageIds.map((imageId: string, index: number) => ({
           uid: `${imageId}-${index}`,
           name: `图片${index + 1}`,
           status: 'done',
@@ -258,6 +307,15 @@ function ProductEditContent() {
           }
         }));
         setImageList(imagesList);
+        
+        // 同步表单字段，确保保存时数据正确
+        form.setFieldValue('images', imageIds);
+        
+        console.log('✅ 商品图片已初始化:', imagesList.length, '张');
+      } else {
+        console.warn('⚠️ 商品图片字段为空或格式无法识别');
+        setImageList([]);
+        form.setFieldValue('images', []);
       }
 
       // 初始化商品视频
@@ -396,7 +454,10 @@ function ProductEditContent() {
         // 如果uid包含'-'，则提取imageId部分，否则直接使用uid
         return uid.includes('-') ? uid.split('-')[0] : uid;
       });
-      form.setFieldValue('images', imageIds);
+      
+      // 去重并清洗数据
+      const cleanedImageIds = [...new Set(imageIds.filter(id => id && id.trim()))];
+      form.setFieldValue('images', cleanedImageIds);
 
       message.success('图片上传成功');
     } catch (error) {
@@ -422,7 +483,10 @@ function ProductEditContent() {
         // 如果uid包含'-'，则提取imageId部分，否则直接使用uid
         return uid.includes('-') ? uid.split('-')[0] : uid;
       });
-      form.setFieldValue('images', imageIds);
+      
+      // 去重并清洗数据
+      const cleanedImageIds = [...new Set(imageIds.filter(id => id && id.trim()))];
+      form.setFieldValue('images', cleanedImageIds);
     }
   }, [form, imageList]);
 
@@ -558,6 +622,11 @@ function ProductEditContent() {
       // 为创建和更新使用不同的数据格式
       if (isEditMode) {
         // 更新商品 - 使用对象格式
+        // 清洗并去重 images 数组
+        const cleanedImages = Array.isArray(values.images) 
+          ? [...new Set(values.images.filter((id: any) => id && typeof id === 'string' && id.trim()))] 
+          : [];
+          
         const updateData = {
           name: values.name,
           subtitle: values.subtitle || '',
@@ -571,7 +640,7 @@ function ProductEditContent() {
           boutique_id: values.boutique_id ? { id: values.boutique_id } : null,
           status: values.status,
           main_image: values.main_image || '',
-          images: values.images || [],
+          images: cleanedImages,
           video_url: values.video_url || '',
           is_on_sale: Boolean(values.is_on_sale),
           carousel: values.carousel || 'out'
@@ -609,6 +678,11 @@ function ProductEditContent() {
           }
         }
 
+        // 清洗并去重 images 数组
+        const cleanedImages = Array.isArray(values.images) 
+          ? [...new Set(values.images.filter((id: any) => id && typeof id === 'string' && id.trim()))] 
+          : [];
+
         const createData = {
           name: values.name,
           subtitle: values.subtitle || '',
@@ -623,7 +697,7 @@ function ProductEditContent() {
           boutique_id: boutiqueData,
           status: values.status,
           main_image: values.main_image || '',
-          images: values.images || [],
+          images: cleanedImages,
           video_url: values.video_url || '',
           is_on_sale: Boolean(values.is_on_sale),
           carousel: values.carousel || 'out'
