@@ -249,6 +249,8 @@ function ProductEditContent() {
 
       // 初始化商品图片
       if (foundProduct.images && Array.isArray(foundProduct.images) && foundProduct.images.length > 0) {
+        console.log('🔄 初始化商品图片:', foundProduct.images);
+        
         const imagesList = foundProduct.images.map((imageId: string, index: number) => ({
           uid: `${imageId}-${index}`,
           name: `图片${index + 1}`,
@@ -260,6 +262,10 @@ function ProductEditContent() {
           }
         }));
         setImageList(imagesList);
+        
+        // 重要：同步更新表单字段
+        form.setFieldValue('images', foundProduct.images);
+        console.log('✅ 商品图片已初始化，同步到表单:', foundProduct.images);
       }
 
       // 初始化商品视频
@@ -392,15 +398,25 @@ function ProductEditContent() {
       }];
       setImageList(newImageList);
 
+      console.log('📤 上传成功 - newImageList:', newImageList);
+
       // 更新表单值 - 从uid中提取真实的imageId
       const imageIds = newImageList.map(img => {
         const uid = img.uid;
-        // 如果uid包含'-'，则提取imageId部分，否则直接使用uid
-        return uid.includes('-') ? uid.split('-')[0] : uid;
+        console.log('📤 提取 ID from uid:', uid);
+        // uid格式: "fileId-index"，需要去掉最后的 -index 部分
+        const lastDashIndex = uid.lastIndexOf('-');
+        const extractedId = lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
+        console.log('📤 提取的 imageId:', extractedId);
+        return extractedId;
       });
+      
+      console.log('📤 所有 imageIds:', imageIds);
       
       // 去重并清洗数据
       const cleanedImageIds = [...new Set(imageIds.filter(id => id && id.trim()))];
+      console.log('📤 清洗后的 cleanedImageIds:', cleanedImageIds);
+      
       form.setFieldValue('images', cleanedImageIds);
 
       message.success('图片上传成功');
@@ -421,15 +437,23 @@ function ProductEditContent() {
     } else {
       const newImageList = imageList.filter(item => item.uid !== file.uid);
       setImageList(newImageList);
-      // 从uid中提取真实的imageId (格式: imageId-index)
-      const imageIds = newImageList.map(img => {
-        const uid = img.uid;
-        // 如果uid包含'-'，则提取imageId部分，否则直接使用uid
-        return uid.includes('-') ? uid.split('-')[0] : uid;
-      });
+      // 从uid中提取真实的imageId (格式: fileId-index)
+      const imageIds = newImageList
+        .filter(img => img.status === 'done') // 只处理上传完成的文件
+        .map(img => {
+          const uid = img.uid;
+          // 跳过 rc-upload- 开头的临时 UID
+          if (uid.startsWith('rc-upload-')) {
+            return null;
+          }
+          // uid格式: "fileId-index"，需要去掉最后的 -index 部分
+          const lastDashIndex = uid.lastIndexOf('-');
+          return lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
+        })
+        .filter((id: string | null) => id && id.trim()); // 过滤掉 null 和空字符串
       
       // 去重并清洗数据
-      const cleanedImageIds = [...new Set(imageIds.filter(id => id && id.trim()))];
+      const cleanedImageIds = [...new Set(imageIds)];
       form.setFieldValue('images', cleanedImageIds);
     }
   }, [form, imageList]);
@@ -441,19 +465,11 @@ function ProductEditContent() {
 
   // 商品图片变化处理
   const handleImagesChange = useCallback(({ fileList }: any) => {
+    console.log('📸 handleImagesChange 被调用，只更新显示列表');
     setImageList(fileList);
-    
-    // 同步更新表单字段
-    const imageIds = fileList.map((img: any) => {
-      const uid = img.uid;
-      // 如果uid包含'-'，则提取imageId部分，否则直接使用uid
-      return uid.includes('-') ? uid.split('-')[0] : uid;
-    });
-    
-    // 去重并清洗数据
-    const cleanedImageIds = [...new Set(imageIds.filter((id: string) => id && id.trim()))];
-    form.setFieldValue('images', cleanedImageIds);
-  }, [form]);
+    // 不在这里更新表单字段，因为可能包含上传中的文件
+    // 表单字段在 handleImagesUpload 和 handleRemoveImage 中更新
+  }, []);
 
   // 视频上传处理
   const handleVideoUpload = useCallback(async (file: File) => {
@@ -562,8 +578,10 @@ function ProductEditContent() {
 
   // 预览处理 - 使用原图
   const handlePreview = useCallback((file: any) => {
-    // 从uid中提取真实的imageId
-    const imageId = file.uid.includes('-') ? file.uid.split('-')[0] : file.uid;
+    // 从uid中提取真实的imageId (格式: fileId-index)
+    const uid = file.uid;
+    const lastDashIndex = uid.lastIndexOf('-');
+    const imageId = lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
     const originalUrl = file.preview?.src || getOriginalImageUrl(imageId);
     window.open(originalUrl, '_blank');
   }, [getOriginalImageUrl]);
@@ -573,6 +591,10 @@ function ProductEditContent() {
     try {
       const values = await form.validateFields();
       setSaving(true);
+
+      console.log('💾 保存商品 - 表单所有字段:', values);
+      console.log('💾 保存商品 - images 字段值:', values.images);
+      console.log('💾 保存商品 - images 类型:', typeof values.images, 'isArray:', Array.isArray(values.images));
 
       // 为创建和更新使用不同的数据格式
       if (isEditMode) {
