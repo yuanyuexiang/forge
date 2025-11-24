@@ -442,7 +442,18 @@ function ProductEditContent() {
   // 商品图片变化处理
   const handleImagesChange = useCallback(({ fileList }: any) => {
     setImageList(fileList);
-  }, []);
+    
+    // 同步更新表单字段
+    const imageIds = fileList.map((img: any) => {
+      const uid = img.uid;
+      // 如果uid包含'-'，则提取imageId部分，否则直接使用uid
+      return uid.includes('-') ? uid.split('-')[0] : uid;
+    });
+    
+    // 去重并清洗数据
+    const cleanedImageIds = [...new Set(imageIds.filter((id: string) => id && id.trim()))];
+    form.setFieldValue('images', cleanedImageIds);
+  }, [form]);
 
   // 视频上传处理
   const handleVideoUpload = useCallback(async (file: File) => {
