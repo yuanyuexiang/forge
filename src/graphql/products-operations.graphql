@@ -1,8 +1,8 @@
 # 产品相关的GraphQL操作
 
-# 查询所有产品（带权限过滤）
+# 查询所有产品（带权限过滤 - 通过店铺关联）
 query GetProducts($userId: ID) {
-  products(filter: { user_created: { id: { _eq: $userId } } }) {
+  products(filter: { boutique_id: { user_created: { id: { _eq: $userId } } } }) {
     id
     name
     subtitle

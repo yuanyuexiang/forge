@@ -6814,7 +6814,7 @@ export type OrdersRealtimeSubscriptionHookResult = ReturnType<typeof useOrdersRe
 export type OrdersRealtimeSubscriptionResult = ApolloReactCommon.SubscriptionResult<OrdersRealtimeSubscription>;
 export const GetProductsDocument = gql`
     query GetProducts($userId: ID) {
-  products(filter: {user_created: {id: {_eq: $userId}}}) {
+  products(filter: {boutique_id: {user_created: {id: {_eq: $userId}}}}) {
     id
     name
     subtitle
