@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Form, Input, Button, Card, Typography, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
@@ -94,48 +95,46 @@ export default function LoginPage() {
       {/* 左侧品牌区域 */}
       <div className="login-page-left">
         <div className="flex flex-col items-center mb-10">
-          <div className="login-logo-circle">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="none">
-              <path
-                d="M30 12L48 21v18L30 48 12 39V21l18-9z"
-                fill="none"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M12 21l18 9 18-9M30 30v18"
-                stroke="white"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+          <div className="login-logo-circle" style={{ marginBottom: '24px' }}>
+            <Image 
+              src="/logo.png" 
+              alt="Kaichenbao Technology Logo" 
+              width={80} 
+              height={80}
+              priority
+            />
           </div>
           <h1 
-            className="text-5xl font-light m-0"
+            className="text-4xl font-light m-0"
             style={{
-              textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-              letterSpacing: '2px',
-              color: '#C5A46D'
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
+              letterSpacing: '1px',
+              color: '#FFFFFF',
+              fontFamily: 'Georgia, serif'
             }}
           >
-            Forge Luxury
+            Kaichenbao Technology
           </h1>
           <p 
-            className="text-lg font-light mt-2"
-            style={{ color: 'rgba(249, 250, 251, 0.8)' }}
+            className="text-xl font-light mt-3"
+            style={{ color: 'rgba(249, 250, 251, 0.95)', letterSpacing: '0.5px' }}
           >
-            实体店产品展示系统
+            实体店商品智能展销系统
           </p>
         </div>
         
-        <div className="text-center max-w-sm">
+        <div className="text-center max-w-md">
           <p 
             className="text-base leading-relaxed"
-            style={{ opacity: '0.8', color: '#F9FAFB' }}
+            style={{ opacity: '0.9', color: '#F9FAFB', marginBottom: '8px' }}
           >
-            专业的精品服饰管理平台，为您的高端业务提供卓越的管理体验
+            致力于创造充满丰富和充实体验的精彩生活
+          </p>
+          <p 
+            className="text-base leading-relaxed"
+            style={{ opacity: '0.9', color: '#F9FAFB' }}
+          >
+            优雅、艺术、品位的全面展示
           </p>
         </div>
       </div>

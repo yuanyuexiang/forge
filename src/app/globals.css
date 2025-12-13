@@ -35,9 +35,6 @@ body {
 .login-page-container {
   min-height: 100vh;
   display: flex;
-  background: linear-gradient(135deg, #111827 0%, #1F2937 50%, #374151 100%);
-  background-size: 400% 400%;
-  animation: gradientShift 20s ease infinite;
 }
 
 .login-page-left {
@@ -49,6 +46,7 @@ body {
   padding: 4rem;
   color: #F9FAFB;
   min-height: 100vh;
+  background: url('/background.png') center center / cover no-repeat;
 }
 
 .login-page-right {
