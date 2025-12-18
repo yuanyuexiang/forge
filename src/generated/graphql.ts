@@ -1155,6 +1155,7 @@ export type Boutiques = {
   id: Scalars['ID']['output'];
   images?: Maybe<Scalars['JSON']['output']>;
   images_func?: Maybe<Count_Functions>;
+  logo?: Maybe<Scalars['String']['output']>;
   main_image?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   official_account_image?: Maybe<Scalars['String']['output']>;
@@ -1211,6 +1212,7 @@ export type Boutiques_Aggregated_Count = {
   expire_date?: Maybe<Scalars['Int']['output']>;
   id?: Maybe<Scalars['Int']['output']>;
   images?: Maybe<Scalars['Int']['output']>;
+  logo?: Maybe<Scalars['Int']['output']>;
   main_image?: Maybe<Scalars['Int']['output']>;
   name?: Maybe<Scalars['Int']['output']>;
   official_account_image?: Maybe<Scalars['Int']['output']>;
@@ -1245,6 +1247,7 @@ export type Boutiques_Filter = {
   id?: InputMaybe<Number_Filter_Operators>;
   images?: InputMaybe<String_Filter_Operators>;
   images_func?: InputMaybe<Count_Function_Filter_Operators>;
+  logo?: InputMaybe<String_Filter_Operators>;
   main_image?: InputMaybe<String_Filter_Operators>;
   name?: InputMaybe<String_Filter_Operators>;
   official_account_image?: InputMaybe<String_Filter_Operators>;
@@ -1392,6 +1395,7 @@ export type Create_Boutiques_Input = {
   expire_date?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   images?: InputMaybe<Scalars['JSON']['input']>;
+  logo?: InputMaybe<Scalars['String']['input']>;
   main_image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   official_account_image?: InputMaybe<Scalars['String']['input']>;
@@ -3849,6 +3853,7 @@ export type Update_Boutiques_Input = {
   expire_date?: InputMaybe<Scalars['Date']['input']>;
   id?: InputMaybe<Scalars['ID']['input']>;
   images?: InputMaybe<Scalars['JSON']['input']>;
+  logo?: InputMaybe<Scalars['String']['input']>;
   main_image?: InputMaybe<Scalars['String']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   official_account_image?: InputMaybe<Scalars['String']['input']>;
@@ -4121,6 +4126,7 @@ export type Version_Boutiques = {
   expire_date?: Maybe<Scalars['Date']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   images?: Maybe<Scalars['JSON']['output']>;
+  logo?: Maybe<Scalars['String']['output']>;
   main_image?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   official_account_image?: Maybe<Scalars['String']['output']>;
@@ -4630,26 +4636,26 @@ export type GetBoutiquesQueryVariables = Exact<{
 }>;
 
 
-export type GetBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, logo?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetAllBoutiquesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
+export type GetAllBoutiquesQuery = { __typename?: 'Query', boutiques: Array<{ __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, logo?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null, user_created?: { __typename?: 'directus_users', id: string, first_name?: string | null, last_name?: string | null, email?: string | null } | null }> };
 
 export type GetBoutiqueByIdQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
 
 
-export type GetBoutiqueByIdQuery = { __typename?: 'Query', boutiques_by_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
+export type GetBoutiqueByIdQuery = { __typename?: 'Query', boutiques_by_id?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, logo?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null, date_updated?: any | null } | null };
 
 export type CreateBoutiqueMutationVariables = Exact<{
   data: Create_Boutiques_Input;
 }>;
 
 
-export type CreateBoutiqueMutation = { __typename?: 'Mutation', create_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null } | null };
+export type CreateBoutiqueMutation = { __typename?: 'Mutation', create_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, logo?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_created?: any | null } | null };
 
 export type UpdateBoutiqueMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -4657,7 +4663,7 @@ export type UpdateBoutiqueMutationVariables = Exact<{
 }>;
 
 
-export type UpdateBoutiqueMutation = { __typename?: 'Mutation', update_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_updated?: any | null } | null };
+export type UpdateBoutiqueMutation = { __typename?: 'Mutation', update_boutiques_item?: { __typename?: 'boutiques', id: string, name?: string | null, address?: string | null, city?: string | null, code?: string | null, category?: string | null, contact?: string | null, expire_date?: any | null, main_image?: string | null, logo?: string | null, official_account_image?: string | null, images?: any | null, stars?: number | null, status?: string | null, sort?: number | null, date_updated?: any | null } | null };
 
 export type DeleteBoutiqueMutationVariables = Exact<{
   id: Scalars['ID']['input'];
@@ -5210,6 +5216,7 @@ export const GetBoutiquesDocument = gql`
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars
@@ -5271,6 +5278,7 @@ export const GetAllBoutiquesDocument = gql`
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars
@@ -5331,6 +5339,7 @@ export const GetBoutiqueByIdDocument = gql`
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars
@@ -5386,6 +5395,7 @@ export const CreateBoutiqueDocument = gql`
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars
@@ -5433,6 +5443,7 @@ export const UpdateBoutiqueDocument = gql`
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars

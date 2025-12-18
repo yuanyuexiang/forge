@@ -28,7 +28,7 @@ import {
 } from '@ant-design/icons';
 import { ProtectedRoute } from '@components/auth';
 import { AdminLayout } from '@components/layout';
-import { 
+import {
   useGetBoutiquesQuery,
   useCreateBoutiqueMutation,
   useUpdateBoutiqueMutation,
@@ -36,9 +36,9 @@ import {
 } from '@generated/graphql';
 import { TokenManager } from '@lib/auth';
 import { FILE_CONFIG } from '@lib/api';
-import { 
-  CHINA_PROVINCES, 
-  getFullAddressByCityName, 
+import {
+  CHINA_PROVINCES,
+  getFullAddressByCityName,
   parseFullAddress,
   type Province,
   type City
@@ -58,12 +58,14 @@ function BoutiqueEditContent() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [boutique, setBoutique] = useState<Boutique | null>(null);
-  
+
   // 图片上传相关状态
   const [mainImageList, setMainImageList] = useState<any[]>([]);
+  const [logoImageList, setLogoImageList] = useState<any[]>([]);
   const [imageList, setImageList] = useState<any[]>([]);
   const [officialAccountImageList, setOfficialAccountImageList] = useState<any[]>([]);
   const [mainImageUploading, setMainImageUploading] = useState(false);
+  const [logoImageUploading, setLogoImageUploading] = useState(false);
   const [imagesUploading, setImagesUploading] = useState(false);
   const [officialAccountImageUploading, setOfficialAccountImageUploading] = useState(false);
 
@@ -87,7 +89,7 @@ function BoutiqueEditContent() {
 
   // 获取当前用户 ID
   const [userId, setUserId] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const currentUserId = TokenManager.getCurrentUserId();
     setUserId(currentUserId);
@@ -98,7 +100,7 @@ function BoutiqueEditContent() {
     variables: userId ? { userId } : undefined,
     skip: !userId
   });
-  
+
   // 创建店铺
   const [createBoutique] = useCreateBoutiqueMutation({
     onCompleted: () => {
@@ -149,11 +151,11 @@ function BoutiqueEditContent() {
   // 获取店铺数据
   const fetchBoutique = () => {
     if (!isEditMode || !boutiquesData) return;
-    
+
     const foundBoutique = boutiques.find((b: Boutique) => b.id === params.id);
     if (foundBoutique) {
       setBoutique(foundBoutique);
-      
+
       // 处理省市数据 - 从城市字段解析省市信息
       let cityCascaderValue: string[] = [];
       if (foundBoutique.city) {
@@ -162,7 +164,7 @@ function BoutiqueEditContent() {
           cityCascaderValue = [parsed.province.code, parsed.city.code];
         }
       }
-      
+
       // 初始化表单数据
       form.setFieldsValue({
         name: foundBoutique.name,
@@ -176,6 +178,7 @@ function BoutiqueEditContent() {
         status: foundBoutique.status,
         sort: foundBoutique.sort,
         main_image: foundBoutique.main_image || '',
+        logo: foundBoutique.logo || '',
         official_account_image: foundBoutique.official_account_image || '',
         images: foundBoutique.images || []
       });
@@ -187,6 +190,16 @@ function BoutiqueEditContent() {
           name: '主图',
           status: 'done',
           url: getImageUrl(foundBoutique.main_image)
+        }]);
+      }
+
+      // 初始化商户Logo
+      if (foundBoutique.logo) {
+        setLogoImageList([{
+          uid: foundBoutique.logo,
+          name: '商户Logo',
+          status: 'done',
+          url: getImageUrl(foundBoutique.logo)
         }]);
       }
 
@@ -267,6 +280,56 @@ function BoutiqueEditContent() {
       message.error('主图上传失败');
     } finally {
       setMainImageUploading(false);
+    }
+    return false;
+  }, [form, getImageUrl]);
+
+  // Logo上传处理
+  const handleLogoUpload = useCallback(async (file: File) => {
+    setLogoImageUploading(true);
+    try {
+      // 使用TokenManager获取有效令牌
+      const authToken = await TokenManager.getValidToken();
+
+      if (!authToken) {
+        throw new Error('未找到认证令牌，请重新登录');
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('上传失败');
+      }
+
+      const result = await response.json();
+      const fileId = result.data.id;
+
+      // 更新表单值
+      form.setFieldValue('logo', fileId);
+
+      // 更新上传列表
+      setLogoImageList([{
+        uid: fileId,
+        name: file.name,
+        status: 'done',
+        url: getImageUrl(fileId)
+      }]);
+
+      message.success('商户Logo上传成功');
+    } catch (error) {
+      console.error('商户Logo上传失败:', error);
+      message.error('商户Logo上传失败');
+    } finally {
+      setLogoImageUploading(false);
     }
     return false;
   }, [form, getImageUrl]);
@@ -374,10 +437,13 @@ function BoutiqueEditContent() {
   }, [form, getImageUrl, imageList]);
 
   // 删除图片处理
-  const handleRemoveImage = useCallback((file: any, imageType: 'main' | 'gallery' | 'officialAccount') => {
+  const handleRemoveImage = useCallback((file: any, imageType: 'main' | 'logo' | 'gallery' | 'officialAccount') => {
     if (imageType === 'main') {
       setMainImageList([]);
       form.setFieldValue('main_image', '');
+    } else if (imageType === 'logo') {
+      setLogoImageList([]);
+      form.setFieldValue('logo', '');
     } else if (imageType === 'officialAccount') {
       setOfficialAccountImageList([]);
       form.setFieldValue('official_account_image', '');
@@ -392,6 +458,11 @@ function BoutiqueEditContent() {
   // 主图变化处理
   const handleMainImageChange = useCallback(({ fileList }: any) => {
     setMainImageList(fileList);
+  }, []);
+
+  // Logo变化处理
+  const handleLogoChange = useCallback(({ fileList }: any) => {
+    setLogoImageList(fileList);
   }, []);
 
   // 公众号二维码图片变化处理
@@ -409,7 +480,7 @@ function BoutiqueEditContent() {
     try {
       setSaving(true);
       const values = await form.validateFields();
-      
+
       // 处理省市级联数据 - 将级联选择的值转换为完整地址
       let cityValue = values.city;
       if (Array.isArray(values.city) && values.city.length === 2) {
@@ -420,7 +491,7 @@ function BoutiqueEditContent() {
           cityValue = `${province.name} ${city.name}`;
         }
       }
-      
+
       const submitData = {
         name: values.name,
         address: values.address,
@@ -433,6 +504,7 @@ function BoutiqueEditContent() {
         status: values.status || 'open',
         sort: values.sort || 0,
         main_image: values.main_image || null,
+        logo: values.logo || null,
         official_account_image: values.official_account_image || null,
         images: values.images && values.images.length > 0 ? values.images : null,
       };
@@ -479,11 +551,11 @@ function BoutiqueEditContent() {
 
   if (loading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '400px' 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '400px'
       }}>
         <Spin size="large" />
       </div>
@@ -495,8 +567,8 @@ function BoutiqueEditContent() {
       {/* 头部 */}
       <div className="mb-6 flex justify-between items-center">
         <div className="flex items-center">
-          <Button 
-            icon={<ArrowLeftOutlined />} 
+          <Button
+            icon={<ArrowLeftOutlined />}
             onClick={handleBack}
             style={{ marginRight: 16 }}
           >
@@ -510,8 +582,8 @@ function BoutiqueEditContent() {
           <Button onClick={handleBack}>
             取消
           </Button>
-          <Button 
-            type="primary" 
+          <Button
+            type="primary"
             icon={<SaveOutlined />}
             loading={saving}
             onClick={handleSave}
@@ -556,7 +628,7 @@ function BoutiqueEditContent() {
                   size="large"
                   showSearch={{
                     filter: (inputValue, path) => {
-                      return path.some(option => 
+                      return path.some(option =>
                         (option.label as string).toLowerCase().indexOf(inputValue.toLowerCase()) > -1
                       );
                     }
@@ -597,7 +669,7 @@ function BoutiqueEditContent() {
                 label="店铺评分"
                 name="stars"
               >
-                <InputNumber 
+                <InputNumber
                   min={1}
                   max={5}
                   placeholder="请输入店铺评分 (1-5)"
@@ -609,8 +681,8 @@ function BoutiqueEditContent() {
                 label="排序权重"
                 name="sort"
               >
-                <InputNumber 
-                  placeholder="数值越大排序越靠前" 
+                <InputNumber
+                  placeholder="数值越大排序越靠前"
                   style={{ width: '100%' }}
                   size="large"
                   min={0}
@@ -646,6 +718,36 @@ function BoutiqueEditContent() {
                     <div>
                       {mainImageUploading ? <LoadingOutlined /> : <UploadOutlined />}
                       <div style={{ marginTop: 8 }}>上传主图</div>
+                    </div>
+                  )}
+                </Upload>
+              </Form.Item>
+
+              <Form.Item
+                label="商户Logo"
+                tooltip="店铺的商户标识图片"
+              >
+                <Form.Item name="logo" hidden>
+                  <Input />
+                </Form.Item>
+                <Upload
+                  listType="picture-card"
+                  fileList={logoImageList}
+                  beforeUpload={handleLogoUpload}
+                  onRemove={(file) => handleRemoveImage(file, 'logo')}
+                  onChange={handleLogoChange}
+                  maxCount={1}
+                  accept="image/*"
+                  showUploadList={{
+                    showPreviewIcon: true,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false
+                  }}
+                >
+                  {logoImageList.length < 1 && (
+                    <div>
+                      {logoImageUploading ? <LoadingOutlined /> : <UploadOutlined />}
+                      <div style={{ marginTop: 8 }}>上传Logo</div>
                     </div>
                   )}
                 </Upload>

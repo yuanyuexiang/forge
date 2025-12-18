@@ -12,6 +12,7 @@ query GetBoutiques($userId: ID) {
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars
@@ -40,6 +41,7 @@ query GetAllBoutiques {
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars
@@ -68,6 +70,7 @@ query GetBoutiqueById($id: ID!) {
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars
@@ -90,6 +93,7 @@ mutation CreateBoutique($data: create_boutiques_input!) {
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars
@@ -111,6 +115,7 @@ mutation UpdateBoutique($id: ID!, $data: update_boutiques_input!) {
     contact
     expire_date
     main_image
+    logo
     official_account_image
     images
     stars
