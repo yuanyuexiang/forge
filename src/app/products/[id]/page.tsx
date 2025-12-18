@@ -231,7 +231,7 @@ function ProductEditContent() {
         main_image: foundProduct.main_image,
         images: foundProduct.images,
         video_url: foundProduct.video_url,
-        is_on_sale: foundProduct.is_on_sale,
+
 
         carousel: foundProduct.carousel || 'out',
         carousel_images: foundProduct.carousel_images
@@ -268,7 +268,7 @@ function ProductEditContent() {
         setImageList(imagesList);
 
         // 重要：同步更新表单字段
-        form.setFieldValue('images', foundProduct.images);
+        // form.setFieldValue('images', foundProduct.images);
         form.setFieldValue('images', foundProduct.images);
         console.log('✅ 商品图片已初始化，同步到表单:', foundProduct.images);
       }
@@ -290,7 +290,7 @@ function ProductEditContent() {
         setCarouselImageList(cImagesList);
 
         // 重要：同步更新表单字段
-        form.setFieldValue('carousel_images', foundProduct.carousel_images);
+        // form.setFieldValue('carousel_images', foundProduct.carousel_images);
         console.log('✅ 轮播图片已初始化，同步到表单:', foundProduct.carousel_images);
       }
 
@@ -411,49 +411,32 @@ function ProductEditContent() {
       const result = await response.json();
       const fileId = result.data.id;
 
-      // 更新图片列表
-      const newImageList = [...imageList, {
-        uid: `${fileId}-${imageList.length}`,
-        name: file.name,
-        status: 'done',
-        url: getImageUrl(fileId),
-        thumbUrl: getImageUrl(fileId),
-        preview: {
-          src: getOriginalImageUrl(fileId)
-        }
-      }];
-      setImageList(newImageList);
-
-      console.log('📤 上传成功 - newImageList:', newImageList);
-
-      // 更新表单值 - 从uid中提取真实的imageId
-      const imageIds = newImageList.map(img => {
-        const uid = img.uid;
-        console.log('📤 提取 ID from uid:', uid);
-        // uid格式: "fileId-index"，需要去掉最后的 -index 部分
-        const lastDashIndex = uid.lastIndexOf('-');
-        const extractedId = lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
-        console.log('📤 提取的 imageId:', extractedId);
-        return extractedId;
+      // 使用函数式更新来避免闭包陷阱和并发竞争条件
+      setImageList(prevList => {
+        const newImageList = [...prevList, {
+          uid: `${fileId}-${prevList.length}`,
+          name: file.name,
+          status: 'done',
+          url: getImageUrl(fileId),
+          thumbUrl: getImageUrl(fileId),
+          preview: {
+            src: getOriginalImageUrl(fileId)
+          }
+        }];
+        console.log('📤 上传成功 - newImageList:', newImageList);
+        return newImageList;
       });
 
-      console.log('📤 所有 imageIds:', imageIds);
-
-      // 去重并清洗数据
-      const cleanedImageIds = [...new Set(imageIds.filter(id => id && id.trim()))];
-      console.log('📤 清洗后的 cleanedImageIds:', cleanedImageIds);
-
-      form.setFieldValue('images', cleanedImageIds);
-
       message.success('图片上传成功');
+      return false; // Prevent default upload behavior
     } catch (error) {
       console.error('图片上传失败:', error);
       message.error('图片上传失败');
+      return false;
     } finally {
       setImagesUploading(false);
     }
-    return false;
-  }, [form, getImageUrl, getOriginalImageUrl, imageList]);
+  }, [getImageUrl, getOriginalImageUrl]);
 
   // 轮播图片上传处理
   const handleCarouselImagesUpload = useCallback(async (file: File) => {
@@ -484,44 +467,32 @@ function ProductEditContent() {
       const result = await response.json();
       const fileId = result.data.id;
 
-      // 更新图片列表
-      const newImageList = [...carouselImageList, {
-        uid: `${fileId}-${carouselImageList.length}`,
-        name: file.name,
-        status: 'done',
-        url: getImageUrl(fileId),
-        thumbUrl: getImageUrl(fileId),
-        preview: {
-          src: getOriginalImageUrl(fileId)
-        }
-      }];
-      setCarouselImageList(newImageList);
-
-      console.log('📤 轮播图上传成功 - newImageList:', newImageList);
-
-      // 更新表单值 - 从uid中提取真实的imageId
-      const imageIds = newImageList.map(img => {
-        const uid = img.uid;
-        // uid格式: "fileId-index"，需要去掉最后的 -index 部分
-        const lastDashIndex = uid.lastIndexOf('-');
-        const extractedId = lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
-        return extractedId;
+      // 使用函数式更新来避免闭包陷阱和并发竞争条件
+      setCarouselImageList(prevList => {
+        const newImageList = [...prevList, {
+          uid: `${fileId}-${prevList.length}`,
+          name: file.name,
+          status: 'done',
+          url: getImageUrl(fileId),
+          thumbUrl: getImageUrl(fileId),
+          preview: {
+            src: getOriginalImageUrl(fileId)
+          }
+        }];
+        console.log('📤 轮播图上传成功 - newImageList:', newImageList);
+        return newImageList;
       });
 
-      // 去重并清洗数据
-      const cleanedImageIds = [...new Set(imageIds.filter(id => id && id.trim()))];
-
-      form.setFieldValue('carousel_images', cleanedImageIds);
-
       message.success('轮播图上传成功');
+      return false;
     } catch (error) {
       console.error('轮播图上传失败:', error);
       message.error('轮播图上传失败');
+      return false;
     } finally {
       setCarouselImagesUploading(false);
     }
-    return false;
-  }, [form, getImageUrl, getOriginalImageUrl, carouselImageList]);
+  }, [getImageUrl, getOriginalImageUrl]);
 
 
   // 删除图片处理
@@ -530,61 +501,67 @@ function ProductEditContent() {
       setMainImageList([]);
       form.setFieldValue('main_image', '');
     } else if (type === 'images') {
-      const newImageList = imageList.filter(item => item.uid !== file.uid);
-      setImageList(newImageList);
-      // 从uid中提取真实的imageId (格式: fileId-index)
-      const imageIds = newImageList
-        .filter(img => img.status === 'done') // 只处理上传完成的文件
-        .map(img => {
-          const uid = img.uid;
-          // 跳过 rc-upload- 开头的临时 UID
-          if (uid.startsWith('rc-upload-')) {
-            return null;
-          }
-          // uid格式: "fileId-index"，需要去掉最后的 -index 部分
-          const lastDashIndex = uid.lastIndexOf('-');
-          return lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
-        })
-        .filter((id: string | null) => id && id.trim()); // 过滤掉 null 和空字符串
-
-      // 去重并清洗数据
-      const cleanedImageIds = [...new Set(imageIds)];
-      form.setFieldValue('images', cleanedImageIds);
+      setImageList(prevList => prevList.filter(item => item.uid !== file.uid));
     } else if (type === 'carousel_images') {
-      const newImageList = carouselImageList.filter(item => item.uid !== file.uid);
-      setCarouselImageList(newImageList);
-      // 从uid中提取真实的imageId
-      const imageIds = newImageList
-        .filter(img => img.status === 'done')
-        .map(img => {
-          const uid = img.uid;
-          if (uid.startsWith('rc-upload-')) return null;
-          const lastDashIndex = uid.lastIndexOf('-');
-          return lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
-        })
-        .filter((id: string | null) => id && id.trim());
-
-      const cleanedImageIds = [...new Set(imageIds)];
-      form.setFieldValue('carousel_images', cleanedImageIds);
+      setCarouselImageList(prevList => prevList.filter(item => item.uid !== file.uid));
     }
-  }, [form, imageList, carouselImageList]);
+  }, [form]);
 
   // 主图变化处理
   const handleMainImageChange = useCallback(({ fileList }: any) => {
     setMainImageList(fileList);
   }, []);
 
-  // 商品图片变化处理
+  // 商品图片变化处理 - 只读，不处理添加，因为我们手动控制上传
   const handleImagesChange = useCallback(({ fileList }: any) => {
-    console.log('📸 handleImagesChange 被调用，只更新显示列表');
-    setImageList(fileList);
+    // 只有在不是上传中状态时才允许onChange更新（例如删除）
+    // 但更好的方式是完全忽略ant design的 onChange 带来的新增文件，只由于 onRemove 处理删除
+    console.log('📸 handleImagesChange ignored');
   }, []);
 
-  // 轮播图变化处理
+  // 轮播图变化处理 - 同上
   const handleCarouselImagesChange = useCallback(({ fileList }: any) => {
-    console.log('📸 handleCarouselImagesChange 被调用，只更新显示列表');
-    setCarouselImageList(fileList);
+    console.log('📸 handleCarouselImagesChange ignored');
   }, []);
+
+  // 使用 useEffect 同步 images 到表单
+  useEffect(() => {
+    const imageIds = imageList
+      .filter(img => img.status === 'done')
+      .map(img => {
+        const uid = img.uid;
+        if (uid.startsWith('rc-upload-')) return null;
+        const lastDashIndex = uid.lastIndexOf('-');
+        return lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
+      })
+      .filter((id: string | null) => id && id.trim());
+
+    const cleanedImageIds = [...new Set(imageIds)];
+    // 只有当值真正改变时才set，避免循环（antd form应该会处理，但安全起见）
+    const currentVal = form.getFieldValue('images');
+    if (JSON.stringify(currentVal) !== JSON.stringify(cleanedImageIds)) {
+      form.setFieldValue('images', cleanedImageIds);
+    }
+  }, [imageList, form]);
+
+  // 使用 useEffect 同步 carousel_images 到表单
+  useEffect(() => {
+    const imageIds = carouselImageList
+      .filter(img => img.status === 'done')
+      .map(img => {
+        const uid = img.uid;
+        if (uid.startsWith('rc-upload-')) return null;
+        const lastDashIndex = uid.lastIndexOf('-');
+        return lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
+      })
+      .filter((id: string | null) => id && id.trim());
+
+    const cleanedImageIds = [...new Set(imageIds)];
+    const currentVal = form.getFieldValue('carousel_images');
+    if (JSON.stringify(currentVal) !== JSON.stringify(cleanedImageIds)) {
+      form.setFieldValue('carousel_images', cleanedImageIds);
+    }
+  }, [carouselImageList, form]);
 
   // 视频上传处理
   const handleVideoUpload = useCallback(async (file: File) => {
