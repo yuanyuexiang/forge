@@ -65,6 +65,8 @@ function ProductEditContent() {
   const [imageList, setImageList] = useState<any[]>([]);
   const [mainImageUploading, setMainImageUploading] = useState(false);
   const [imagesUploading, setImagesUploading] = useState(false);
+  const [carouselImagesUploading, setCarouselImagesUploading] = useState(false);
+  const [carouselImageList, setCarouselImageList] = useState<any[]>([]);
 
   // 视频上传相关状态
   const [videoList, setVideoList] = useState<any[]>([]);
@@ -230,7 +232,9 @@ function ProductEditContent() {
         images: foundProduct.images,
         video_url: foundProduct.video_url,
         is_on_sale: foundProduct.is_on_sale,
-        carousel: foundProduct.carousel || 'out'
+
+        carousel: foundProduct.carousel || 'out',
+        carousel_images: foundProduct.carousel_images
       });
 
       // 初始化主图
@@ -265,7 +269,29 @@ function ProductEditContent() {
 
         // 重要：同步更新表单字段
         form.setFieldValue('images', foundProduct.images);
+        form.setFieldValue('images', foundProduct.images);
         console.log('✅ 商品图片已初始化，同步到表单:', foundProduct.images);
+      }
+
+      // 初始化轮播图片
+      if (foundProduct.carousel_images && Array.isArray(foundProduct.carousel_images) && foundProduct.carousel_images.length > 0) {
+        console.log('🔄 初始化轮播图片:', foundProduct.carousel_images);
+
+        const cImagesList = foundProduct.carousel_images.map((imageId: string, index: number) => ({
+          uid: `${imageId}-${index}`,
+          name: `轮播图${index + 1}`,
+          status: 'done',
+          url: getImageUrl(imageId),
+          thumbUrl: getImageUrl(imageId),
+          preview: {
+            src: getOriginalImageUrl(imageId)
+          }
+        }));
+        setCarouselImageList(cImagesList);
+
+        // 重要：同步更新表单字段
+        form.setFieldValue('carousel_images', foundProduct.carousel_images);
+        console.log('✅ 轮播图片已初始化，同步到表单:', foundProduct.carousel_images);
       }
 
       // 初始化商品视频
@@ -429,12 +455,81 @@ function ProductEditContent() {
     return false;
   }, [form, getImageUrl, getOriginalImageUrl, imageList]);
 
+  // 轮播图片上传处理
+  const handleCarouselImagesUpload = useCallback(async (file: File) => {
+    setCarouselImagesUploading(true);
+    try {
+      // 使用TokenManager获取有效令牌
+      const authToken = await TokenManager.getValidToken();
+
+      if (!authToken) {
+        throw new Error('未找到认证令牌，请重新登录');
+      }
+
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('上传失败');
+      }
+
+      const result = await response.json();
+      const fileId = result.data.id;
+
+      // 更新图片列表
+      const newImageList = [...carouselImageList, {
+        uid: `${fileId}-${carouselImageList.length}`,
+        name: file.name,
+        status: 'done',
+        url: getImageUrl(fileId),
+        thumbUrl: getImageUrl(fileId),
+        preview: {
+          src: getOriginalImageUrl(fileId)
+        }
+      }];
+      setCarouselImageList(newImageList);
+
+      console.log('📤 轮播图上传成功 - newImageList:', newImageList);
+
+      // 更新表单值 - 从uid中提取真实的imageId
+      const imageIds = newImageList.map(img => {
+        const uid = img.uid;
+        // uid格式: "fileId-index"，需要去掉最后的 -index 部分
+        const lastDashIndex = uid.lastIndexOf('-');
+        const extractedId = lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
+        return extractedId;
+      });
+
+      // 去重并清洗数据
+      const cleanedImageIds = [...new Set(imageIds.filter(id => id && id.trim()))];
+
+      form.setFieldValue('carousel_images', cleanedImageIds);
+
+      message.success('轮播图上传成功');
+    } catch (error) {
+      console.error('轮播图上传失败:', error);
+      message.error('轮播图上传失败');
+    } finally {
+      setCarouselImagesUploading(false);
+    }
+    return false;
+  }, [form, getImageUrl, getOriginalImageUrl, carouselImageList]);
+
+
   // 删除图片处理
-  const handleRemoveImage = useCallback((file: any, isMainImage: boolean) => {
-    if (isMainImage) {
+  const handleRemoveImage = useCallback((file: any, type: 'main' | 'images' | 'carousel_images') => {
+    if (type === 'main') {
       setMainImageList([]);
       form.setFieldValue('main_image', '');
-    } else {
+    } else if (type === 'images') {
       const newImageList = imageList.filter(item => item.uid !== file.uid);
       setImageList(newImageList);
       // 从uid中提取真实的imageId (格式: fileId-index)
@@ -455,8 +550,24 @@ function ProductEditContent() {
       // 去重并清洗数据
       const cleanedImageIds = [...new Set(imageIds)];
       form.setFieldValue('images', cleanedImageIds);
+    } else if (type === 'carousel_images') {
+      const newImageList = carouselImageList.filter(item => item.uid !== file.uid);
+      setCarouselImageList(newImageList);
+      // 从uid中提取真实的imageId
+      const imageIds = newImageList
+        .filter(img => img.status === 'done')
+        .map(img => {
+          const uid = img.uid;
+          if (uid.startsWith('rc-upload-')) return null;
+          const lastDashIndex = uid.lastIndexOf('-');
+          return lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
+        })
+        .filter((id: string | null) => id && id.trim());
+
+      const cleanedImageIds = [...new Set(imageIds)];
+      form.setFieldValue('carousel_images', cleanedImageIds);
     }
-  }, [form, imageList]);
+  }, [form, imageList, carouselImageList]);
 
   // 主图变化处理
   const handleMainImageChange = useCallback(({ fileList }: any) => {
@@ -467,8 +578,12 @@ function ProductEditContent() {
   const handleImagesChange = useCallback(({ fileList }: any) => {
     console.log('📸 handleImagesChange 被调用，只更新显示列表');
     setImageList(fileList);
-    // 不在这里更新表单字段，因为可能包含上传中的文件
-    // 表单字段在 handleImagesUpload 和 handleRemoveImage 中更新
+  }, []);
+
+  // 轮播图变化处理
+  const handleCarouselImagesChange = useCallback(({ fileList }: any) => {
+    console.log('📸 handleCarouselImagesChange 被调用，只更新显示列表');
+    setCarouselImageList(fileList);
   }, []);
 
   // 视频上传处理
@@ -620,7 +735,10 @@ function ProductEditContent() {
           images: cleanedImages,
           video_url: values.video_url || '',
           is_on_sale: Boolean(values.is_on_sale),
-          carousel: values.carousel || 'out'
+          carousel: values.carousel || 'out',
+          carousel_images: Array.isArray(values.carousel_images)
+            ? [...new Set(values.carousel_images.filter((id: any) => id && typeof id === 'string' && id.trim()))]
+            : []
         };
 
         await updateProduct({
@@ -677,7 +795,10 @@ function ProductEditContent() {
           images: cleanedImages,
           video_url: values.video_url || '',
           is_on_sale: Boolean(values.is_on_sale),
-          carousel: values.carousel || 'out'
+          carousel: values.carousel || 'out',
+          carousel_images: Array.isArray(values.carousel_images)
+            ? [...new Set(values.carousel_images.filter((id: any) => id && typeof id === 'string' && id.trim()))]
+            : []
         };
 
         await createProduct({
@@ -933,7 +1054,7 @@ function ProductEditContent() {
                   listType="picture-card"
                   fileList={mainImageList}
                   beforeUpload={handleMainImageUpload}
-                  onRemove={(file) => handleRemoveImage(file, true)}
+                  onRemove={(file) => handleRemoveImage(file, 'main')}
                   onChange={handleMainImageChange}
                   onPreview={handlePreview}
                   maxCount={1}
@@ -966,7 +1087,7 @@ function ProductEditContent() {
                   listType="picture-card"
                   fileList={imageList}
                   beforeUpload={handleImagesUpload}
-                  onRemove={(file) => handleRemoveImage(file, false)}
+                  onRemove={(file) => handleRemoveImage(file, 'images')}
                   onChange={handleImagesChange}
                   onPreview={handlePreview}
                   maxCount={10}
@@ -982,6 +1103,40 @@ function ProductEditContent() {
                     <div>
                       {imagesUploading ? <LoadingOutlined /> : <UploadOutlined />}
                       <div style={{ marginTop: 8 }}>上传图片</div>
+                    </div>
+                  )}
+                </Upload>
+              </Form.Item>
+
+              <Divider />
+
+              <Form.Item
+                label="App轮播图"
+                tooltip="App端首页轮播展示的图片，支持多张"
+              >
+                <Form.Item name="carousel_images" hidden>
+                  <Input />
+                </Form.Item>
+                <Upload
+                  listType="picture-card"
+                  fileList={carouselImageList}
+                  beforeUpload={handleCarouselImagesUpload}
+                  onRemove={(file) => handleRemoveImage(file, 'carousel_images')}
+                  onChange={handleCarouselImagesChange}
+                  onPreview={handlePreview}
+                  maxCount={10}
+                  accept="image/*"
+                  multiple
+                  showUploadList={{
+                    showPreviewIcon: true,
+                    showRemoveIcon: true,
+                    showDownloadIcon: false
+                  }}
+                >
+                  {carouselImageList.length < 10 && (
+                    <div>
+                      {carouselImagesUploading ? <LoadingOutlined /> : <UploadOutlined />}
+                      <div style={{ marginTop: 8 }}>上传轮播图</div>
                     </div>
                   )}
                 </Upload>
