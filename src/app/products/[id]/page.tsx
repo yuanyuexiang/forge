@@ -33,7 +33,7 @@ import {
 } from '@ant-design/icons';
 import { ProtectedRoute } from '@components/auth';
 import { AdminLayout } from '@components/layout';
-import { 
+import {
   useGetProductsQuery,
   useGetCategoriesQuery,
   useGetBoutiquesQuery,
@@ -59,7 +59,7 @@ function ProductEditContent() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [product, setProduct] = useState<Product | null>(null);
-  
+
   // 图片上传相关状态
   const [mainImageList, setMainImageList] = useState<any[]>([]);
   const [imageList, setImageList] = useState<any[]>([]);
@@ -74,7 +74,7 @@ function ProductEditContent() {
 
   // 获取当前用户 ID
   const [userId, setUserId] = useState<string | null>(null);
-  
+
   useEffect(() => {
     const currentUserId = TokenManager.getCurrentUserId();
     setUserId(currentUserId);
@@ -85,19 +85,19 @@ function ProductEditContent() {
     variables: userId ? { userId } : undefined,
     skip: !userId
   });
-  
+
   // 查询分类列表
   const { data: categoriesData } = useGetCategoriesQuery({
     variables: userId ? { userId } : undefined,
     skip: !userId
   });
-  
+
   // 查询店铺列表
   const { data: boutiquesData } = useGetBoutiquesQuery({
     variables: userId ? { userId } : undefined,
     skip: !userId
   });
-  
+
   // 创建商品
   const [createProduct] = useCreateProductMutation({
     onCompleted: () => {
@@ -171,22 +171,22 @@ function ProductEditContent() {
       video.crossOrigin = 'anonymous';
       video.src = videoUrl;
       video.preload = 'metadata';
-      
+
       video.onloadedmetadata = () => {
         // 跳到第1秒（避免第0秒可能是黑屏）
         video.currentTime = Math.min(1, video.duration);
       };
-      
+
       video.onseeked = () => {
         try {
           const canvas = document.createElement('canvas');
           canvas.width = video.videoWidth;
           canvas.height = video.videoHeight;
-          
+
           const ctx = canvas.getContext('2d');
           if (ctx) {
             ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-            
+
             // 转为 base64 图片（JPEG 格式，质量 0.8）
             const thumbnailUrl = canvas.toDataURL('image/jpeg', 0.8);
             resolve(thumbnailUrl);
@@ -197,7 +197,7 @@ function ProductEditContent() {
           reject(error);
         }
       };
-      
+
       video.onerror = () => {
         reject(new Error('视频加载失败'));
       };
@@ -207,11 +207,11 @@ function ProductEditContent() {
   // 获取商品数据
   const fetchProduct = () => {
     if (!isEditMode || !productsData) return;
-    
+
     const foundProduct = products.find((p: Product) => p.id === params.id);
     if (foundProduct) {
       setProduct(foundProduct);
-      
+
       // 初始化表单数据
       form.setFieldsValue({
         name: foundProduct.name,
@@ -250,7 +250,7 @@ function ProductEditContent() {
       // 初始化商品图片
       if (foundProduct.images && Array.isArray(foundProduct.images) && foundProduct.images.length > 0) {
         console.log('🔄 初始化商品图片:', foundProduct.images);
-        
+
         const imagesList = foundProduct.images.map((imageId: string, index: number) => ({
           uid: `${imageId}-${index}`,
           name: `图片${index + 1}`,
@@ -262,7 +262,7 @@ function ProductEditContent() {
           }
         }));
         setImageList(imagesList);
-        
+
         // 重要：同步更新表单字段
         form.setFieldValue('images', foundProduct.images);
         console.log('✅ 商品图片已初始化，同步到表单:', foundProduct.images);
@@ -271,7 +271,7 @@ function ProductEditContent() {
       // 初始化商品视频
       if (foundProduct.video_url) {
         const videoUrl = getVideoUrl(foundProduct.video_url);
-        
+
         // 先设置基本信息
         setVideoList([{
           uid: foundProduct.video_url,
@@ -279,7 +279,7 @@ function ProductEditContent() {
           status: 'done',
           url: videoUrl,
         }]);
-        
+
         // 异步提取缩略图
         extractVideoThumbnail(videoUrl)
           .then(thumbnailUrl => {
@@ -410,13 +410,13 @@ function ProductEditContent() {
         console.log('📤 提取的 imageId:', extractedId);
         return extractedId;
       });
-      
+
       console.log('📤 所有 imageIds:', imageIds);
-      
+
       // 去重并清洗数据
       const cleanedImageIds = [...new Set(imageIds.filter(id => id && id.trim()))];
       console.log('📤 清洗后的 cleanedImageIds:', cleanedImageIds);
-      
+
       form.setFieldValue('images', cleanedImageIds);
 
       message.success('图片上传成功');
@@ -451,7 +451,7 @@ function ProductEditContent() {
           return lastDashIndex > 0 ? uid.substring(0, lastDashIndex) : uid;
         })
         .filter((id: string | null) => id && id.trim()); // 过滤掉 null 和空字符串
-      
+
       // 去重并清洗数据
       const cleanedImageIds = [...new Set(imageIds)];
       form.setFieldValue('images', cleanedImageIds);
@@ -520,7 +520,7 @@ function ProductEditContent() {
       // 提取视频第一帧作为缩略图
       try {
         const thumbnailUrl = await extractVideoThumbnail(videoUrl);
-        
+
         // 更新上传列表（带缩略图）
         setVideoList([{
           uid: fileId,
@@ -531,7 +531,7 @@ function ProductEditContent() {
         }]);
       } catch (thumbnailError) {
         console.warn('提取视频缩略图失败，使用默认显示:', thumbnailError);
-        
+
         // 如果提取失败，仍然添加视频但没有缩略图
         setVideoList([{
           uid: fileId,
@@ -600,10 +600,10 @@ function ProductEditContent() {
       if (isEditMode) {
         // 更新商品 - 使用对象格式
         // 清洗并去重 images 数组
-        const cleanedImages = Array.isArray(values.images) 
-          ? [...new Set(values.images.filter((id: any) => id && typeof id === 'string' && id.trim()))] 
+        const cleanedImages = Array.isArray(values.images)
+          ? [...new Set(values.images.filter((id: any) => id && typeof id === 'string' && id.trim()))]
           : [];
-          
+
         const updateData = {
           name: values.name,
           subtitle: values.subtitle || '',
@@ -656,8 +656,8 @@ function ProductEditContent() {
         }
 
         // 清洗并去重 images 数组
-        const cleanedImages = Array.isArray(values.images) 
-          ? [...new Set(values.images.filter((id: any) => id && typeof id === 'string' && id.trim()))] 
+        const cleanedImages = Array.isArray(values.images)
+          ? [...new Set(values.images.filter((id: any) => id && typeof id === 'string' && id.trim()))]
           : [];
 
         const createData = {
@@ -712,11 +712,11 @@ function ProductEditContent() {
 
   if (loading) {
     return (
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        height: '400px' 
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '400px'
       }}>
         <Spin size="large" />
       </div>
@@ -728,8 +728,8 @@ function ProductEditContent() {
       {/* 头部 */}
       <div className="mb-6 flex justify-between items-center">
         <div className="flex items-center">
-          <Button 
-            icon={<ArrowLeftOutlined />} 
+          <Button
+            icon={<ArrowLeftOutlined />}
             onClick={handleBack}
             style={{ marginRight: 16 }}
           >
@@ -743,8 +743,8 @@ function ProductEditContent() {
           <Button onClick={handleBack}>
             取消
           </Button>
-          <Button 
-            type="primary" 
+          <Button
+            type="primary"
             icon={<SaveOutlined />}
             loading={saving}
             onClick={handleSave}
@@ -898,15 +898,15 @@ function ProductEditContent() {
                     </div>
                   )}
                 </Upload>
-                
+
                 {/* 视频预览 */}
                 {videoList.length > 0 && videoList[0].url && (
                   <div style={{ marginTop: 16 }}>
-                    <video 
-                      src={videoList[0].url} 
+                    <video
+                      src={videoList[0].url}
                       controls
-                      style={{ 
-                        width: '100%', 
+                      style={{
+                        width: '100%',
                         maxWidth: 500,
                         borderRadius: 8,
                         border: '1px solid #d9d9d9'
@@ -1010,9 +1010,9 @@ function ProductEditContent() {
                 label="所属店铺"
                 name="boutique_id"
               >
-                <Select 
-                  placeholder="请选择店铺" 
-                  allowClear 
+                <Select
+                  placeholder="请选择店铺"
+                  allowClear
                   size="large"
                   showSearch
                   filterOption={(input, option) => {
@@ -1066,7 +1066,7 @@ function ProductEditContent() {
               </Form.Item>
 
               <Form.Item
-                label="是否特价"
+                label="是否推荐商品"
                 name="is_on_sale"
                 valuePropName="checked"
                 initialValue={false}
