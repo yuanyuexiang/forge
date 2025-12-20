@@ -32,10 +32,10 @@ export default function LoginPage() {
           query: 'query { __typename }'
         })
       });
-      
+
       const result = await response.json();
       console.log('连接测试结果:', result);
-      
+
       if (response.ok) {
         message.success('代理连接正常！');
       } else {
@@ -53,13 +53,13 @@ export default function LoginPage() {
     setTestLoading(true);
     try {
       console.log('填入测试凭据到表单...');
-      
+
       // 使用Form实例设置值
       form.setFieldsValue({
         email: 'tom.nanjing@gmail.com',
         password: 'sual116y'
       });
-      
+
       message.success('已填入测试凭据，请点击登录按钮');
     } catch (error) {
       console.error('填入凭据失败:', error);
@@ -71,11 +71,11 @@ export default function LoginPage() {
 
   const onFinish = async (values: LoginFormValues) => {
     setLoading(true);
-    
+
     try {
       console.log('尝试登录:', { email: values.email });
       const success = await login(values.email, values.password);
-      
+
       if (success) {
         message.success('登录成功！');
         router.push('/dashboard');
@@ -96,15 +96,15 @@ export default function LoginPage() {
       <div className="login-page-left">
         <div className="flex flex-col items-center mb-10">
           <div className="login-logo-circle" style={{ marginBottom: '24px' }}>
-            <Image 
-              src="/logo.png" 
-              alt="Kaichenbao Technology Logo" 
-              width={80} 
+            <Image
+              src="/logo.png"
+              alt="Kaichenbao Technology Logo"
+              width={80}
               height={80}
               priority
             />
           </div>
-          <h1 
+          <h1
             className="text-4xl font-light m-0"
             style={{
               textShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
@@ -115,23 +115,23 @@ export default function LoginPage() {
           >
             Kaichenbao Technology
           </h1>
-          <p 
+          <p
             className="text-xl font-light mt-3"
             style={{ color: 'rgba(249, 250, 251, 0.95)', letterSpacing: '0.5px' }}
           >
             实体店商品智能展销系统
           </p>
         </div>
-        
+
         <div className="text-center max-w-md">
-          <p 
-            className="text-base leading-relaxed"
+          <p
+            className="text-2xl leading-relaxed"
             style={{ opacity: '0.9', color: '#F9FAFB', marginBottom: '8px' }}
           >
             致力于创造充满丰富和充实体验的精彩生活
           </p>
-          <p 
-            className="text-base leading-relaxed"
+          <p
+            className="text-2xl leading-relaxed"
             style={{ opacity: '0.9', color: '#F9FAFB' }}
           >
             优雅、艺术、品位的全面展示
@@ -142,13 +142,13 @@ export default function LoginPage() {
       {/* 右侧登录表单区域 */}
       <div className="login-page-right">
         <div className="w-full max-w-sm">
-          <h2 
+          <h2
             className="text-center mb-10 text-2xl font-semibold"
             style={{ color: '#111827' }}
           >
             系统登录
           </h2>
-          
+
           <Form
             name="login"
             form={form}
@@ -168,10 +168,10 @@ export default function LoginPage() {
                 { type: 'email', message: '请输入有效的邮箱格式！' }
               ]}
             >
-              <Input 
+              <Input
                 className="login-input-field"
-                prefix={<UserOutlined style={{ color: '#C5A46D' }} />} 
-                placeholder="请输入邮箱地址" 
+                prefix={<UserOutlined style={{ color: '#C5A46D' }} />}
+                placeholder="请输入邮箱地址"
                 size="large"
               />
             </Form.Item>
@@ -197,9 +197,9 @@ export default function LoginPage() {
             </Form.Item>
 
             <Form.Item>
-              <Button 
-                type="primary" 
-                htmlType="submit" 
+              <Button
+                type="primary"
+                htmlType="submit"
                 loading={loading}
                 className="login-submit-button w-full mt-2"
                 size="large"
@@ -208,7 +208,7 @@ export default function LoginPage() {
               </Button>
             </Form.Item>
           </Form>
-          
+
           {/* 开发调试信息 */}
           {/* <div 
             className="mt-6 p-4 rounded-lg border"
@@ -250,16 +250,16 @@ export default function LoginPage() {
               </Button>
             </div>
           </div> */}
-          
-          <div 
+
+          <div
             className="text-center text-sm mt-8"
             style={{ color: '#6B7280' }}
           >
             <p>© 2025 Matrix Net Tech. 保留所有权利</p>
             <p className="mt-2">
-              <a 
-                href="https://beian.miit.gov.cn/" 
-                target="_blank" 
+              <a
+                href="https://beian.miit.gov.cn/"
+                target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: '#6B7280', textDecoration: 'none' }}
               >
