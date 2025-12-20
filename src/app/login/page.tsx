@@ -123,7 +123,7 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <div className="text-center max-w-md">
+        <div className="text-center max-w-lg">
           <p
             className="text-2xl leading-relaxed"
             style={{ opacity: '0.9', color: '#F9FAFB', marginBottom: '8px' }}
