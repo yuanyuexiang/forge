@@ -153,7 +153,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           style={{ backgroundColor: '#111827', borderBottom: '1px solid #374151' }}
         >
           <Title level={4} style={{ color: '#C5A46D', margin: 0, fontWeight: 600 }}>
-            {collapsed ? 'LX' : '精品服饰后台'}
+            {collapsed ? 'LX' : '商品数据管理后台'}
           </Title>
         </div>
         <Menu
